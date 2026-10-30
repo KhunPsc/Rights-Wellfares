@@ -1,7 +1,12 @@
 node_modules/
 .clasp.json
 .clasprc.json
-.env
+.env*
+!.env.example
+credentials*.json
+client_secret*.json
+*.pem
+*.key
 
 # Obsidian: per-device state
 vault/.obsidian/workspace*.json
