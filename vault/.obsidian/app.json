@@ -5,5 +5,7 @@
   "newLinkFormat": "shortest",
   "useMarkdownLinks": false,
   "alwaysUpdateLinks": true,
-  "userIgnoreFilters": ["templates/"]
+  "userIgnoreFilters": [
+    "templates/"
+  ]
 }
