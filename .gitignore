@@ -1,3 +1,7 @@
+# เอกสารต้นฉบับ (PDF) — เก็บไว้ในเครื่องเท่านั้น ไม่อัปขึ้น git
+vault/raw/pdf/
+*.pdf
+
 node_modules/
 .clasp.json
 .clasprc.json
