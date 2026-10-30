@@ -50,6 +50,9 @@ scripts/               build-knowledge.mjs: รวม wiki/ → apps-script/Know
 
 ## Chatbot
 
-- `npm run build` สร้าง `apps-script/Knowledge.js` จาก `vault/wiki/` (ไฟล์ generated ห้ามแก้มือ)
-- `npm run push` = build + `clasp push`
-- API key เก็บใน Script Properties ชื่อ `ANTHROPIC_API_KEY` ห้าม commit
+- หน้าเว็บ: HTML ก้อนเดียวใน Google Sites (Embed code) สำเนาอยู่ที่ `vault/raw/google-site/site-embed.html`
+  หน้าเว็บสร้าง system prompt จากข้อมูลในหน้าเอง แล้ว POST ไปที่ Apps Script
+- `apps-script/รหัส.js`: `doPost` เป็น proxy ไป Gemini + บันทึก Feedback ลง Google Sheet
+- API key เก็บใน Script Properties ชื่อ `GEMINI_API_KEY` ห้ามใส่ในโค้ด ห้าม commit
+- `npm run build` สร้าง `apps-script/Knowledge.js` จาก `vault/wiki/` (ไฟล์ generated ห้ามแก้มือ, ยังไม่ได้ต่อเข้า doPost)
+- `npm run push` = build + `clasp push` (ทับโค้ดบน Apps Script ทั้งโปรเจกต์) แล้วต้อง Deploy → Manage deployments → อัปเดตเวอร์ชันเพื่อให้ URL `/exec` เดิมใช้โค้ดใหม่

@@ -5,9 +5,6 @@
   "scripts": {
     "build": "node scripts/build-knowledge.mjs",
     "push": "npm run build && clasp push",
-    "deploy": "clasp deploy --description \"auto\""
-  },
-  "devDependencies": {
-    "@google/clasp": "^2.4.2"
+    "deploy": "clasp redeploy AKfycbxuj4rSSQDzlcSCVv6QmT_vLcud5P2csRg55FcW4Wa920p4u3KCz-HPtO9gFvVVjwr3 --description \"npm run deploy\""
   }
 }

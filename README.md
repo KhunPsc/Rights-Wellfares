@@ -8,32 +8,29 @@
 
 ## ติดตั้งครั้งแรก
 
+ติดตั้ง clasp แบบ global (ชื่อโฟลเดอร์มี `&` ทำให้ติดตั้งในโปรเจกต์บน Windows ไม่ได้):
+
 ```bash
-npm install
-npx clasp login
+npm install -g @google/clasp
+clasp login
 ```
 
-ผูกกับโปรเจกต์ Apps Script:
+ผูกกับโปรเจกต์ Apps Script: คัดลอก `.clasp.json.example` เป็น `.clasp.json` (scriptId ของโปรเจกต์ "คู่มือรักษาพยาบาล")
 
-- สร้างใหม่: `npx clasp create --type webapp --title "Rights & Welfares Chatbot" --rootDir apps-script`
-- หรือใช้ของเดิม: คัดลอก `.clasp.json.example` เป็น `.clasp.json` แล้วใส่ `scriptId`
-
-ตั้ง API key: เปิด Apps Script editor → Project Settings → Script Properties → เพิ่ม `ANTHROPIC_API_KEY`
+ตั้ง API key: Apps Script editor → Project Settings → Script Properties → `GEMINI_API_KEY`
 
 ## ใช้งาน
 
 | คำสั่ง | ทำอะไร |
 |---|---|
 | `npm run build` | รวม `vault/wiki/` เป็น `apps-script/Knowledge.js` |
-| `npm run push` | build แล้ว push โค้ดขึ้น Apps Script |
-| `npm run deploy` | สร้าง deployment ใหม่ของ web app |
+| `npm run push` | build แล้ว push โค้ดขึ้น Apps Script (ทับทั้งโปรเจกต์) |
+| `npm run deploy` | อัปเดต deployment เดิม — URL `/exec` ที่หน้าเว็บใช้อยู่ไม่เปลี่ยน |
 
-## ฝังใน Google Sites
+## หน้าเว็บ (Google Sites)
 
-1. Apps Script editor → Deploy → New deployment → Web app
-   - Execute as: **Me** · Who has access: **Anyone**
-2. คัดลอก URL ที่ลงท้าย `/exec`
-3. Google Sites → Insert → Embed → By URL → วาง URL
+ทั้งหน้าเป็น HTML ก้อนเดียวในกล่อง Embed code สำเนาอยู่ที่ `vault/raw/google-site/site-embed.html`
+หน้าเว็บเรียก Apps Script ผ่าน `DEFAULT_GAS_PROXY_URL` (ถามแชท + ส่ง Feedback ลง Google Sheet)
 
 ## เพิ่มความรู้
 
