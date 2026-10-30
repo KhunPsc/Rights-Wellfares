@@ -1,0 +1,12 @@
+node_modules/
+.clasp.json
+.clasprc.json
+.env
+
+# Obsidian: per-device state
+vault/.obsidian/workspace*.json
+vault/.obsidian/cache
+vault/.trash/
+
+.DS_Store
+Thumbs.db
