@@ -1,6 +1,8 @@
 # เอกสารต้นฉบับ (PDF) — เก็บไว้ในเครื่องเท่านั้น ไม่อัปขึ้น git
 vault/raw/pdf/
 *.pdf
+!docs/assets/**
+!src/sites/assets/**
 
 node_modules/
 .clasp.json
