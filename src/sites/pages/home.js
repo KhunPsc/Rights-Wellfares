@@ -113,12 +113,47 @@ function resetNewsTimer() {
     startNewsTimer();
 }
 
-// Expose navigation functions
+// Search Bar Logic (Home Page -> Manual Page)
+function handleHomeSearch(event) {
+    if (event) event.preventDefault();
+    const input = document.getElementById('globalSearchInput');
+    const q = (input ? input.value : '').trim();
+    if (!q) return;
+    try {
+        localStorage.setItem('rw_search_query', q);
+        localStorage.setItem('rw_selected_cat', 'all');
+    } catch (e) {}
+    const manualUrl = RW.pageUrl('manual') || 'manual.html';
+    window.location.href = `${manualUrl}?q=${encodeURIComponent(q)}&cat=all`;
+}
+
+function clearHomeSearch() {
+    const input = document.getElementById('globalSearchInput');
+    if (input) {
+        input.value = '';
+        input.focus();
+    }
+    const btn = document.getElementById('clearSearchBtn');
+    if (btn) btn.classList.add('hidden');
+}
+
+// Expose navigation & search functions
 window.nextNewsSlide = nextNewsSlide;
 window.prevNewsSlide = prevNewsSlide;
 window.goToNewsSlide = goToNewsSlide;
+window.handleHomeSearch = handleHomeSearch;
+window.clearHomeSearch = clearHomeSearch;
 
 function initHomePage() {
+    // Setup Home Search Input events
+    const sInput = document.getElementById('globalSearchInput');
+    if (sInput) {
+        sInput.addEventListener('input', () => {
+            const btn = document.getElementById('clearSearchBtn');
+            if (btn) btn.classList.toggle('hidden', sInput.value.trim().length === 0);
+        });
+    }
+
     const grid = document.getElementById('homeCategoryGrid');
     grid.innerHTML = RW.loadingBox('กำลังโหลดรายการหมวดหมู่...');
 

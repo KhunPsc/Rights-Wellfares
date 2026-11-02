@@ -298,6 +298,25 @@ function initManualPage() {
             currentCategory = 'all';
         }
 
+        // Check if a search query was passed via localStorage or URL (?q=... or ?search=...)
+        let targetQuery = '';
+        try {
+            targetQuery = localStorage.getItem('rw_search_query');
+            if (targetQuery) localStorage.removeItem('rw_search_query');
+        } catch (e) {}
+        if (!targetQuery) {
+            const urlParams = new URLSearchParams(window.location.search);
+            targetQuery = urlParams.get('q') || urlParams.get('search') || '';
+        }
+
+        if (targetQuery) {
+            currentSearchQuery = targetQuery.trim();
+            const sInput = document.getElementById('globalSearchInput');
+            if (sInput) sInput.value = currentSearchQuery;
+            const clrBtn = document.getElementById('clearSearchBtn');
+            if (clrBtn) clrBtn.classList.remove('hidden');
+        }
+
         renderCategorySidebar();
         renderForms(d.forms);
         renderClausesList();
@@ -307,7 +326,7 @@ function initManualPage() {
             const targetClause = localStorage.getItem('rw_selected_clause');
             if (targetClause) {
                 localStorage.removeItem('rw_selected_clause');
-                setTimeout(() => jumpToClause(Number(targetClause)), 350);
+                setTimeout(() => jumpToClause(targetClause), 350);
             }
         } catch (e) {}
     }).catch(err => {

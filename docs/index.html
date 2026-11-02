@@ -945,6 +945,43 @@ function closeImageModal() { RW.closeImageModal(); }
         </div>
     </section>
 
+    <!-- Search Bar Section (Home Page) -->
+    <section class="w-full">
+        <form onsubmit="handleHomeSearch(event)" class="relative w-full">
+            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-base pointer-events-none"></i>
+            <input
+                id="globalSearchInput"
+                type="text"
+                inputmode="search"
+                enterkeyhint="search"
+                autocomplete="off"
+                autocapitalize="off"
+                spellcheck="false"
+                aria-label="ค้นหาข้อมูลในคู่มือ"
+                placeholder="ค้นหา เช่น ค่าห้อง, ลูกจ้าง, 90 วัน, ล้างไต, เบี้ยเลี้ยง, ปากกาลดน้ำหนัก..."
+                class="w-full min-w-0 pl-11 pr-24 py-3 sm:py-3.5 rounded-2xl bg-white text-slate-900 placeholder-slate-400 text-base sm:text-sm border border-slate-300 focus:border-pea-600 focus:ring-4 focus:ring-purple-100 focus:outline-none shadow-sm transition"
+            >
+            <div class="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
+                <button
+                    id="clearSearchBtn"
+                    type="button"
+                    onclick="clearHomeSearch()"
+                    class="hidden text-slate-400 hover:text-slate-600 p-1.5 transition cursor-pointer"
+                    title="ล้างคำค้นหา"
+                >
+                    <i class="fa-solid fa-circle-xmark text-sm"></i>
+                </button>
+                <button
+                    type="submit"
+                    class="px-4 py-2 sm:py-2.5 rounded-xl bg-pea-700 hover:bg-pea-800 text-white font-heading font-semibold text-xs sm:text-sm transition flex items-center gap-1.5 shadow-sm cursor-pointer active:scale-95"
+                >
+                    <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                    <span>ค้นหา</span>
+                </button>
+            </div>
+        </form>
+    </section>
+
     <!-- Quick Highlights Strip -->
     <section class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
         <div class="text-xs font-heading font-semibold text-slate-500 mb-2.5 flex items-center gap-1.5">
@@ -1412,12 +1449,47 @@ function resetNewsTimer() {
     startNewsTimer();
 }
 
-// Expose navigation functions
+// Search Bar Logic (Home Page -> Manual Page)
+function handleHomeSearch(event) {
+    if (event) event.preventDefault();
+    const input = document.getElementById('globalSearchInput');
+    const q = (input ? input.value : '').trim();
+    if (!q) return;
+    try {
+        localStorage.setItem('rw_search_query', q);
+        localStorage.setItem('rw_selected_cat', 'all');
+    } catch (e) {}
+    const manualUrl = RW.pageUrl('manual') || 'manual.html';
+    window.location.href = `${manualUrl}?q=${encodeURIComponent(q)}&cat=all`;
+}
+
+function clearHomeSearch() {
+    const input = document.getElementById('globalSearchInput');
+    if (input) {
+        input.value = '';
+        input.focus();
+    }
+    const btn = document.getElementById('clearSearchBtn');
+    if (btn) btn.classList.add('hidden');
+}
+
+// Expose navigation & search functions
 window.nextNewsSlide = nextNewsSlide;
 window.prevNewsSlide = prevNewsSlide;
 window.goToNewsSlide = goToNewsSlide;
+window.handleHomeSearch = handleHomeSearch;
+window.clearHomeSearch = clearHomeSearch;
 
 function initHomePage() {
+    // Setup Home Search Input events
+    const sInput = document.getElementById('globalSearchInput');
+    if (sInput) {
+        sInput.addEventListener('input', () => {
+            const btn = document.getElementById('clearSearchBtn');
+            if (btn) btn.classList.toggle('hidden', sInput.value.trim().length === 0);
+        });
+    }
+
     const grid = document.getElementById('homeCategoryGrid');
     grid.innerHTML = RW.loadingBox('กำลังโหลดรายการหมวดหมู่...');
 
