@@ -1,13 +1,13 @@
 {
   "apiUrl": "https://script.google.com/macros/s/AKfycbxuj4rSSQDzlcSCVv6QmT_vLcud5P2csRg55FcW4Wa920p4u3KCz-HPtO9gFvVVjwr3/exec",
-  "linkTarget": "_blank",
+  "linkTarget": "_self",
   "pages": {
-    "home": "https://sites.google.com/view/n1khunphonwasright/home",
-    "manual": "https://sites.google.com/view/n1khunphonwasright/manual",
-    "tables": "https://sites.google.com/view/n1khunphonwasright/allowance/table",
-    "tools": "https://sites.google.com/view/n1khunphonwasright/manual/manual",
-    "allowance": "https://sites.google.com/view/n1khunphonwasright/allowance/allowance",
-    "chat": "https://sites.google.com/view/n1khunphonwasright/chat",
-    "forms": "https://sites.google.com/view/n1khunphonwasright/forms"
+    "home": "home.html",
+    "manual": "manual.html",
+    "tables": "tables.html",
+    "tools": "tools.html",
+    "allowance": "allowance.html",
+    "chat": "chat.html",
+    "forms": "forms.html"
   }
 }

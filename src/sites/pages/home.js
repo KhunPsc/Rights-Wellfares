@@ -5,12 +5,10 @@ function initHomePage() {
 
     RW.loadData(d => {
         const cats = (d.categories || []).filter(c => c.id !== 'all');
-        const manualUrl = RW.pageUrl('manual') || 'https://sites.google.com/view/n1khunphonwasright/manual';
+        const manualUrl = RW.pageUrl('manual') || 'manual.html';
         grid.innerHTML = cats.map(c => `
             <a
                 href="${manualUrl}?cat=${encodeURIComponent(c.id)}"
-                target="_blank"
-                rel="noopener"
                 onclick="try{localStorage.setItem('rw_selected_cat','${c.id}')}catch(e){}"
                 class="cursor-pointer p-3.5 rounded-xl border border-slate-200 hover:border-purple-300 hover:bg-purple-50/50 transition flex items-start gap-3 group block no-underline"
             >

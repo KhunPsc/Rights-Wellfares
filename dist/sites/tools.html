@@ -244,7 +244,7 @@ body.rw-embed {
 }
 </style>
 <script>
-window.RW_CONFIG = {"apiUrl":"https://script.google.com/macros/s/AKfycbxuj4rSSQDzlcSCVv6QmT_vLcud5P2csRg55FcW4Wa920p4u3KCz-HPtO9gFvVVjwr3/exec","linkTarget":"_blank","pages":{"home":"https://sites.google.com/view/n1khunphonwasright/home","manual":"https://sites.google.com/view/n1khunphonwasright/manual","tables":"https://sites.google.com/view/n1khunphonwasright/allowance/table","tools":"https://sites.google.com/view/n1khunphonwasright/manual/manual","allowance":"https://sites.google.com/view/n1khunphonwasright/allowance/allowance","chat":"https://sites.google.com/view/n1khunphonwasright/chat","forms":"https://sites.google.com/view/n1khunphonwasright/forms"},"page":"tools"};
+window.RW_CONFIG = {"apiUrl":"https://script.google.com/macros/s/AKfycbxuj4rSSQDzlcSCVv6QmT_vLcud5P2csRg55FcW4Wa920p4u3KCz-HPtO9gFvVVjwr3/exec","linkTarget":"_self","pages":{"home":"home.html","manual":"manual.html","tables":"tables.html","tools":"tools.html","allowance":"allowance.html","chat":"chat.html","forms":"forms.html"},"page":"tools"};
 </script>
 <script>
 // ============================================================================
@@ -356,17 +356,7 @@ const RW = (() => {
             url += (url.includes('?') ? '&' : '?') + 'clause=' + encodeURIComponent(params.clause);
         }
 
-        try {
-            const a = document.createElement('a');
-            a.href = url;
-            a.target = cfg.linkTarget || '_blank';
-            a.rel = 'noopener';
-            document.body.appendChild(a);
-            a.click();
-            setTimeout(() => a.remove(), 100);
-        } catch (err) {
-            window.open(url, cfg.linkTarget || '_blank', 'noopener');
-        }
+        window.location.href = url;
     }
 
     function back() {
@@ -414,7 +404,7 @@ const RW = (() => {
                 <div class="bg-gradient-to-r from-pea-900 to-pea-700 text-white px-5 py-3.5 flex items-start justify-between gap-3 border-b-2 border-amber-400 shrink-0">
                     <div id="rwClauseModalHead" class="min-w-0"></div>
                     <div class="flex items-center gap-2 shrink-0">
-                        <a id="rwClauseModalGoBtn" target="_blank" rel="noopener" class="hidden px-2.5 py-1 rounded-lg bg-white/20 hover:bg-white/30 text-white text-xs font-heading font-medium transition flex items-center gap-1.5 no-underline" title="เปิดดูในหน้าคู่มือฉบับเต็ม">
+                        <a id="rwClauseModalGoBtn" class="hidden px-2.5 py-1 rounded-lg bg-white/20 hover:bg-white/30 text-white text-xs font-heading font-medium transition flex items-center gap-1.5 no-underline" title="เปิดดูในหน้าคู่มือฉบับเต็ม">
                             <i class="fa-solid fa-up-right-from-square text-[10px]"></i>
                             <span class="hidden sm:inline">เปิดในหน้าคู่มือ</span>
                         </a>
@@ -456,7 +446,7 @@ const RW = (() => {
                     goBtn.classList.add('hidden');
                 } else {
                     goBtn.classList.remove('hidden');
-                    const manualUrl = pageUrl('manual') || 'https://sites.google.com/view/n1khunphonwasright/manual';
+                    const manualUrl = pageUrl('manual') || 'manual.html';
                     goBtn.href = manualUrl + '?clause=' + encodeURIComponent(c.num);
                     goBtn.onclick = () => {
                         try { localStorage.setItem('rw_selected_clause', String(c.num)); } catch (e) {}
@@ -681,17 +671,15 @@ function closeFeedbackModal() { RW.closeFeedback(); }
         <div class="flex items-center gap-2">
             <button
                 type="button"
-                onclick="window.history.length > 1 ? window.history.back() : window.open('https://sites.google.com/view/n1khunphonwasright/home', '_blank', 'noopener')"
-                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-purple-100 hover:text-pea-800 text-slate-700 font-heading font-medium transition"
+                onclick="RW.back()"
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-purple-100 hover:text-pea-800 text-slate-700 font-heading font-medium transition cursor-pointer"
                 title="ย้อนกลับไปหน้าที่แล้ว"
             >
                 <i class="fa-solid fa-arrow-left text-[11px]"></i>
                 <span>ย้อนกลับ</span>
             </button>
             <a
-                href="https://sites.google.com/view/n1khunphonwasright/home"
-                target="_blank"
-                rel="noopener"
+                href="home.html"
                 class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-50 hover:bg-pea-700 hover:text-white text-pea-800 font-heading font-medium transition no-underline"
                 title="กลับหน้าหลัก"
             >
@@ -703,11 +691,12 @@ function closeFeedbackModal() { RW.closeFeedback(); }
         <!-- Quick Jump Shortcuts -->
         <div class="hidden sm:flex items-center gap-1 text-[11px] font-heading">
             <span class="text-slate-400 mr-1.5">ไปที่:</span>
-            <a href="https://sites.google.com/view/n1khunphonwasright/manual" target="_blank" rel="noopener" class="px-2.5 py-1 rounded-lg hover:bg-slate-100 text-slate-600 hover:text-pea-800 transition no-underline">คู่มือ 44 ข้อ</a>
-            <a href="https://sites.google.com/view/n1khunphonwasright/allowance/allowance" target="_blank" rel="noopener" class="px-2.5 py-1 rounded-lg hover:bg-slate-100 text-slate-600 hover:text-pea-800 transition no-underline">เบี้ยเลี้ยง-ที่พัก</a>
-            <a href="https://sites.google.com/view/n1khunphonwasright/manual/manual" target="_blank" rel="noopener" class="px-2.5 py-1 rounded-lg hover:bg-slate-100 text-slate-600 hover:text-pea-800 transition no-underline">โปรแกรมคำนวณ</a>
-            <a href="https://sites.google.com/view/n1khunphonwasright/forms" target="_blank" rel="noopener" class="px-2.5 py-1 rounded-lg hover:bg-slate-100 text-slate-600 hover:text-pea-800 transition no-underline"><i class="fa-solid fa-download mr-1"></i>แบบฟอร์ม</a>
-            <button type="button" onclick="RW.toggleChat(true)" class="px-2.5 py-1 rounded-lg hover:bg-emerald-50 text-emerald-700 font-semibold transition"><i class="fa-solid fa-robot mr-1"></i>ถาม AI</button>
+            <a href="manual.html" class="px-2.5 py-1 rounded-lg hover:bg-slate-100 text-slate-600 hover:text-pea-800 transition no-underline">คู่มือ 44 ข้อ</a>
+            <a href="allowance.html" class="px-2.5 py-1 rounded-lg hover:bg-slate-100 text-slate-600 hover:text-pea-800 transition no-underline">เบี้ยเลี้ยง-ที่พัก</a>
+            <a href="tools.html" class="px-2.5 py-1 rounded-lg hover:bg-slate-100 text-slate-600 hover:text-pea-800 transition no-underline">โปรแกรมคำนวณ</a>
+            <a href="tables.html" class="px-2.5 py-1 rounded-lg hover:bg-slate-100 text-slate-600 hover:text-pea-800 transition no-underline">ตารางสรุป</a>
+            <a href="forms.html" class="px-2.5 py-1 rounded-lg hover:bg-slate-100 text-slate-600 hover:text-pea-800 transition no-underline"><i class="fa-solid fa-download mr-1"></i>แบบฟอร์ม</a>
+            <button type="button" onclick="RW.toggleChat(true)" class="px-2.5 py-1 rounded-lg hover:bg-emerald-50 text-emerald-700 font-semibold transition cursor-pointer"><i class="fa-solid fa-robot mr-1"></i>ถาม AI</button>
         </div>
     </div>
 </div>

@@ -107,17 +107,7 @@ const RW = (() => {
             url += (url.includes('?') ? '&' : '?') + 'clause=' + encodeURIComponent(params.clause);
         }
 
-        try {
-            const a = document.createElement('a');
-            a.href = url;
-            a.target = cfg.linkTarget || '_blank';
-            a.rel = 'noopener';
-            document.body.appendChild(a);
-            a.click();
-            setTimeout(() => a.remove(), 100);
-        } catch (err) {
-            window.open(url, cfg.linkTarget || '_blank', 'noopener');
-        }
+        window.location.href = url;
     }
 
     function back() {
@@ -165,7 +155,7 @@ const RW = (() => {
                 <div class="bg-gradient-to-r from-pea-900 to-pea-700 text-white px-5 py-3.5 flex items-start justify-between gap-3 border-b-2 border-amber-400 shrink-0">
                     <div id="rwClauseModalHead" class="min-w-0"></div>
                     <div class="flex items-center gap-2 shrink-0">
-                        <a id="rwClauseModalGoBtn" target="_blank" rel="noopener" class="hidden px-2.5 py-1 rounded-lg bg-white/20 hover:bg-white/30 text-white text-xs font-heading font-medium transition flex items-center gap-1.5 no-underline" title="เปิดดูในหน้าคู่มือฉบับเต็ม">
+                        <a id="rwClauseModalGoBtn" class="hidden px-2.5 py-1 rounded-lg bg-white/20 hover:bg-white/30 text-white text-xs font-heading font-medium transition flex items-center gap-1.5 no-underline" title="เปิดดูในหน้าคู่มือฉบับเต็ม">
                             <i class="fa-solid fa-up-right-from-square text-[10px]"></i>
                             <span class="hidden sm:inline">เปิดในหน้าคู่มือ</span>
                         </a>
@@ -207,7 +197,7 @@ const RW = (() => {
                     goBtn.classList.add('hidden');
                 } else {
                     goBtn.classList.remove('hidden');
-                    const manualUrl = pageUrl('manual') || 'https://sites.google.com/view/n1khunphonwasright/manual';
+                    const manualUrl = pageUrl('manual') || 'manual.html';
                     goBtn.href = manualUrl + '?clause=' + encodeURIComponent(c.num);
                     goBtn.onclick = () => {
                         try { localStorage.setItem('rw_selected_clause', String(c.num)); } catch (e) {}

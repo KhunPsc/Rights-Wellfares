@@ -111,11 +111,13 @@ description: >-
 
 ## 3. กฎเหล็กที่ห้ามลืม (Crucial Rules & Gotchas)
 
-### กฎที่ 1: Google Sites Iframe Sandbox (เปิดหน้าต่างใหม่เสมอ)
-* Google Sites ครอบกล่อง Embed ด้วย Sandbox ที่ **ไม่อนุญาต `allow-top-navigation`**
-* **ข้อห้ามเด็ดขาด**: ห้ามใช้ `target="_top"` หรือ `target="_parent"` หรือ `window.open(url, '_top')` ใน Embed
-* **ข้อกำหนด**: ลิงก์ข้ามหน้าและการดาวน์โหลดทั้งหมดใน Embed ต้องใช้ **`target="_blank" rel="noopener"`**
-* ดูรายละเอียดใน [references/iframe-sandbox.md](./references/iframe-sandbox.md)
+### กฎที่ 1: การนำทางในเว็บแอป (Single-Host Same-Tab Navigation)
+* **เมื่อใช้ GitHub Pages เป็นโฮสต์หลัก (แนะนำสูงสุด)**:
+  - ทุกลิงก์นำทางระหว่างหน้าภายในเว็บแอป (`home.html`, `manual.html`, `allowance.html`, `tools.html`, `tables.html`, `forms.html`, `chat.html`) ให้ใช้ **Relative Links** พร้อมการนำทางในแท็บเดิม (`target="_self"` หรือ `window.location.href`)
+  - **ข้อดี:** ผู้ใช้สลับหน้าไป-มาได้ลื่นไหล ไม่ต้องเปิดแท็บใหม่ และปุ่มย้อนกลับ (Back) ของเบราว์เซอร์ทำงานได้ปกติ
+  - **การฝังใน Google Sites:** ให้ฝังลิงก์หลัก `https://<user>.github.io/<repo>/` เพียงจุดเดียวใน Google Sites โดยการคลิกเปลี่ยนหน้าทั้งหมดจะทำงานอยู่ภายในกรอบ iframe เดิมอย่างราบรื่น
+* **ลิงก์ดาวน์โหลดภายนอก (Direct Download)**:
+  - ไฟล์ PDF หรือ Word ที่ดาวน์โหลดจาก Google Drive ให้คง `target="_blank" rel="noopener"` ไว้เพื่อให้เบราว์เซอร์เปิดดาวน์โหลดไฟล์ได้ทันที
 
 ### กฎที่ 2: เลี่ยง CORS Preflight ด้วย `Content-Type: text/plain`
 * Google Apps Script Web App **ไม่รองรับ HTTP `OPTIONS` (Preflight)** สำหรับคำขอแบบ Simple CORS
