@@ -1,0 +1,196 @@
+<!-- @title หน้าแรก - คู่มือตรวจจ่ายค่ารักษาพยาบาล และอัตราเบี้ยเลี้ยง-ที่พัก (กฟภ.) -->
+<main class="app-main max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- Hero Banner -->
+    <div class="bg-gradient-to-r from-pea-900 via-pea-700 to-purple-800 rounded-3xl p-6 sm:p-8 text-white shadow-xl border-b-4 border-pea-gold relative overflow-hidden">
+        <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div class="space-y-2 max-w-2xl">
+                <div class="flex items-center gap-2 flex-wrap">
+                    <span class="px-2.5 py-0.5 text-xs font-heading font-semibold bg-amber-400 text-slate-900 rounded-full">PEA N1</span>
+                    <span class="text-xs text-purple-200 font-medium"><i class="fa-regular fa-calendar-check mr-1"></i>Update ข้อมูลล่าสุด (30 ตุลาคม 2569)</span>
+                </div>
+                <h1 class="text-xl sm:text-2xl md:text-3xl font-heading font-bold text-white tracking-tight leading-tight">
+                    คู่มือตรวจจ่ายค่ารักษาพยาบาล และอัตราเบี้ยเลี้ยง-ที่พัก (กฟภ.)
+                </h1>
+                <p class="text-xs sm:text-sm text-purple-200 leading-relaxed">
+                    รวบรวมระเบียบกองทุนสงเคราะห์ ว่าด้วยการรักษาพยาบาล พ.ศ. 2559 และที่แก้ไขเพิ่มเติม พร้อมหลักเกณฑ์อัตราเบี้ยเลี้ยงเดินทางและค่าเช่าที่พัก (TAX)
+                </p>
+            </div>
+            <!-- Quick Action Buttons -->
+            <div class="flex flex-wrap sm:flex-col gap-2.5 shrink-0">
+                <button
+                    type="button"
+                    onclick="RW.toggleChat(true)"
+                    class="px-4 py-2.5 rounded-xl bg-emerald-400 hover:bg-emerald-300 text-slate-900 font-heading font-semibold text-xs sm:text-sm shadow flex items-center justify-center gap-2 transition"
+                >
+                    <i class="fa-solid fa-robot"></i>
+                    <span>ถาม AI ผู้ช่วย</span>
+                </button>
+                <button
+                    type="button"
+                    onclick="RW.openFeedback()"
+                    class="px-4 py-2.5 rounded-xl bg-amber-100 hover:bg-amber-200 text-slate-900 font-heading font-semibold text-xs sm:text-sm shadow flex items-center justify-center gap-2 transition border border-amber-300"
+                    title="แจ้งข้อเสนอแนะหรือแจ้งปัญหา"
+                >
+                    <i class="fa-solid fa-comment-dots text-amber-700"></i>
+                    <span>Feedback / แจ้งปัญหา</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Highlights Strip -->
+    <section class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
+        <div class="text-xs font-heading font-semibold text-slate-500 mb-2.5 flex items-center gap-1.5">
+            <i class="fa-solid fa-star text-amber-500"></i>
+            <span>สรุปสาระสำคัญที่ใช้บ่อย (คลิกดูรายละเอียด):</span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-2.5 text-xs">
+            <div onclick="RW.openClause(7)" class="cursor-pointer p-2.5 rounded-xl bg-purple-50 hover:bg-purple-100 border border-purple-200 transition flex items-center gap-2.5 lg:col-span-2">
+                <div class="w-9 h-9 rounded-lg bg-pea-700 text-white flex items-center justify-center shrink-0"><i class="fa-solid fa-bed"></i></div>
+                <div class="leading-tight">
+                    <div class="text-slate-500 font-medium">ค่าห้อง+อาหาร/วัน (ข้อ 7.3)</div>
+                    <div class="font-heading font-bold text-pea-800 mt-0.5">
+                        พนง. 1,500 | ครอบครัว 1,100 | ลูกจ้าง/ครอบครัว 1,000
+                    </div>
+                </div>
+            </div>
+            <div onclick="RW.openClause(7)" class="cursor-pointer p-2.5 rounded-xl bg-blue-50 hover:bg-blue-100 border border-blue-200 transition flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center shrink-0"><i class="fa-solid fa-hospital-user"></i></div>
+                <div>
+                    <div class="text-slate-500 font-medium">OPD เอกชน + คลินิก</div>
+                    <div class="font-heading font-bold text-blue-900">รวมไม่เกิน 3,600 บ./ปี</div>
+                </div>
+            </div>
+            <div onclick="RW.openClause(7)" class="cursor-pointer p-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center shrink-0"><i class="fa-solid fa-procedures"></i></div>
+                <div>
+                    <div class="text-slate-500 font-medium">IPD รพ.เอกชน</div>
+                    <div class="font-heading font-bold text-emerald-900">เบิกได้ครึ่งหนึ่ง (50%)</div>
+                </div>
+            </div>
+            <div onclick="RW.openClause(14)" class="cursor-pointer p-2.5 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-200 transition flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-lg bg-amber-500 text-white flex items-center justify-center shrink-0"><i class="fa-solid fa-clock"></i></div>
+                <div>
+                    <div class="text-slate-500 font-medium">ระยะเวลายื่นเบิก</div>
+                    <div class="font-heading font-bold text-amber-900">ภายใน 90 วัน นับจากใบเสร็จ</div>
+                </div>
+            </div>
+            <a href="https://sites.google.com/view/n1khunphonwasright/allowance/allowance" target="_blank" rel="noopener" class="cursor-pointer p-2.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 transition flex items-center gap-2.5 block no-underline">
+                <div class="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center shrink-0"><i class="fa-solid fa-suitcase-rolling"></i></div>
+                <div>
+                    <div class="text-slate-500 font-medium">เบี้ยเลี้ยง & ที่พัก (TAX)</div>
+                    <div class="font-heading font-bold text-indigo-900">300-460 | พัก 650-1,350</div>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- Navigation Hub (Main Features) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+        <!-- Card 1: Manual -->
+        <a href="https://sites.google.com/view/n1khunphonwasright/manual" target="_blank" rel="noopener" class="group cursor-pointer bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:shadow-md hover:border-purple-300 transition flex flex-col justify-between block no-underline">
+            <div>
+                <div class="w-12 h-12 rounded-xl bg-purple-100 text-pea-700 flex items-center justify-center text-xl mb-3 group-hover:scale-105 transition">
+                    <i class="fa-solid fa-book-open"></i>
+                </div>
+                <h3 class="font-heading font-bold text-slate-800 text-base group-hover:text-pea-800 transition">เนื้อหาคู่มือ 44 ข้อ</h3>
+                <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+                    ค้นหาและอ่านระเบียบแยกตาม 8 หมวดหมู่ พร้อมตัวอย่างและเอกสารประกอบ
+                </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-heading font-semibold text-pea-700">
+                <span>เปิดดูคู่มือ</span>
+                <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition"></i>
+            </div>
+        </a>
+
+        <!-- Card 2: Allowance & Hotel -->
+        <a href="https://sites.google.com/view/n1khunphonwasright/allowance/allowance" target="_blank" rel="noopener" class="group cursor-pointer bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:shadow-md hover:border-purple-300 transition flex flex-col justify-between block no-underline">
+            <div>
+                <div class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center text-xl mb-3 group-hover:scale-105 transition">
+                    <i class="fa-solid fa-coins"></i>
+                </div>
+                <h3 class="font-heading font-bold text-slate-800 text-base group-hover:text-indigo-800 transition">อัตราเบี้ยเลี้ยง & ที่พัก (TAX)</h3>
+                <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+                    ตารางอัตราเบี้ยเลี้ยงและที่พัก พร้อมคำนวณยอดที่ระบุและไม่ระบุ TAX
+                </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-heading font-semibold text-indigo-700">
+                <span>คำนวณเบี้ยเลี้ยง</span>
+                <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition"></i>
+            </div>
+        </a>
+
+        <!-- Card 3: Calculators & Tools -->
+        <a href="https://sites.google.com/view/n1khunphonwasright/manual/manual" target="_blank" rel="noopener" class="group cursor-pointer bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:shadow-md hover:border-purple-300 transition flex flex-col justify-between block no-underline">
+            <div>
+                <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-xl mb-3 group-hover:scale-105 transition">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                </div>
+                <h3 class="font-heading font-bold text-slate-800 text-base group-hover:text-emerald-800 transition">เครื่องมือจำลองคำนวณ</h3>
+                <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+                    คำนวณยอดเบิกค่ารักษา, เช็ก 90 วัน, อายุบุตร 20 ปี และสิทธิซ้ำซ้อน
+                </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-heading font-semibold text-emerald-700">
+                <span>ใช้งานเครื่องมือ</span>
+                <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition"></i>
+            </div>
+        </a>
+
+        <!-- Card 4: Tables -->
+        <a href="https://sites.google.com/view/n1khunphonwasright/allowance/table" target="_blank" rel="noopener" class="group cursor-pointer bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:shadow-md hover:border-purple-300 transition flex flex-col justify-between block no-underline">
+            <div>
+                <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center text-xl mb-3 group-hover:scale-105 transition">
+                    <i class="fa-solid fa-table"></i>
+                </div>
+                <h3 class="font-heading font-bold text-slate-800 text-base group-hover:text-amber-800 transition">ตารางสรุปเปรียบเทียบ</h3>
+                <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+                    ตารางเทียบสิทธิบิดามารดา (ข้อ 9), สิทธิบุตร (ข้อ 13) และส่วนลด รพ.
+                </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-heading font-semibold text-amber-700">
+                <span>ดูตารางสรุป</span>
+                <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition"></i>
+            </div>
+        </a>
+
+        <!-- Card 5: Forms Download -->
+        <a href="https://sites.google.com/view/n1khunphonwasright/forms" target="_blank" rel="noopener" class="group cursor-pointer bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:shadow-md hover:border-purple-300 transition flex flex-col justify-between block no-underline">
+            <div>
+                <div class="w-12 h-12 rounded-xl bg-rose-100 text-rose-700 flex items-center justify-center text-xl mb-3 group-hover:scale-105 transition">
+                    <i class="fa-solid fa-cloud-arrow-down"></i>
+                </div>
+                <h3 class="font-heading font-bold text-slate-800 text-base group-hover:text-rose-800 transition">ดาวน์โหลดแบบฟอร์ม</h3>
+                <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+                    แบบคำร้องและใบสำคัญจ่ายเงินค่ารักษาพยาบาล (PDF / Word) โหลดลงเครื่องทันที
+                </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-heading font-semibold text-rose-700">
+                <span>ดาวน์โหลดฟอร์ม</span>
+                <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition"></i>
+            </div>
+        </a>
+    </div>
+
+    <!-- Category Overview List -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm">
+        <div class="flex items-center justify-between mb-4">
+            <div>
+                <h2 class="font-heading font-bold text-base text-slate-800">
+                    <i class="fa-solid fa-layer-group text-pea-600 mr-1.5"></i>หมวดหมู่ระเบียบหลัก (8 หมวด)
+                </h2>
+                <p class="text-xs text-slate-500 mt-0.5">คลิกแต่ละหมวดเพื่อเปิดอ่านในหน้าคู่มือ</p>
+            </div>
+            <a href="https://sites.google.com/view/n1khunphonwasright/manual" target="_blank" rel="noopener" class="text-xs font-heading font-semibold text-pea-700 hover:text-pea-800 flex items-center gap-1 no-underline">
+                <span>ดูทั้งหมด</span>
+                <i class="fa-solid fa-chevron-right text-[10px]"></i>
+            </a>
+        </div>
+        <div id="homeCategoryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <!-- Populated via JS -->
+        </div>
+    </div>
+
+</main>

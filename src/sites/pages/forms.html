@@ -1,0 +1,80 @@
+<!-- @title ดาวน์โหลดแบบฟอร์มและเอกสารการเบิกจ่าย (กฟภ.) -->
+<main class="app-main max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- Header Banner -->
+    <div class="bg-gradient-to-r from-pea-900 via-pea-700 to-purple-800 rounded-3xl p-6 sm:p-7 text-white shadow-xl border-b-4 border-pea-gold flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <div class="flex items-center gap-2 mb-1.5">
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-heading font-semibold bg-amber-400 text-slate-900">Download Center</span>
+                <span class="text-xs text-purple-200">แบบฟอร์มมาตรฐาน กฟภ.</span>
+            </div>
+            <h1 class="text-xl sm:text-2xl font-heading font-bold text-white">
+                ดาวน์โหลดแบบฟอร์มและเอกสารประกอบการเบิกจ่าย
+            </h1>
+            <p class="text-xs sm:text-sm text-purple-200 mt-1">
+                คลิกปุ่มดาวน์โหลดเพื่อบันทึกไฟล์ลงคอมพิวเตอร์ของคุณทันที (Direct Download)
+            </p>
+        </div>
+        <div class="shrink-0 flex items-center gap-2">
+            <a
+                href="https://sites.google.com/view/n1khunphonwasright/manual"
+                target="_blank"
+                rel="noopener"
+                class="px-4 py-2 rounded-xl bg-white/15 hover:bg-white/25 border border-white/30 text-white font-heading font-semibold text-xs transition flex items-center gap-1.5 no-underline"
+            >
+                <i class="fa-solid fa-book-open"></i>
+                <span>ดูระเบียบการเบิกจ่าย</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Download Cards Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5" id="formsContainer">
+        <!-- Rendered dynamically via forms.js -->
+    </div>
+
+    <!-- Required Documents Checklist Box -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm space-y-4">
+        <h2 class="font-heading font-bold text-base text-slate-800 flex items-center gap-2">
+            <i class="fa-solid fa-clipboard-check text-pea-600"></i>
+            <span>เอกสารประกอบการยื่นเบิกค่ารักษาพยาบาล (ข้อ 14 - 16)</span>
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+            <div class="p-4 rounded-xl bg-purple-50/60 border border-purple-200 space-y-2">
+                <div class="font-heading font-bold text-pea-900 flex items-center gap-1.5">
+                    <span class="w-5 h-5 rounded-full bg-pea-700 text-white flex items-center justify-center text-[11px]">1</span>
+                    <span>แบบคำร้อง & ใบสำคัญ</span>
+                </div>
+                <ul class="space-y-1.5 text-slate-600 list-disc pl-4 leading-relaxed">
+                    <li>แบบคำร้องและใบสำคัญจ่ายเงินค่ารักษาพยาบาล (พิมพ์จากไฟล์ดาวน์โหลดด้านบน)</li>
+                    <li>กรอกรายละเอียดผู้มีสิทธิ, ผู้ป่วย, โรคที่รักษา และลงลายมือชื่อให้ครบถ้วน</li>
+                </ul>
+            </div>
+
+            <div class="p-4 rounded-xl bg-blue-50/60 border border-blue-200 space-y-2">
+                <div class="font-heading font-bold text-blue-900 flex items-center gap-1.5">
+                    <span class="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[11px]">2</span>
+                    <span>ใบเสร็จ & ใบรับรองแพทย์</span>
+                </div>
+                <ul class="space-y-1.5 text-slate-600 list-disc pl-4 leading-relaxed">
+                    <li><strong>ใบเสร็จรับเงินฉบับจริง</strong> (หรือใบเสร็จอิเล็กทรอนิกส์ e-Receipt ตามระเบียบ)</li>
+                    <li><strong>ใบรับรองแพทย์</strong> หรือหนังสือกำกับการรักษาของสถานพยาบาล</li>
+                    <li>ใบแจกแจงรายการค่าใช้จ่าย (กรณีคนไข้ใน IPD)</li>
+                </ul>
+            </div>
+
+            <div class="p-4 rounded-xl bg-amber-50/60 border border-amber-200 space-y-2">
+                <div class="font-heading font-bold text-amber-900 flex items-center gap-1.5">
+                    <span class="w-5 h-5 rounded-full bg-amber-600 text-white flex items-center justify-center text-[11px]">3</span>
+                    <span>เอกสารเฉพาะกรณี</span>
+                </div>
+                <ul class="space-y-1.5 text-slate-600 list-disc pl-4 leading-relaxed">
+                    <li>กรณีบุตร: สูติบัตร หรือทะเบียนสมรสบิดามารดา</li>
+                    <li>กรณีเบิก รพ.รัฐคู่สัญญา: แนบรายงาน SAP <strong>T-code ZBNR016</strong></li>
+                    <li>ยื่นเบิก<strong>ภายใน 90 วัน</strong> นับจากวันที่ในใบเสร็จรับเงิน (ข้อ 14)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</main>

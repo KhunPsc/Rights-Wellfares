@@ -1,0 +1,46 @@
+[
+  {
+    "id": "medical-claim-pdf",
+    "category": "ค่ารักษาพยาบาล",
+    "label": "แบบคำร้องและใบสำคัญจ่ายเงินค่ารักษาพยาบาล (PDF)",
+    "title": "แบบคำร้องและใบสำคัญจ่ายเงินค่ารักษาพยาบาล",
+    "desc": "สำหรับพิมพ์ออกมากรอกข้อความด้วยลายมือ หรือเปิดอ่านตัวอย่างแบบฟอร์มการเบิกค่ารักษาพยาบาล",
+    "type": "pdf",
+    "ext": "PDF",
+    "icon": "fa-file-pdf text-rose-600",
+    "url": "https://drive.google.com/uc?export=download&id=1oGxDN54XCipwnIN0VS0SzjRxzNZlB7Az"
+  },
+  {
+    "id": "medical-claim-docx",
+    "category": "ค่ารักษาพยาบาล",
+    "label": "แบบคำร้องและใบสำคัญจ่ายเงินค่ารักษาพยาบาล (Word / docx)",
+    "title": "แบบคำร้องและใบสำคัญจ่ายเงินค่ารักษาพยาบาล",
+    "desc": "ไฟล์ Microsoft Word (.docx) สำหรับพิมพ์กรอกข้อมูลบนคอมพิวเตอร์ก่อนสั่งพิมพ์และแนบใบเสร็จ",
+    "type": "word",
+    "ext": "DOCX",
+    "icon": "fa-file-word text-blue-600",
+    "url": "https://docs.google.com/document/d/1w_A12NKVih0Lh_mvHdC6fwEG_lpE8nkr/export?format=docx"
+  },
+  {
+    "id": "tuition-claim-pdf",
+    "category": "ค่าเล่าเรียนบุตร",
+    "label": "แบบคำร้องและใบสำคัญจ่ายเงินค่าเล่าเรียน ค่าบำรุงการศึกษาและค่าธรรมเนียมอื่น ๆ (PDF)",
+    "title": "แบบคำร้องและใบสำคัญจ่ายเงินค่าเล่าเรียน ค่าบำรุงการศึกษาและค่าธรรมเนียมอื่น ๆ",
+    "desc": "สำหรับยื่นขอเบิกเงินสวัสดิการค่าเล่าเรียน ค่าบำรุงการศึกษา และค่าธรรมเนียมการศึกษาของบุตร",
+    "type": "pdf",
+    "ext": "PDF",
+    "icon": "fa-file-pdf text-rose-600",
+    "url": "https://drive.google.com/uc?export=download&id=1qqIRYWVwoqqux0vq7JzpH3pMMj_nYa5b"
+  },
+  {
+    "id": "child-allowance-pdf",
+    "category": "เงินช่วยเหลือบุตร",
+    "label": "แบบขอรับ/เปลี่ยนแปลง เงินช่วยเหลือบุตร (PDF)",
+    "title": "แบบขอรับ/เปลี่ยนแปลง เงินช่วยเหลือบุตร",
+    "desc": "สำหรับยื่นขอรับเงินช่วยเหลือบุตรแรกเกิด หรือแจ้งเปลี่ยนแปลงข้อมูลสิทธิเงินช่วยเหลือบุตร",
+    "type": "pdf",
+    "ext": "PDF",
+    "icon": "fa-file-pdf text-rose-600",
+    "url": "https://drive.google.com/uc?export=download&id=1LaCkWEJpA_T60iQdvN5d9THrkGIYL5xt"
+  }
+]

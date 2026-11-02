@@ -1,0 +1,234 @@
+<!-- @title ตารางสรุป & ตัวอย่างคำนวณ -->
+<main class="app-main max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div id="viewTables" class="space-y-6">
+        <!-- Summary Table 0: Room & Food Rates Comparison (พนักงาน vs ครอบครัว vs ลูกจ้าง) -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-6 overflow-x-auto">
+            <div class="flex items-center justify-between mb-3">
+                <div>
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-heading font-semibold bg-pea-100 text-pea-800">สรุปอัตราปัจจุบัน (ข้อ 7.3 & 8.1)</span>
+                    <h3 class="font-heading font-bold text-base sm:text-lg text-slate-800 mt-1">
+                        ตารางสรุปสิทธิค่าห้องและค่าอาหาร (พนักงาน / บุคคลในครอบครัว / ลูกจ้างและครอบครัว)
+                    </h3>
+                </div>
+            </div>
+            <table class="w-full text-xs sm:text-sm border-collapse">
+                <thead>
+                    <tr class="bg-pea-800 text-white font-heading">
+                        <th class="border border-pea-700 p-3 text-left">ประเภทผู้มีสิทธิ</th>
+                        <th class="border border-pea-700 p-3 text-center">อัตราค่าห้องและค่าอาหาร (ต่อวัน)</th>
+                        <th class="border border-pea-700 p-3 text-left">หลักเกณฑ์และเงื่อนไขสำคัญ</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200">
+                    <tr class="hover:bg-purple-50/40">
+                        <td class="border p-3 font-heading font-bold text-pea-900">1. ผู้ปฏิบัติงาน (พนักงาน กฟภ.)</td>
+                        <td class="border p-3 text-center font-heading font-bold text-pea-700 text-base">ไม่เกินวันละ 1,500.- บาท</td>
+                        <td class="border p-3 text-slate-700">เบิกได้เท่าที่จ่ายจริง แต่ไม่เกินวันละ 1,500 บาท (รวมค่าห้อง ค่าอาหาร อาหารทางสายยางตามแพทย์สั่งสำหรับผู้ป่วยใน และค่าห้อง I.C.U.)</td>
+                    </tr>
+                    <tr class="hover:bg-purple-50/40">
+                        <td class="border p-3 font-heading font-bold text-blue-900">2. บุคคลในครอบครัวของพนักงาน</td>
+                        <td class="border p-3 text-center font-heading font-bold text-blue-700 text-base">ไม่เกินวันละ 1,100.- บาท</td>
+                        <td class="border p-3 text-slate-700">เบิกได้เท่าที่จ่ายจริง แต่ไม่เกินวันละ 1,100 บาท สำหรับบุตรชอบด้วยกฎหมายที่ยังไม่บรรลุนิติภาวะ, คู่สมรสจดทะเบียน และบิดามารดาโดยกำเนิด (เมื่อพนักงานทำงานครบ 6 เดือน)</td>
+                    </tr>
+                    <tr class="hover:bg-purple-50/40 bg-amber-50/40">
+                        <td class="border p-3 font-heading font-bold text-amber-900">3. ลูกจ้าง กฟภ. และบุคคลในครอบครัวของลูกจ้าง</td>
+                        <td class="border p-3 text-center font-heading font-bold text-amber-700 text-base">ไม่เกินวันละ 1,000.- บาท</td>
+                        <td class="border p-3 text-slate-700">เบิกได้เท่าที่จ่ายจริง แต่ไม่เกินวันละ 1,000 บาท ทั้งนี้ กรณีพนักงานมีคู่สมรสเป็นลูกจ้าง กฟภ. ให้พนักงานมีสิทธิเบิกส่วนเกินสิทธิของคู่สมรสเพิ่มเติมได้เท่าจำนวนที่ยังขาดอยู่ (ตามข้อ 8.1 กสก.(สก.)ว3470/2558)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Table 1: Clause 9 Matrix -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-6 overflow-x-auto">
+            <div class="flex items-center justify-between mb-3">
+                <div>
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-heading font-semibold bg-purple-100 text-pea-800">หน้า 4 - 5 (ข้อ 9)</span>
+                    <h3 class="font-heading font-bold text-base sm:text-lg text-slate-800 mt-1">
+                        ตารางการใช้สิทธิเบิกค่ารักษาพยาบาลของบุคคลในครอบครัวที่มีสิทธิจากทางราชการ (กสก.(สก.)ว 2802/2559 ลว. 14 ต.ค. 2559)
+                    </h3>
+                </div>
+            </div>
+            <table class="w-full text-xs sm:text-sm border-collapse">
+                <thead>
+                    <tr class="bg-pea-800 text-white font-heading">
+                        <th class="border border-pea-700 p-2.5 text-left" rowspan="2">กรณี</th>
+                        <th class="border border-pea-700 p-2 text-center" colspan="2">บุตร</th>
+                        <th class="border border-pea-700 p-2 text-center" colspan="2">การใช้สิทธิกับทางราชการ</th>
+                        <th class="border border-pea-700 p-2 text-center" colspan="2">การใช้สิทธิกับ กฟภ.</th>
+                        <th class="border border-pea-700 p-2.5 text-left" rowspan="2">ผลการพิจารณาการใช้สิทธิ</th>
+                    </tr>
+                    <tr class="bg-pea-700 text-purple-100 font-heading text-xs">
+                        <th class="border border-pea-600 p-2 text-center">พนักงาน กฟภ.</th>
+                        <th class="border border-pea-600 p-2 text-center">รับราชการ</th>
+                        <th class="border border-pea-600 p-2 text-center">เคยใช้สิทธิ</th>
+                        <th class="border border-pea-600 p-2 text-center">ไม่เคยใช้สิทธิ</th>
+                        <th class="border border-pea-600 p-2 text-center">เคยใช้สิทธิ</th>
+                        <th class="border border-pea-600 p-2 text-center">ไม่เคยใช้สิทธิ</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200">
+                    <tr class="hover:bg-slate-50">
+                        <td class="border p-2.5 font-medium">9.1 บุคคลในครอบครัวรับราชการ หรือเป็นข้าราชการบำนาญ</td>
+                        <td class="border p-2 text-center text-slate-400">-</td>
+                        <td class="border p-2 text-center text-slate-400">-</td>
+                        <td class="border p-2 text-center text-slate-400">-</td>
+                        <td class="border p-2 text-center text-slate-400">-</td>
+                        <td class="border p-2 text-center text-slate-400">-</td>
+                        <td class="border p-2 text-center text-slate-400">-</td>
+                        <td class="border p-2.5 font-semibold text-amber-800 bg-amber-50">ให้ใช้สิทธิจากทางราชการก่อน</td>
+                    </tr>
+                    <tr class="hover:bg-slate-50">
+                        <td class="border p-2.5 font-medium">9.2 บิดา มารดา เป็นพ่อบ้าน แม่บ้าน ไม่มีอาชีพ</td>
+                        <td class="border p-2 text-center text-pea-700 font-bold">✓</td>
+                        <td class="border p-2 text-center text-pea-700 font-bold">✓</td>
+                        <td class="border p-2 text-center text-pea-700 font-bold">✓</td>
+                        <td class="border p-2 text-center text-slate-400">-</td>
+                        <td class="border p-2 text-center text-pea-700 font-bold">✓</td>
+                        <td class="border p-2 text-center text-slate-400">-</td>
+                        <td class="border p-2.5 font-semibold text-amber-800 bg-amber-50">ให้ใช้สิทธิจากทางราชการก่อน</td>
+                    </tr>
+                    <tr class="hover:bg-slate-50">
+                        <td class="border p-2.5 font-medium">9.3 บิดา มารดา เป็นพ่อบ้าน แม่บ้าน ไม่มีอาชีพ</td>
+                        <td class="border p-2 text-center text-pea-700 font-bold">✓</td>
+                        <td class="border p-2 text-center text-pea-700 font-bold">✓</td>
+                        <td class="border p-2 text-center text-pea-700 font-bold">✓</td>
+                        <td class="border p-2 text-center text-slate-400">-</td>
+                        <td class="border p-2 text-center text-slate-400">-</td>
+                        <td class="border p-2 text-center text-pea-700 font-bold">✓</td>
+                        <td class="border p-2.5 font-semibold text-amber-800 bg-amber-50">ให้ใช้สิทธิจากทางราชการก่อน</td>
+                    </tr>
+                    <tr class="hover:bg-slate-50">
+                        <td class="border p-2.5 font-medium">9.4 บิดา มารดา เป็นพ่อบ้าน แม่บ้าน ไม่มีอาชีพ</td>
+                        <td class="border p-2 text-center text-pea-700 font-bold">✓</td>
+                        <td class="border p-2 text-center text-pea-700 font-bold">✓</td>
+                        <td class="border p-2 text-center text-slate-400">-</td>
+                        <td class="border p-2 text-center text-pea-700 font-bold">✓</td>
+                        <td class="border p-2 text-center text-pea-700 font-bold">✓</td>
+                        <td class="border p-2 text-center text-slate-400">-</td>
+                        <td class="border p-2.5 font-semibold text-emerald-800 bg-emerald-50">ยังคงให้ใช้สิทธิจาก กฟภ. ได้</td>
+                    </tr>
+                    <tr class="hover:bg-slate-50">
+                        <td class="border p-2.5 font-medium">9.5 คู่สมรสเป็นพนักงาน กฟภ. ทั้งคู่ ขณะเดียวกันก็มีบุตรรับราชการ ต่อมาคู่สมรสคนใดคนหนึ่งพ้นสภาพการเป็นพนักงาน</td>
+                        <td class="border p-2 text-center text-pea-700 font-bold">✓</td>
+                        <td class="border p-2 text-center text-pea-700 font-bold">✓</td>
+                        <td class="border p-2 text-center text-slate-400">-</td>
+                        <td class="border p-2 text-center text-slate-400">-</td>
+                        <td class="border p-2 text-center text-slate-400">-</td>
+                        <td class="border p-2 text-center text-slate-400">-</td>
+                        <td class="border p-2.5 font-semibold text-emerald-800 bg-emerald-50">ใช้สิทธิเบิกจาก กฟภ. ได้ โดยให้คู่สมรสที่เป็นพนักงานเป็นผู้ใช้สิทธิ</td>
+                    </tr>
+                    <tr class="hover:bg-slate-50">
+                        <td class="border p-2.5 font-medium">9.6 ตามข้อ 9.5 หากภายหลังมีการนำค่ารักษาพยาบาลไปใช้สิทธิเบิกโดยบุตรจากทางราชการ</td>
+                        <td class="border p-2 text-center text-pea-700 font-bold">✓</td>
+                        <td class="border p-2 text-center text-pea-700 font-bold">✓</td>
+                        <td class="border p-2 text-center text-pea-700 font-bold">✓</td>
+                        <td class="border p-2 text-center text-slate-400">-</td>
+                        <td class="border p-2 text-center text-slate-400">-</td>
+                        <td class="border p-2 text-center text-slate-400">-</td>
+                        <td class="border p-2.5 font-semibold text-amber-800 bg-amber-50">ต่อไปให้ใช้สิทธิเบิกจากทางราชการก่อน</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Table 2: Clause 13 Child Entitlement Table -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-6 overflow-x-auto">
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-heading font-semibold bg-purple-100 text-pea-800">หน้า 6 - 7 (ข้อ 13)</span>
+            <h3 class="font-heading font-bold text-base sm:text-lg text-slate-800 mt-1 mb-3">
+                ตารางการใช้สิทธิเบิกค่ารักษาพยาบาลของบุตร (ข้อ 13)
+            </h3>
+            <table class="w-full text-xs sm:text-sm border-collapse">
+                <thead>
+                    <tr class="bg-slate-800 text-white font-heading">
+                        <th class="border border-slate-700 p-2.5 text-left">คู่สมรสฝ่ายที่ 1</th>
+                        <th class="border border-slate-700 p-2.5 text-left">คู่สมรสฝ่ายที่ 2</th>
+                        <th class="border border-slate-700 p-2.5 text-left">ผู้ขอใช้สิทธิเบิกค่ารักษาพยาบาลของบุตร</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200">
+                    <tr>
+                        <td class="border p-2.5 font-semibold text-pea-800">พนักงาน กฟภ.</td>
+                        <td class="border p-2.5">ข้าราชการ</td>
+                        <td class="border p-2.5 font-semibold text-emerald-700">พนักงาน กฟภ.</td>
+                    </tr>
+                    <tr>
+                        <td class="border p-2.5 font-semibold text-pea-800">พนักงาน กฟภ.</td>
+                        <td class="border p-2.5 font-semibold text-pea-800">พนักงาน กฟภ.</td>
+                        <td class="border p-2.5 font-semibold text-blue-700">พนักงานฝ่ายสามี</td>
+                    </tr>
+                    <tr>
+                        <td class="border p-2.5 font-semibold text-pea-800">พนักงาน กฟภ.</td>
+                        <td class="border p-2.5">รัฐวิสาหกิจอื่น</td>
+                        <td class="border p-2.5">คู่สมรสฝ่ายสามีใช้สิทธิก่อน หากสิทธิที่ได้รับจากฝ่ายสามีต่ำกว่า ให้ภรรยาเป็นผู้ใช้สิทธิเบิกจ่ายเพิ่มเติมเฉพาะส่วนที่ต่ำกว่าสิทธิที่พึงได้รับ</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Table 3: Clause 33.1 & 33.2 Hospital Discount Comparison -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-6 overflow-x-auto">
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-heading font-semibold bg-purple-100 text-pea-800">หน้า 22 (ข้อ 33.1 และ 33.2)</span>
+            <h3 class="font-heading font-bold text-base sm:text-lg text-slate-800 mt-1 mb-3">
+                เปรียบเทียบตัวอย่างการคำนวณค่ารักษาพยาบาลกรณี รพ. มีส่วนลด 10% (ข้อ 33.1 vs ข้อ 33.2)
+            </h3>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- 33.1 -->
+                <div>
+                    <h4 class="font-heading font-semibold text-sm text-pea-800 mb-2">
+                        33.1 กรณี รพ. มีส่วนลดให้ 10% โดยไม่กำหนดว่าเป็นส่วนลดรายการใดบ้าง (เฉลี่ยหัก 10% ทุกรายการ)
+                    </h4>
+                    <table class="w-full text-xs border-collapse">
+                        <thead>
+                            <tr class="bg-purple-900 text-white">
+                                <th class="border p-2 text-left">รายการ รพ.เอกชน</th>
+                                <th class="border p-2 text-right">ส่วนลด 10%</th>
+                                <th class="border p-2 text-right">หลังหักส่วนลด</th>
+                                <th class="border p-2 text-right">สิทธิเบิกจ่าย</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td class="border p-1.5">1. ค่าห้องวันละ 600 บ. x 15 วัน (9,000)</td><td class="border p-1.5 text-right">900.00</td><td class="border p-1.5 text-right">8,100.00</td><td class="border p-1.5 text-right font-semibold">8,100.00</td></tr>
+                            <tr><td class="border p-1.5">2. ค่าแพทย์ (12,000)</td><td class="border p-1.5 text-right">1,200.00</td><td class="border p-1.5 text-right">10,800.00</td><td class="border p-1.5 text-right font-semibold">5,400.00</td></tr>
+                            <tr><td class="border p-1.5">3. ค่าห้องผ่าตัด (8,000)</td><td class="border p-1.5 text-right">800.00</td><td class="border p-1.5 text-right">7,200.00</td><td class="border p-1.5 text-right font-semibold">3,600.00</td></tr>
+                            <tr><td class="border p-1.5">4. ค่ายา (17,500)</td><td class="border p-1.5 text-right">1,750.00</td><td class="border p-1.5 text-right">15,750.00</td><td class="border p-1.5 text-right font-semibold">7,875.00</td></tr>
+                            <tr><td class="border p-1.5">5. ค่าพยาบาล (7,000)</td><td class="border p-1.5 text-right">700.00</td><td class="border p-1.5 text-right">6,300.00</td><td class="border p-1.5 text-right font-semibold">3,150.00</td></tr>
+                            <tr><td class="border p-1.5">6. ค่าเอกซเรย์คอมพิวเตอร์ (7,800)</td><td class="border p-1.5 text-right">780.00</td><td class="border p-1.5 text-right">7,020.00</td><td class="border p-1.5 text-right font-semibold">3,510.00</td></tr>
+                            <tr><td class="border p-1.5">7. ค่าเครื่องมือแพทย์ (6,000)</td><td class="border p-1.5 text-right">600.00</td><td class="border p-1.5 text-right">5,400.00</td><td class="border p-1.5 text-right font-semibold">2,700.00</td></tr>
+                            <tr><td class="border p-1.5 text-slate-500">8. ค่าบริการอื่น ๆ (1,200) [เบิกไม่ได้]</td><td class="border p-1.5 text-right">120.00</td><td class="border p-1.5 text-right">1,080.00</td><td class="border p-1.5 text-right text-rose-600">0.00</td></tr>
+                            <tr class="bg-purple-50 font-bold"><td class="border p-1.5">รวม</td><td class="border p-1.5 text-right">6,850.00</td><td class="border p-1.5 text-right">61,650.00</td><td class="border p-1.5 text-right text-pea-800">34,335.00</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 33.2 -->
+                <div>
+                    <h4 class="font-heading font-semibold text-sm text-blue-800 mb-2">
+                        33.2 กรณี รพ. มีส่วนลดให้ 10% โดยกำหนดเฉพาะว่าเป็นส่วนลดรายการที่ 2 และ 5
+                    </h4>
+                    <table class="w-full text-xs border-collapse">
+                        <thead>
+                            <tr class="bg-blue-900 text-white">
+                                <th class="border p-2 text-left">รายการ รพ.เอกชน</th>
+                                <th class="border p-2 text-right">ส่วนลด 10%</th>
+                                <th class="border p-2 text-right">หลังหักส่วนลด</th>
+                                <th class="border p-2 text-right">สิทธิเบิกจ่าย</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td class="border p-1.5">1. ค่าห้องวันละ 600 บ. x 15 วัน (9,000)</td><td class="border p-1.5 text-right">0.00</td><td class="border p-1.5 text-right">9,000.00</td><td class="border p-1.5 text-right font-semibold">9,000.00</td></tr>
+                            <tr class="bg-amber-50/60"><td class="border p-1.5 font-medium">2. ค่าแพทย์ (12,000) [ลด 10%]</td><td class="border p-1.5 text-right">1,200.00</td><td class="border p-1.5 text-right">10,800.00</td><td class="border p-1.5 text-right font-semibold">5,400.00</td></tr>
+                            <tr><td class="border p-1.5">3. ค่าห้องผ่าตัด (8,000)</td><td class="border p-1.5 text-right">0.00</td><td class="border p-1.5 text-right">8,000.00</td><td class="border p-1.5 text-right font-semibold">4,000.00</td></tr>
+                            <tr><td class="border p-1.5">4. ค่ายา (17,500)</td><td class="border p-1.5 text-right">0.00</td><td class="border p-1.5 text-right">17,500.00</td><td class="border p-1.5 text-right font-semibold">8,750.00</td></tr>
+                            <tr class="bg-amber-50/60"><td class="border p-1.5 font-medium">5. ค่าพยาบาล (7,000) [ลด 10%]</td><td class="border p-1.5 text-right">700.00</td><td class="border p-1.5 text-right">6,300.00</td><td class="border p-1.5 text-right font-semibold">3,150.00</td></tr>
+                            <tr><td class="border p-1.5">6. ค่าเอกซเรย์คอมพิวเตอร์ (7,800)</td><td class="border p-1.5 text-right">0.00</td><td class="border p-1.5 text-right">7,800.00</td><td class="border p-1.5 text-right font-semibold">3,900.00</td></tr>
+                            <tr><td class="border p-1.5">7. ค่าเครื่องมือแพทย์ (6,000)</td><td class="border p-1.5 text-right">0.00</td><td class="border p-1.5 text-right">6,000.00</td><td class="border p-1.5 text-right font-semibold">3,000.00</td></tr>
+                            <tr><td class="border p-1.5 text-slate-500">8. ค่าบริการอื่น ๆ (1,200) [เบิกไม่ได้]</td><td class="border p-1.5 text-right">0.00</td><td class="border p-1.5 text-right">1,200.00</td><td class="border p-1.5 text-right text-rose-600">0.00</td></tr>
+                            <tr class="bg-blue-50 font-bold"><td class="border p-1.5">รวม</td><td class="border p-1.5 text-right">1,900.00 (ตามรายการ)</td><td class="border p-1.5 text-right">66,600.00</td><td class="border p-1.5 text-right text-blue-800">37,200.00</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

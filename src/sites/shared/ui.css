@@ -1,0 +1,200 @@
+:root {
+    color-scheme: light;
+    --page-bg: #f5f6fb;
+    --ink: #1e293b;
+    --surface-border: #e5e7ef;
+    --surface-shadow: 0 10px 30px rgba(30, 41, 59, 0.06);
+}
+
+body {
+    font-family: 'Sarabun', sans-serif;
+    background:
+        radial-gradient(ellipse at 10% 0%, rgba(116, 34, 132, 0.06), transparent 32rem),
+        var(--page-bg);
+    color: var(--ink);
+}
+h1, h2, h3, h4, .font-heading {
+    font-family: 'Prompt', sans-serif;
+}
+button, input, select, textarea {
+    font: inherit;
+}
+button {
+    -webkit-tap-highlight-color: transparent;
+}
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+    outline: 3px solid rgba(245, 158, 11, 0.7);
+    outline-offset: 2px;
+}
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+.highlight-mark {
+    background-color: #fef08a;
+    color: #854d0e;
+    padding: 0 3px;
+    border-radius: 3px;
+    font-weight: 600;
+}
+.clause-card {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.clause-card:hover {
+    border-color: #c084fc;
+}
+.app-header {
+    background: linear-gradient(112deg, #35103f 0%, #5b1968 52%, #742284 100%);
+    border-bottom-width: 3px;
+    box-shadow: 0 8px 28px rgba(44, 13, 54, 0.2);
+}
+.app-header-layout {
+    align-items: center;
+}
+.app-header-actions {
+    flex-wrap: wrap;
+    min-width: 0;
+}
+.app-header-actions > .relative {
+    min-width: 0;
+}
+.quick-summary {
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(12px);
+}
+.quick-summary [onclick] {
+    min-height: 58px;
+    box-shadow: 0 2px 6px rgba(30, 41, 59, 0.025);
+}
+.quick-summary [onclick]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(30, 41, 59, 0.08);
+}
+.app-main {
+    padding-top: 1.75rem;
+}
+.view-tabs {
+    background: rgba(226, 232, 240, 0.72);
+    border-color: #dce1ea;
+    box-shadow: inset 0 1px 2px rgba(30, 41, 59, 0.04);
+}
+.view-tabs button {
+    min-height: 42px;
+}
+.app-main .bg-white.rounded-2xl {
+    border-color: var(--surface-border);
+    box-shadow: var(--surface-shadow);
+}
+.app-main aside > div:first-child {
+    box-shadow: var(--surface-shadow);
+}
+.clause-card {
+    box-shadow: 0 3px 12px rgba(30, 41, 59, 0.035);
+}
+.clause-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 24px rgba(75, 21, 89, 0.09);
+}
+.app-main input:not([type="checkbox"]):not([type="radio"]),
+.app-main select,
+.app-main textarea {
+    min-height: 2.5rem;
+    border-color: #d7dce6;
+    background-color: #fff;
+    transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+.app-main input:focus,
+.app-main select:focus,
+.app-main textarea:focus {
+    border-color: #9333a2;
+    box-shadow: 0 0 0 3px rgba(147, 51, 162, 0.12);
+    outline: none;
+}
+.app-main table th {
+    letter-spacing: 0.01em;
+}
+.app-main table tbody tr {
+    transition: background-color 140ms ease;
+}
+#aiChatFab {
+    box-shadow: 0 8px 24px rgba(75, 21, 89, 0.28);
+}
+@media (min-width: 1024px) and (max-width: 1279px) {
+    .app-header-layout {
+        align-items: stretch;
+        flex-direction: column;
+    }
+    .app-header-actions {
+        width: 100%;
+    }
+}
+@media (max-width: 1023px) {
+    .app-header-actions > .relative {
+        flex: 1 1 100%;
+        width: 100%;
+    }
+    .app-header-actions > .relative input {
+        min-height: 48px;
+        font-size: 16px;
+    }
+    .app-header-actions > button {
+        flex: 1 1 auto;
+        justify-content: center;
+    }
+    .view-tabs {
+        width: 100%;
+    }
+    .view-tabs button {
+        flex: 1 1 220px;
+        justify-content: center;
+    }
+}
+@media (max-width: 640px) {
+    .app-main {
+        padding-top: 1.25rem;
+    }
+    .quick-summary [onclick] {
+        min-height: 54px;
+    }
+    .app-header-actions > button {
+        min-height: 42px;
+    }
+    .app-header-actions > button span {
+        white-space: normal;
+        text-align: left;
+    }
+    #manualControls {
+        flex-wrap: wrap;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+@media print {
+    .no-print {
+        display: none !important;
+    }
+}
+
+/* ---------- Google Sites embed ---------- */
+body.rw-embed {
+    margin: 0;
+}
+.clause-page-btn {
+    min-width: 2.25rem;
+}

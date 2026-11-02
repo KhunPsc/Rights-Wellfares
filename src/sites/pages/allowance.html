@@ -1,0 +1,323 @@
+<!-- @title อัตราเบี้ยเลี้ยง-ค่าเช่าที่พัก (TAX) -->
+<main class="app-main max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div id="viewAllowance" class="space-y-6">
+        <!-- Header Banner -->
+        <div class="bg-gradient-to-r from-indigo-900 via-pea-800 to-purple-800 rounded-2xl p-5 sm:p-6 text-white shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+                <span class="px-3 py-0.5 rounded-full text-xs font-heading font-semibold bg-amber-400 text-slate-900">อัตราปัจจุบัน</span>
+                <h2 class="text-xl sm:text-2xl font-heading font-bold mt-1.5">ตารางอัตราค่าเบี้ยเลี้ยง และค่าเช่าที่พัก (พร้อมหลักเกณฑ์การระบุ TAX)</h2>
+                <p class="text-xs sm:text-sm text-purple-200 mt-1">แยกจำนวนเงินได้ที่ไม่ถือเป็นประโยชน์เพิ่ม (ไม่ระบุ TAX) และจำนวนเงินได้ที่ถือเป็นประโยชน์เพิ่ม (ระบุ TAX ในช่องการกำหนด)</p>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+                <span class="px-3.5 py-2 rounded-xl bg-white/15 border border-white/20 text-xs font-heading">
+                    <i class="fa-solid fa-file-invoice-dollar text-amber-300 mr-1.5"></i>เกณฑ์ยกเว้นภาษีเบี้ยเลี้ยง 270 บ./วัน
+                </span>
+            </div>
+        </div>
+
+        <!-- Interactive Per Diem & Accommodation Calculator -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-6">
+            <div class="flex items-center gap-3 mb-4 pb-3 border-b border-slate-100">
+                <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-calculator"></i>
+                </div>
+                <div>
+                    <h3 class="font-heading font-bold text-base sm:text-lg text-slate-800">
+                        โปรแกรมคำนวณค่าเบี้ยเลี้ยง & ค่าเช่าที่พัก พร้อมแยกยอดระบุ TAX อัตโนมัติ
+                    </h3>
+                    <p class="text-xs text-slate-500">เลือกระดับพนักงาน จำนวนวันเบี้ยเลี้ยง และประเภทค่าที่พัก เพื่อดูยอดเงินที่ต้องบันทึกแยกบรรทัด TAX และไม่ระบุ TAX</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-5">
+                <div>
+                    <label class="block text-xs font-heading font-semibold text-slate-700 mb-1">ระดับพนักงาน</label>
+                    <select id="alwLevel" onchange="calculateAllowanceTax()" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm focus:border-pea-600 focus:outline-none">
+                        <option value="1-6">ระดับ 1 - 6</option>
+                        <option value="7-12" selected>ระดับ 7 - 12</option>
+                        <option value="13+">ระดับ 13 ขึ้นไป</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-heading font-semibold text-slate-700 mb-1">เบี้ยเลี้ยงเต็มวัน (จำนวนวัน)</label>
+                    <input type="number" id="alwFullDays" value="2" min="0" oninput="calculateAllowanceTax()" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-heading font-semibold text-slate-700 mb-1">เบี้ยเลี้ยง 2 ใน 3 (จำนวนครั้ง/วัน)</label>
+                    <input type="number" id="alwTwoThirdDays" value="1" min="0" oninput="calculateAllowanceTax()" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-heading font-semibold text-slate-700 mb-1">เบี้ยเลี้ยง 1 ใน 3 (จำนวนครั้ง/วัน)</label>
+                    <input type="number" id="alwOneThirdDays" value="0" min="0" oninput="calculateAllowanceTax()" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-heading font-semibold text-slate-700 mb-1">รูปแบบค่าเช่าที่พัก & จำนวนคืน</label>
+                    <div class="flex gap-1.5">
+                        <select id="alwHotelType" onchange="calculateAllowanceTax()" class="w-2/3 rounded-xl border border-slate-300 px-2 py-2 text-xs focus:border-pea-600 focus:outline-none">
+                            <option value="lump">เหมาจ่าย (ระบุ TAX)</option>
+                            <option value="actual">จ่ายตามจริง (ไม่ระบุ TAX)</option>
+                        </select>
+                        <input type="number" id="alwHotelNights" value="2" min="0" oninput="calculateAllowanceTax()" class="w-1/3 rounded-xl border border-slate-300 px-2 py-2 text-sm text-center" title="จำนวนคืน">
+                    </div>
+                </div>
+            </div>
+
+            <div id="alwCalcResult" class="rounded-2xl bg-slate-50 border border-slate-200 p-4 sm:p-5">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+
+        <!-- Official Table 1: ค่าเบี้ยเลี้ยง -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-6 space-y-6">
+            <div class="border-b border-slate-100 pb-3">
+                <h3 class="font-heading font-bold text-lg text-pea-900 flex items-center gap-2">
+                    <i class="fa-solid fa-utensils text-pea-600"></i>
+                    <span>ตารางที่ 1: ค่าเบี้ยเลี้ยง (การระบุ TAX)</span>
+                </h3>
+            </div>
+
+            <!-- 1.1 กรณี เบิกได้เต็มวัน -->
+            <div class="overflow-x-auto">
+                <h4 class="font-heading font-bold text-sm sm:text-base text-slate-800 mb-2.5 flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-pea-600"></span>
+                    <span>กรณี เบิกได้เต็มวัน</span>
+                </h4>
+                <table class="w-full text-xs sm:text-sm border-collapse">
+                    <thead>
+                        <tr class="bg-pea-800 text-white font-heading">
+                            <th class="border border-pea-700 p-3 text-center w-1/5" rowspan="2">ระดับ</th>
+                            <th class="border border-pea-700 p-3 text-center w-1/5" rowspan="2">อัตราเหมาจ่าย</th>
+                            <th class="border border-pea-700 p-2.5 text-center" colspan="2">การระบุ TAX</th>
+                        </tr>
+                        <tr class="bg-pea-700 text-white font-heading text-xs">
+                            <th class="border border-pea-600 p-2.5 text-center w-3/10 bg-emerald-800/90">
+                                จำนวนเงินได้ที่ไม่ถือเป็นประโยชน์เพิ่ม<br>
+                                <span class="font-normal text-emerald-100">ไม่นำมาคำนวณภาษีเงินได้หัก ณ ที่จ่าย</span>
+                            </th>
+                            <th class="border border-pea-600 p-2.5 text-center w-3/10 bg-rose-800/90">
+                                จำนวนเงินได้ที่ถือเป็นประโยชน์เพิ่ม<br>
+                                <span class="font-normal text-rose-100">นำมาคำนวณภาษีเงินได้หัก ณ ที่จ่าย</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-200 text-center">
+                        <tr class="hover:bg-slate-50">
+                            <td class="border p-3 font-heading font-semibold text-slate-800">ระดับ 13 ขึ้นไป</td>
+                            <td class="border p-3 font-bold text-pea-800">วันละ 460.00 บาท</td>
+                            <td class="border p-3 bg-emerald-50/50">
+                                <div class="font-bold text-emerald-800">270.00 บาท</div>
+                                <div class="text-xs text-slate-600">(ไม่ระบุ TAX ในช่องการกำหนด)</div>
+                            </td>
+                            <td class="border p-3 bg-rose-50/50">
+                                <div class="font-bold text-rose-700">190.00 บาท</div>
+                                <div class="text-xs text-slate-600">(ระบุ TAX ในช่องการกำหนด)</div>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-slate-50">
+                            <td class="border p-3 font-heading font-semibold text-slate-800">ระดับ 7 - 12</td>
+                            <td class="border p-3 font-bold text-pea-800">วันละ 370.00 บาท</td>
+                            <td class="border p-3 bg-emerald-50/50">
+                                <div class="font-bold text-emerald-800">270.00 บาท</div>
+                                <div class="text-xs text-slate-600">(ไม่ระบุ TAX ในช่องการกำหนด)</div>
+                            </td>
+                            <td class="border p-3 bg-rose-50/50">
+                                <div class="font-bold text-rose-700">100.00 บาท</div>
+                                <div class="text-xs text-slate-600">(ระบุ TAX ในช่องการกำหนด)</div>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-slate-50">
+                            <td class="border p-3 font-heading font-semibold text-slate-800">ระดับ 1 - 6</td>
+                            <td class="border p-3 font-bold text-pea-800">วันละ 300.00 บาท</td>
+                            <td class="border p-3 bg-emerald-50/50">
+                                <div class="font-bold text-emerald-800">270.00 บาท</div>
+                                <div class="text-xs text-slate-600">(ไม่ระบุ TAX ในช่องการกำหนด)</div>
+                            </td>
+                            <td class="border p-3 bg-rose-50/50">
+                                <div class="font-bold text-rose-700">30.00 บาท</div>
+                                <div class="text-xs text-slate-600">(ระบุ TAX ในช่องการกำหนด)</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 1.2 กรณี เบิกได้ 2 ใน 3 -->
+            <div class="overflow-x-auto">
+                <h4 class="font-heading font-bold text-sm sm:text-base text-slate-800 mb-2.5 flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
+                    <span>กรณี เบิกได้ 2 ใน 3</span>
+                </h4>
+                <table class="w-full text-xs sm:text-sm border-collapse">
+                    <thead>
+                        <tr class="bg-slate-800 text-white font-heading">
+                            <th class="border border-slate-700 p-3 text-center w-1/5" rowspan="2">ระดับ</th>
+                            <th class="border border-slate-700 p-3 text-center w-1/5" rowspan="2">อัตราเหมาจ่าย</th>
+                            <th class="border border-slate-700 p-2.5 text-center" colspan="2">การระบุ TAX</th>
+                        </tr>
+                        <tr class="bg-slate-700 text-white font-heading text-xs">
+                            <th class="border border-slate-600 p-2.5 text-center w-3/10 bg-emerald-800/90">
+                                จำนวนเงินได้ที่ไม่ถือเป็นประโยชน์เพิ่ม<br>
+                                <span class="font-normal text-emerald-100">ไม่นำมาคำนวณภาษีเงินได้หัก ณ ที่จ่าย</span>
+                            </th>
+                            <th class="border border-slate-600 p-2.5 text-center w-3/10 bg-rose-800/90">
+                                จำนวนเงินได้ที่ถือเป็นประโยชน์เพิ่ม<br>
+                                <span class="font-normal text-rose-100">นำมาคำนวณภาษีเงินได้หัก ณ ที่จ่าย</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-200 text-center">
+                        <tr class="hover:bg-slate-50">
+                            <td class="border p-3 font-heading font-semibold text-slate-800">ระดับ 13 ขึ้นไป</td>
+                            <td class="border p-3 font-bold text-blue-800">วันละ 306.67 บาท</td>
+                            <td class="border p-3 bg-emerald-50/50">
+                                <div class="font-bold text-emerald-800">270.00 บาท</div>
+                                <div class="text-xs text-slate-600">(ไม่ระบุ TAX ในช่องการกำหนด)</div>
+                            </td>
+                            <td class="border p-3 bg-rose-50/50">
+                                <div class="font-bold text-rose-700">36.67 บาท</div>
+                                <div class="text-xs text-slate-600">(ระบุ TAX ในช่องการกำหนด)</div>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-slate-50">
+                            <td class="border p-3 font-heading font-semibold text-slate-800">ระดับ 7 - 12</td>
+                            <td class="border p-3 font-bold text-blue-800">วันละ 246.67 บาท</td>
+                            <td class="border p-3 bg-emerald-50/50">
+                                <div class="font-bold text-emerald-800">246.67 บาท</div>
+                                <div class="text-xs text-slate-600">(ไม่ระบุ TAX ในช่องการกำหนด)</div>
+                            </td>
+                            <td class="border p-3 text-slate-400 font-bold">-</td>
+                        </tr>
+                        <tr class="hover:bg-slate-50">
+                            <td class="border p-3 font-heading font-semibold text-slate-800">ระดับ 1 - 6</td>
+                            <td class="border p-3 font-bold text-blue-800">วันละ 200.00 บาท</td>
+                            <td class="border p-3 bg-emerald-50/50">
+                                <div class="font-bold text-emerald-800">200.00 บาท</div>
+                                <div class="text-xs text-slate-600">(ไม่ระบุ TAX ในช่องการกำหนด)</div>
+                            </td>
+                            <td class="border p-3 text-slate-400 font-bold">-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 1.3 กรณี เบิกได้ 1 ใน 3 -->
+            <div class="overflow-x-auto">
+                <h4 class="font-heading font-bold text-sm sm:text-base text-slate-800 mb-2.5 flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                    <span>กรณี เบิกได้ 1 ใน 3</span>
+                </h4>
+                <table class="w-full text-xs sm:text-sm border-collapse">
+                    <thead>
+                        <tr class="bg-slate-800 text-white font-heading">
+                            <th class="border border-slate-700 p-3 text-center w-1/5" rowspan="2">ระดับ</th>
+                            <th class="border border-slate-700 p-3 text-center w-1/5" rowspan="2">อัตราเหมาจ่าย</th>
+                            <th class="border border-slate-700 p-2.5 text-center" colspan="2">การระบุ TAX</th>
+                        </tr>
+                        <tr class="bg-slate-700 text-white font-heading text-xs">
+                            <th class="border border-slate-600 p-2.5 text-center w-3/10 bg-emerald-800/90">
+                                จำนวนเงินได้ที่ไม่ถือเป็นประโยชน์เพิ่ม<br>
+                                <span class="font-normal text-emerald-100">ไม่นำมาคำนวณภาษีเงินได้หัก ณ ที่จ่าย</span>
+                            </th>
+                            <th class="border border-slate-600 p-2.5 text-center w-3/10 bg-rose-800/90">
+                                จำนวนเงินได้ที่ถือเป็นประโยชน์เพิ่ม<br>
+                                <span class="font-normal text-rose-100">นำมาคำนวณภาษีเงินได้หัก ณ ที่จ่าย</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-200 text-center">
+                        <tr class="hover:bg-slate-50">
+                            <td class="border p-3 font-heading font-semibold text-slate-800">ระดับ 13 ขึ้นไป</td>
+                            <td class="border p-3 font-bold text-amber-800">วันละ 153.33 บาท</td>
+                            <td class="border p-3 bg-emerald-50/50">
+                                <div class="font-bold text-emerald-800">153.33 บาท</div>
+                                <div class="text-xs text-slate-600">(ไม่ระบุ TAX ในช่องการกำหนด)</div>
+                            </td>
+                            <td class="border p-3 text-slate-400 font-bold">-</td>
+                        </tr>
+                        <tr class="hover:bg-slate-50">
+                            <td class="border p-3 font-heading font-semibold text-slate-800">ระดับ 7 - 12</td>
+                            <td class="border p-3 font-bold text-amber-800">วันละ 123.33 บาท</td>
+                            <td class="border p-3 bg-emerald-50/50">
+                                <div class="font-bold text-emerald-800">123.33 บาท</div>
+                                <div class="text-xs text-slate-600">(ไม่ระบุ TAX ในช่องการกำหนด)</div>
+                            </td>
+                            <td class="border p-3 text-slate-400 font-bold">-</td>
+                        </tr>
+                        <tr class="hover:bg-slate-50">
+                            <td class="border p-3 font-heading font-semibold text-slate-800">ระดับ 1 - 6</td>
+                            <td class="border p-3 font-bold text-amber-800">วันละ 100.00 บาท</td>
+                            <td class="border p-3 bg-emerald-50/50">
+                                <div class="font-bold text-emerald-800">100.00 บาท</div>
+                                <div class="text-xs text-slate-600">(ไม่ระบุ TAX ในช่องการกำหนด)</div>
+                            </td>
+                            <td class="border p-3 text-slate-400 font-bold">-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Official Table 2: ค่าเช่าที่พัก -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-6">
+            <div class="border-b border-slate-100 pb-3 mb-4">
+                <h3 class="font-heading font-bold text-lg text-pea-900 flex items-center gap-2">
+                    <i class="fa-solid fa-hotel text-pea-600"></i>
+                    <span>ตารางที่ 2: ค่าเช่าที่พัก (การระบุ TAX)</span>
+                </h3>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-xs sm:text-sm border-collapse">
+                    <thead>
+                        <tr class="bg-pea-800 text-white font-heading">
+                            <th class="border border-pea-700 p-3 text-center w-1/4" rowspan="2">ระดับ</th>
+                            <th class="border border-pea-700 p-2.5 text-center" colspan="2">การระบุ TAX</th>
+                        </tr>
+                        <tr class="bg-pea-700 text-white font-heading text-xs">
+                            <th class="border border-pea-600 p-3 text-center w-3/8 bg-rose-800/90">
+                                อัตราเหมาจ่าย<br>
+                                <span class="font-normal text-rose-100">ที่ถือเป็นประโยชน์เพิ่มทั้งจำนวน<br>นำมาคำนวณภาษีเงินได้หัก ณ ที่จ่าย</span>
+                            </th>
+                            <th class="border border-pea-600 p-3 text-center w-3/8 bg-emerald-800/90">
+                                จ่ายตามจริง<br>
+                                <span class="font-normal text-emerald-100">ที่ไม่ถือเป็นประโยชน์เพิ่มทั้งจำนวน<br>ไม่นำมาคำนวณภาษีเงินได้หัก ณ ที่จ่าย</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-200 text-center">
+                        <tr class="hover:bg-slate-50">
+                            <td class="border p-3.5 font-heading font-semibold text-slate-800">ระดับ 13 ขึ้นไป</td>
+                            <td class="border p-3.5 text-slate-400 font-bold">-</td>
+                            <td class="border p-3.5 bg-emerald-50/50">
+                                <div class="font-bold text-emerald-800">เท่าที่จ่ายจริง</div>
+                                <div class="text-xs text-slate-600">(ไม่ระบุ TAX ในช่องการกำหนดทั้งจำนวน)</div>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-slate-50">
+                            <td class="border p-3.5 font-heading font-semibold text-slate-800">ระดับ 7 - 12</td>
+                            <td class="border p-3.5 bg-rose-50/50">
+                                <div class="font-bold text-rose-700">1,000.00 บาท</div>
+                                <div class="text-xs text-slate-600">(ระบุ TAX ในช่องการกำหนดทั้งจำนวน)</div>
+                            </td>
+                            <td class="border p-3.5 bg-emerald-50/50">
+                                <div class="font-bold text-emerald-800">ไม่เกิน 1,350.00 บาท</div>
+                                <div class="text-xs text-slate-600">(ไม่ระบุ TAX ในช่องการกำหนดทั้งจำนวน)</div>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-slate-50">
+                            <td class="border p-3.5 font-heading font-semibold text-slate-800">ระดับ 1 - 6</td>
+                            <td class="border p-3.5 bg-rose-50/50">
+                                <div class="font-bold text-rose-700">650.00 บาท</div>
+                                <div class="text-xs text-slate-600">(ระบุ TAX ในช่องการกำหนดทั้งจำนวน)</div>
+                            </td>
+                            <td class="border p-3.5 bg-emerald-50/50">
+                                <div class="font-bold text-emerald-800">ไม่เกิน 1,000.00 บาท</div>
+                                <div class="text-xs text-slate-600">(ไม่ระบุ TAX ในช่องการกำหนดทั้งจำนวน)</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>

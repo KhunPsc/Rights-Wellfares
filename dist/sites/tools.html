@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เครื่องมือจำลองคำนวณ & วินิจฉัยสิทธิ</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Google Fonts: Sarabun & Prompt -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<!-- Font Awesome Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                fontFamily: {
+                    sans: ['Sarabun', 'sans-serif'],
+                    heading: ['Prompt', 'sans-serif'],
+                },
+                colors: {
+                    pea: {
+                        50: '#faf5ff',
+                        100: '#f3e8ff',
+                        200: '#e9d5ff',
+                        300: '#d8b4fe',
+                        400: '#c084fc',
+                        500: '#a855f7',
+                        600: '#9333ea',
+                        700: '#742284',
+                        800: '#5b1968',
+                        900: '#3f1049',
+                        gold: '#f59e0b',
+                        goldLight: '#fef3c7'
+                    }
+                }
+            }
+        }
+    }
+</script>
+<style>
+:root {
+    color-scheme: light;
+    --page-bg: #f5f6fb;
+    --ink: #1e293b;
+    --surface-border: #e5e7ef;
+    --surface-shadow: 0 10px 30px rgba(30, 41, 59, 0.06);
+}
+
+body {
+    font-family: 'Sarabun', sans-serif;
+    background:
+        radial-gradient(ellipse at 10% 0%, rgba(116, 34, 132, 0.06), transparent 32rem),
+        var(--page-bg);
+    color: var(--ink);
+}
+h1, h2, h3, h4, .font-heading {
+    font-family: 'Prompt', sans-serif;
+}
+button, input, select, textarea {
+    font: inherit;
+}
+button {
+    -webkit-tap-highlight-color: transparent;
+}
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+    outline: 3px solid rgba(245, 158, 11, 0.7);
+    outline-offset: 2px;
+}
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+.highlight-mark {
+    background-color: #fef08a;
+    color: #854d0e;
+    padding: 0 3px;
+    border-radius: 3px;
+    font-weight: 600;
+}
+.clause-card {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.clause-card:hover {
+    border-color: #c084fc;
+}
+.app-header {
+    background: linear-gradient(112deg, #35103f 0%, #5b1968 52%, #742284 100%);
+    border-bottom-width: 3px;
+    box-shadow: 0 8px 28px rgba(44, 13, 54, 0.2);
+}
+.app-header-layout {
+    align-items: center;
+}
+.app-header-actions {
+    flex-wrap: wrap;
+    min-width: 0;
+}
+.app-header-actions > .relative {
+    min-width: 0;
+}
+.quick-summary {
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(12px);
+}
+.quick-summary [onclick] {
+    min-height: 58px;
+    box-shadow: 0 2px 6px rgba(30, 41, 59, 0.025);
+}
+.quick-summary [onclick]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(30, 41, 59, 0.08);
+}
+.app-main {
+    padding-top: 1.75rem;
+}
+.view-tabs {
+    background: rgba(226, 232, 240, 0.72);
+    border-color: #dce1ea;
+    box-shadow: inset 0 1px 2px rgba(30, 41, 59, 0.04);
+}
+.view-tabs button {
+    min-height: 42px;
+}
+.app-main .bg-white.rounded-2xl {
+    border-color: var(--surface-border);
+    box-shadow: var(--surface-shadow);
+}
+.app-main aside > div:first-child {
+    box-shadow: var(--surface-shadow);
+}
+.clause-card {
+    box-shadow: 0 3px 12px rgba(30, 41, 59, 0.035);
+}
+.clause-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 24px rgba(75, 21, 89, 0.09);
+}
+.app-main input:not([type="checkbox"]):not([type="radio"]),
+.app-main select,
+.app-main textarea {
+    min-height: 2.5rem;
+    border-color: #d7dce6;
+    background-color: #fff;
+    transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+.app-main input:focus,
+.app-main select:focus,
+.app-main textarea:focus {
+    border-color: #9333a2;
+    box-shadow: 0 0 0 3px rgba(147, 51, 162, 0.12);
+    outline: none;
+}
+.app-main table th {
+    letter-spacing: 0.01em;
+}
+.app-main table tbody tr {
+    transition: background-color 140ms ease;
+}
+#aiChatFab {
+    box-shadow: 0 8px 24px rgba(75, 21, 89, 0.28);
+}
+@media (min-width: 1024px) and (max-width: 1279px) {
+    .app-header-layout {
+        align-items: stretch;
+        flex-direction: column;
+    }
+    .app-header-actions {
+        width: 100%;
+    }
+}
+@media (max-width: 1023px) {
+    .app-header-actions > .relative {
+        flex: 1 1 100%;
+        width: 100%;
+    }
+    .app-header-actions > .relative input {
+        min-height: 48px;
+        font-size: 16px;
+    }
+    .app-header-actions > button {
+        flex: 1 1 auto;
+        justify-content: center;
+    }
+    .view-tabs {
+        width: 100%;
+    }
+    .view-tabs button {
+        flex: 1 1 220px;
+        justify-content: center;
+    }
+}
+@media (max-width: 640px) {
+    .app-main {
+        padding-top: 1.25rem;
+    }
+    .quick-summary [onclick] {
+        min-height: 54px;
+    }
+    .app-header-actions > button {
+        min-height: 42px;
+    }
+    .app-header-actions > button span {
+        white-space: normal;
+        text-align: left;
+    }
+    #manualControls {
+        flex-wrap: wrap;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+@media print {
+    .no-print {
+        display: none !important;
+    }
+}
+
+/* ---------- Google Sites embed ---------- */
+body.rw-embed {
+    margin: 0;
+}
+.clause-page-btn {
+    min-width: 2.25rem;
+}
+</style>
+<script>
+window.RW_CONFIG = {"apiUrl":"https://script.google.com/macros/s/AKfycbxuj4rSSQDzlcSCVv6QmT_vLcud5P2csRg55FcW4Wa920p4u3KCz-HPtO9gFvVVjwr3/exec","linkTarget":"_blank","pages":{"home":"https://sites.google.com/view/n1khunphonwasright/home","manual":"https://sites.google.com/view/n1khunphonwasright/manual","tables":"https://sites.google.com/view/n1khunphonwasright/allowance/table","tools":"https://sites.google.com/view/n1khunphonwasright/manual/manual","allowance":"https://sites.google.com/view/n1khunphonwasright/allowance/allowance","chat":"https://sites.google.com/view/n1khunphonwasright/chat","forms":"https://sites.google.com/view/n1khunphonwasright/forms"},"page":"tools"};
+</script>
+<script>
+// ============================================================================
+// core.js — ใช้ร่วมกันทุกหน้า (inline เข้า embed ตอน build)
+//   RW.loadData(cb)   ดึงข้อมูลจาก Apps Script + cache ใน localStorage (stale-while-revalidate)
+//   RW.post(body)     POST ไป Apps Script (text/plain เพื่อเลี่ยง CORS preflight)
+//   RW.go(page)       ไปหน้าอื่นใน Google Sites ตาม config.pages
+//   jumpToClause(n)   เปิดข้อคู่มือใน popup (หน้า manual override เป็นเลื่อนไปที่การ์ด)
+//   switchMainView(v) = RW.go(v) — เนื้อหาในข้อคู่มือยังเรียกชื่อนี้อยู่
+// ============================================================================
+const RW = (() => {
+    const cfg = window.RW_CONFIG || {};
+    const CACHE_KEY = 'rw_bootstrap_v1';
+    let data = null;
+    let loading = null;
+
+    const storage = {
+        get() {
+            try { return JSON.parse(localStorage.getItem(CACHE_KEY)); } catch (e) { return null; }
+        },
+        set(value) {
+            try { localStorage.setItem(CACHE_KEY, JSON.stringify(value)); } catch (e) { /* storage ถูกบล็อก — ไม่เป็นไร */ }
+        }
+    };
+
+    async function getJson(params, retries = 1) {
+        const url = cfg.apiUrl + '?' + new URLSearchParams(params).toString();
+        try {
+            const res = await fetch(url, { method: 'GET', redirect: 'follow' });
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            const json = await res.json();
+            if (!json.ok) throw new Error(json.error || json.message || 'ข้อผิดพลาดจากเซิร์ฟเวอร์');
+            return json;
+        } catch (err) {
+            // Apps Script ตื่นช้า (cold start) — ลองใหม่อีกครั้ง
+            if (retries > 0) {
+                await new Promise(r => setTimeout(r, 1200));
+                return getJson(params, retries - 1);
+            }
+            throw err;
+        }
+    }
+
+    async function post(body) {
+        const res = await fetch(cfg.apiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(body)
+        });
+        const json = await res.json();
+        if (!json.ok && json.status !== 'ok') throw new Error(json.error || json.message || 'ข้อผิดพลาดจากเซิร์ฟเวอร์');
+        return json;
+    }
+
+    async function fetchBootstrap() {
+        const b = await getJson({ action: 'bootstrap' });
+        storage.set({ version: b.version, data: b.data });
+        data = b.data;
+        return data;
+    }
+
+    // เรียก onData(data) ทันทีถ้ามี cache แล้วเช็กเวอร์ชันเบื้องหลัง ถ้าใหม่กว่าจะเรียก onData อีกรอบ
+    async function loadData(onData) {
+        const cached = storage.get();
+        if (cached && cached.data) {
+            data = cached.data;
+            onData(data, { fromCache: true });
+            try {
+                const v = await getJson({ action: 'version' });
+                if (v.version !== cached.version) onData(await fetchBootstrap(), { fromCache: false });
+            } catch (err) {
+                console.warn('[RW] version check failed', err);
+            }
+            return data;
+        }
+        onData(await fetchBootstrap(), { fromCache: false });
+        return data;
+    }
+
+    // ใช้ข้อมูลแบบไม่ต้อง render ซ้ำ (เช่น popup ข้อคู่มือ)
+    function ensureData() {
+        if (data) return Promise.resolve(data);
+        if (!loading) {
+            const cached = storage.get();
+            loading = cached && cached.data ? Promise.resolve((data = cached.data)) : fetchBootstrap();
+            loading.catch(() => { loading = null; });
+        }
+        return loading;
+    }
+
+    function pageUrl(name) {
+        return (cfg.pages && cfg.pages[name]) || '';
+    }
+
+    function go(name, params) {
+        let url = pageUrl(name);
+        if (!url) {
+            console.warn('[RW] No URL configured for page:', name);
+            alert('ยังไม่ได้ตั้งค่าลิงก์ของหน้านี้ (src/sites/config.json → pages.' + name + ')\nกรุณาใช้เมนูของเว็บไซต์ด้านบน');
+            return;
+        }
+
+        if (params && params.cat) {
+            try { localStorage.setItem('rw_selected_cat', params.cat); } catch (e) {}
+            url += (url.includes('?') ? '&' : '?') + 'cat=' + encodeURIComponent(params.cat);
+        }
+        if (params && params.clause) {
+            try { localStorage.setItem('rw_selected_clause', String(params.clause)); } catch (e) {}
+            url += (url.includes('?') ? '&' : '?') + 'clause=' + encodeURIComponent(params.clause);
+        }
+
+        try {
+            const a = document.createElement('a');
+            a.href = url;
+            a.target = cfg.linkTarget || '_blank';
+            a.rel = 'noopener';
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => a.remove(), 100);
+        } catch (err) {
+            window.open(url, cfg.linkTarget || '_blank', 'noopener');
+        }
+    }
+
+    function back() {
+        if (window.history && window.history.length > 1) {
+            window.history.back();
+        } else {
+            go('home');
+        }
+    }
+
+    function escapeHtml(s) {
+        return String(s == null ? '' : s)
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    const fmt = (n) => Number(n).toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    function errorBox(message, retryFnName) {
+        return `
+            <div class="bg-white rounded-2xl border border-rose-200 p-8 text-center">
+                <i class="fa-solid fa-triangle-exclamation text-3xl text-rose-400 mb-2"></i>
+                <h3 class="font-heading font-bold text-slate-700">โหลดข้อมูลจากเซิร์ฟเวอร์ไม่สำเร็จ</h3>
+                <p class="text-xs text-slate-500 mt-1">${escapeHtml(message)}</p>
+                ${retryFnName ? `<button onclick="${retryFnName}()" class="mt-4 px-4 py-2 rounded-xl bg-pea-700 text-white text-xs font-heading font-semibold"><i class="fa-solid fa-rotate-right mr-1"></i>ลองใหม่</button>` : ''}
+            </div>`;
+    }
+
+    function loadingBox(text) {
+        return `
+            <div class="bg-white rounded-2xl border border-slate-200 p-8 text-center text-sm text-slate-500">
+                <i class="fa-solid fa-circle-notch fa-spin text-pea-600 mr-1.5"></i>${escapeHtml(text || 'กำลังโหลดข้อมูล...')}
+            </div>`;
+    }
+
+    // ---------- popup แสดงข้อคู่มือ ----------
+    function ensureModal() {
+        let modal = document.getElementById('rwClauseModal');
+        if (modal) return modal;
+        modal = document.createElement('div');
+        modal.id = 'rwClauseModal';
+        modal.className = 'fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-start sm:items-center justify-center p-3 sm:p-6';
+        modal.innerHTML = `
+            <div class="bg-white rounded-3xl shadow-2xl border border-slate-200 w-full max-w-3xl max-h-[92vh] flex flex-col overflow-hidden">
+                <div class="bg-gradient-to-r from-pea-900 to-pea-700 text-white px-5 py-3.5 flex items-start justify-between gap-3 border-b-2 border-amber-400 shrink-0">
+                    <div id="rwClauseModalHead" class="min-w-0"></div>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <a id="rwClauseModalGoBtn" target="_blank" rel="noopener" class="hidden px-2.5 py-1 rounded-lg bg-white/20 hover:bg-white/30 text-white text-xs font-heading font-medium transition flex items-center gap-1.5 no-underline" title="เปิดดูในหน้าคู่มือฉบับเต็ม">
+                            <i class="fa-solid fa-up-right-from-square text-[10px]"></i>
+                            <span class="hidden sm:inline">เปิดในหน้าคู่มือ</span>
+                        </a>
+                        <button onclick="RW.closeClause()" class="w-8 h-8 rounded-lg hover:bg-white/15 text-purple-200 hover:text-white flex items-center justify-center shrink-0" title="ปิด">
+                            <i class="fa-solid fa-xmark text-lg"></i>
+                        </button>
+                    </div>
+                </div>
+                <div id="rwClauseModalBody" class="p-5 overflow-y-auto"></div>
+            </div>`;
+        modal.addEventListener('click', (e) => { if (e.target === modal) closeClause(); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeClause(); });
+        document.body.appendChild(modal);
+        return modal;
+    }
+
+    async function openClause(num) {
+        const modal = ensureModal();
+        const head = document.getElementById('rwClauseModalHead');
+        const body = document.getElementById('rwClauseModalBody');
+        head.innerHTML = `<div class="font-heading font-bold">ข้อ ${Number(num)}</div>`;
+        body.innerHTML = loadingBox();
+        modal.classList.remove('hidden');
+        try {
+            const d = await ensureData();
+            const c = d.clauses.find(x => x.num === Number(num));
+            if (!c) {
+                body.innerHTML = `<p class="text-sm text-slate-600">ไม่พบข้อ ${Number(num)}</p>`;
+                return;
+            }
+            head.innerHTML = `
+                <div class="text-[11px] text-amber-200 font-heading">ข้อ ${c.num} · ${escapeHtml(c.page)}</div>
+                <div class="font-heading font-bold text-sm sm:text-base">${escapeHtml(c.title)}</div>`;
+            body.innerHTML = c.content;
+
+            const goBtn = document.getElementById('rwClauseModalGoBtn');
+            if (goBtn) {
+                if (cfg.page === 'manual') {
+                    goBtn.classList.add('hidden');
+                } else {
+                    goBtn.classList.remove('hidden');
+                    const manualUrl = pageUrl('manual') || 'https://sites.google.com/view/n1khunphonwasright/manual';
+                    goBtn.href = manualUrl + '?clause=' + encodeURIComponent(c.num);
+                    goBtn.onclick = () => {
+                        try { localStorage.setItem('rw_selected_clause', String(c.num)); } catch (e) {}
+                    };
+                }
+            }
+        } catch (err) {
+            body.innerHTML = errorBox(err.message);
+        }
+    }
+
+    function closeClause() {
+        const modal = document.getElementById('rwClauseModal');
+        if (modal) modal.classList.add('hidden');
+    }
+
+    // ---------- Floating AI Chatbot Widget Logic ----------
+    let floatingChatHistory = [];
+
+    function toggleChat(forceOpen) {
+        const panel = document.getElementById('rwChatPanel');
+        const fab = document.getElementById('rwChatFab');
+        if (!panel || !fab) return;
+        const isHidden = panel.classList.contains('hidden');
+        const shouldOpen = typeof forceOpen === 'boolean' ? forceOpen : isHidden;
+        if (shouldOpen) {
+            panel.classList.remove('hidden');
+            fab.classList.add('hidden');
+            setTimeout(() => document.getElementById('rwFloatingChatInput')?.focus(), 100);
+        } else {
+            panel.classList.add('hidden');
+            fab.classList.remove('hidden');
+        }
+    }
+
+    function clearChat() {
+        floatingChatHistory = [];
+        const box = document.getElementById('rwFloatingChatMessages');
+        if (box) {
+            box.innerHTML = `
+                <div class="flex items-start gap-2.5">
+                    <div class="w-7 h-7 rounded-lg bg-pea-700 text-amber-300 flex items-center justify-center text-xs shrink-0 mt-0.5">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <div class="bg-white border border-slate-200 rounded-2xl rounded-tl-sm p-3 text-slate-700 shadow-sm text-xs">
+                        ล้างประวัติการสนทนาแล้วครับ พิมพ์คำถามใหม่เกี่ยวกับระเบียบค่ารักษาพยาบาล หรืออัตราเบี้ยเลี้ยง-ที่พักได้เลยครับ
+                    </div>
+                </div>`;
+        }
+    }
+
+    function askQuestion(qText) {
+        toggleChat(true);
+        const input = document.getElementById('rwFloatingChatInput');
+        if (input) {
+            input.value = qText;
+            handleChatSubmit(new Event('submit'));
+        }
+    }
+
+    function formatChatText(text) {
+        let safe = escapeHtml(text);
+        safe = safe.replace(/\*\*([^*]+)\*\*/g, '<strong class="text-pea-900 font-semibold">$1</strong>');
+        safe = safe.replace(/ข้อ\s*(\d{1,2})(?:\.\d+)*/g, (match, numStr) => {
+            const n = parseInt(numStr, 10);
+            if (n >= 1 && n <= 44) {
+                return `<button type="button" onclick="RW.openClause(${n})" class="inline-flex items-center px-1.5 py-0.5 rounded bg-purple-100 hover:bg-pea-700 text-pea-800 hover:text-white font-heading font-semibold text-[11px] transition mx-0.5" title="คลิกเปิดดูข้อ ${n}">${match}</button>`;
+            }
+            return match;
+        });
+        return safe.replace(/\n/g, '<br>');
+    }
+
+    async function handleChatSubmit(e) {
+        if (e && e.preventDefault) e.preventDefault();
+        const input = document.getElementById('rwFloatingChatInput');
+        const sendBtn = document.getElementById('rwFloatingChatSendBtn');
+        const msgBox = document.getElementById('rwFloatingChatMessages');
+        if (!input || !sendBtn || !msgBox) return;
+
+        const userText = input.value.trim();
+        if (!userText) return;
+
+        input.value = '';
+        input.disabled = true;
+        sendBtn.disabled = true;
+
+        const userBubble = document.createElement('div');
+        userBubble.className = 'flex justify-end';
+        userBubble.innerHTML = `
+            <div class="max-w-[85%] bg-pea-700 text-white rounded-2xl rounded-tr-sm px-3.5 py-2 text-xs shadow-sm leading-relaxed">
+                ${escapeHtml(userText)}
+            </div>`;
+        msgBox.appendChild(userBubble);
+
+        const loadingBubble = document.createElement('div');
+        loadingBubble.className = 'flex items-start gap-2.5';
+        loadingBubble.innerHTML = `
+            <div class="w-7 h-7 rounded-lg bg-pea-700 text-amber-300 flex items-center justify-center text-xs shrink-0 mt-0.5">
+                <i class="fa-solid fa-robot"></i>
+            </div>
+            <div class="bg-white border border-slate-200 rounded-2xl rounded-tl-sm px-3.5 py-2.5 text-xs text-slate-500 shadow-sm flex items-center gap-2">
+                <i class="fa-solid fa-circle-notch fa-spin text-pea-600"></i>
+                <span>กำลังค้นหาคำตอบ...</span>
+            </div>`;
+        msgBox.appendChild(loadingBubble);
+        msgBox.scrollTop = msgBox.scrollHeight;
+
+        try {
+            const res = await post({
+                action: 'chat',
+                question: userText,
+                history: floatingChatHistory.slice(-6)
+            });
+
+            const answerText = res.answer || 'ไม่ได้รับข้อความตอบกลับ';
+            floatingChatHistory.push({ role: 'user', parts: [{ text: userText }] });
+            floatingChatHistory.push({ role: 'model', parts: [{ text: answerText }] });
+
+            loadingBubble.innerHTML = `
+                <div class="w-7 h-7 rounded-lg bg-pea-700 text-amber-300 flex items-center justify-center text-xs shrink-0 mt-0.5">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <div class="max-w-[88%] bg-white border border-slate-200 rounded-2xl rounded-tl-sm p-3 text-xs text-slate-700 shadow-sm leading-relaxed">
+                    ${formatChatText(answerText)}
+                </div>`;
+        } catch (err) {
+            loadingBubble.innerHTML = `
+                <div class="w-7 h-7 rounded-lg bg-rose-600 text-white flex items-center justify-center text-xs shrink-0 mt-0.5">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <div class="max-w-[88%] bg-rose-50 border border-rose-200 rounded-2xl rounded-tl-sm p-2.5 text-xs text-rose-800">
+                    ${escapeHtml(err.message || 'ไม่สามารถเชื่อมต่อได้ในขณะนี้')}
+                </div>`;
+        } finally {
+            input.disabled = false;
+            sendBtn.disabled = false;
+            input.focus();
+            msgBox.scrollTop = msgBox.scrollHeight;
+        }
+    }
+
+    // ---------- Feedback Modal Logic ----------
+    function openFeedback() {
+        const modal = document.getElementById('rwFeedbackModal');
+        if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeFeedback() {
+        const modal = document.getElementById('rwFeedbackModal');
+        if (modal) {
+            modal.classList.add('hidden');
+            const form = document.getElementById('rwFeedbackForm');
+            if (form) form.reset();
+            const alertBox = document.getElementById('rwFbAlertBox');
+            if (alertBox) alertBox.classList.add('hidden');
+        }
+    }
+
+    async function submitFeedback(e) {
+        if (e && e.preventDefault) e.preventDefault();
+        const btn = document.getElementById('rwFbSubmitBtn');
+        const alertBox = document.getElementById('rwFbAlertBox');
+        const detailInput = document.getElementById('rwFbDetail');
+        if (!detailInput || !btn || !alertBox) return;
+
+        const payload = {
+            action: 'feedback',
+            type: document.getElementById('rwFbType')?.value || 'อื่นๆ',
+            detail: detailInput.value.trim(),
+            sender: document.getElementById('rwFbSender')?.value.trim() || 'ไม่ระบุชื่อ',
+            contact: document.getElementById('rwFbContact')?.value.trim() || '-',
+            page: cfg.page || 'home'
+        };
+
+        btn.disabled = true;
+        btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin mr-1.5"></i> กำลังส่งข้อมูล...`;
+        alertBox.classList.add('hidden');
+
+        try {
+            const res = await post(payload);
+            alertBox.className = "p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs";
+            alertBox.innerHTML = `<i class="fa-solid fa-circle-check mr-1 text-emerald-600"></i> แจ้งข้อเสนอแนะสำเร็จเรียบร้อยแล้ว ขอบคุณครับ!`;
+            alertBox.classList.remove('hidden');
+
+            setTimeout(() => {
+                closeFeedback();
+            }, 1800);
+        } catch (err) {
+            alertBox.className = "p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs";
+            alertBox.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1 text-rose-600"></i> ไม่สามารถบันทึกได้: ${escapeHtml(err.message || 'กรุณาลองใหม่อีกครั้ง')}`;
+            alertBox.classList.remove('hidden');
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = `<i class="fa-solid fa-paper-plane mr-1"></i> ยืนยัน ส่งข้อมูล`;
+        }
+    }
+
+    return {
+        config: cfg,
+        get data() { return data; },
+        loadData, ensureData, post, go, back, pageUrl,
+        escapeHtml, fmt, errorBox, loadingBox,
+        openClause, closeClause,
+        toggleChat, clearChat, askQuestion, handleChatSubmit,
+        openFeedback, closeFeedback, submitFeedback
+    };
+})();
+
+// ชื่อเดิมที่ยังถูกเรียกจาก onclick ในเนื้อหาข้อคู่มือ / การ์ดสรุป
+function switchMainView(view) { RW.go(view); }
+function jumpToClause(num) { RW.openClause(num); }
+function openFeedbackModal() { RW.openFeedback(); }
+function closeFeedbackModal() { RW.closeFeedback(); }
+</script>
+</head>
+<body class="rw-embed">
+<!-- Top Navigation Bar for Subpages -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-1">
+    <div class="flex items-center justify-between gap-3 bg-white/80 backdrop-blur-sm border border-slate-200/80 rounded-2xl px-4 py-2.5 shadow-sm text-xs">
+        <!-- Back and Home Buttons -->
+        <div class="flex items-center gap-2">
+            <button
+                type="button"
+                onclick="window.history.length > 1 ? window.history.back() : window.open('https://sites.google.com/view/n1khunphonwasright/home', '_blank', 'noopener')"
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-purple-100 hover:text-pea-800 text-slate-700 font-heading font-medium transition"
+                title="ย้อนกลับไปหน้าที่แล้ว"
+            >
+                <i class="fa-solid fa-arrow-left text-[11px]"></i>
+                <span>ย้อนกลับ</span>
+            </button>
+            <a
+                href="https://sites.google.com/view/n1khunphonwasright/home"
+                target="_blank"
+                rel="noopener"
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-50 hover:bg-pea-700 hover:text-white text-pea-800 font-heading font-medium transition no-underline"
+                title="กลับหน้าหลัก"
+            >
+                <i class="fa-solid fa-house text-[11px]"></i>
+                <span>หน้าหลัก</span>
+            </a>
+        </div>
+
+        <!-- Quick Jump Shortcuts -->
+        <div class="hidden sm:flex items-center gap-1 text-[11px] font-heading">
+            <span class="text-slate-400 mr-1.5">ไปที่:</span>
+            <a href="https://sites.google.com/view/n1khunphonwasright/manual" target="_blank" rel="noopener" class="px-2.5 py-1 rounded-lg hover:bg-slate-100 text-slate-600 hover:text-pea-800 transition no-underline">คู่มือ 44 ข้อ</a>
+            <a href="https://sites.google.com/view/n1khunphonwasright/allowance/allowance" target="_blank" rel="noopener" class="px-2.5 py-1 rounded-lg hover:bg-slate-100 text-slate-600 hover:text-pea-800 transition no-underline">เบี้ยเลี้ยง-ที่พัก</a>
+            <a href="https://sites.google.com/view/n1khunphonwasright/manual/manual" target="_blank" rel="noopener" class="px-2.5 py-1 rounded-lg hover:bg-slate-100 text-slate-600 hover:text-pea-800 transition no-underline">โปรแกรมคำนวณ</a>
+            <a href="https://sites.google.com/view/n1khunphonwasright/forms" target="_blank" rel="noopener" class="px-2.5 py-1 rounded-lg hover:bg-slate-100 text-slate-600 hover:text-pea-800 transition no-underline"><i class="fa-solid fa-download mr-1"></i>แบบฟอร์ม</a>
+            <button type="button" onclick="RW.toggleChat(true)" class="px-2.5 py-1 rounded-lg hover:bg-emerald-50 text-emerald-700 font-semibold transition"><i class="fa-solid fa-robot mr-1"></i>ถาม AI</button>
+        </div>
+    </div>
+</div>
+<main class="app-main max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div id="viewTools" class="space-y-6">
+        <div class="grid grid-cols-1 gap-6">
+            <!-- Tool 1: Hospital Bill & Discount Claim Calculator -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-6">
+                <div class="flex items-center gap-3 mb-4 pb-3 border-b border-slate-100">
+                    <div class="w-10 h-10 rounded-xl bg-pea-100 text-pea-700 flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-calculator"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-heading font-bold text-base sm:text-lg text-slate-800">
+                            1. โปรแกรมคำนวณสิทธิเบิกค่ารักษาพยาบาล & ส่วนลด รพ. (ตามข้อ 7, 8.1, 8.4, 25.5, 33)
+                        </h3>
+                        <p class="text-xs text-slate-500">รองรับสิทธิพนักงาน (1,500 บ.) ครอบครัวพนักงาน (1,100 บ.) ลูกจ้างและครอบครัวลูกจ้าง (1,000 บ.) และการหักส่วนลด/สิทธิอื่น</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-xs font-heading font-semibold text-slate-700 mb-1">ประเภทผู้เข้ารับการรักษา (ข้อ 1, 7.3, 8.1)</label>
+                        <select id="calcPatientType" onchange="calculateMedicalClaim()" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm focus:border-pea-600 focus:outline-none">
+                            <option value="employee">ผู้ปฏิบัติงาน (พนักงาน กฟภ.) - ค่าห้องไม่เกิน 1,500 บ./วัน</option>
+                            <option value="family">บุคคลในครอบครัวของพนักงาน - ค่าห้องไม่เกิน 1,100 บ./วัน</option>
+                            <option value="worker">ลูกจ้าง กฟภ. และครอบครัวของลูกจ้าง - ค่าห้องไม่เกิน 1,000 บ./วัน</option>
+                            <option value="duty">เจ็บป่วยเนื่องจากปฏิบัติหน้าที่ (ข้อ 35) - เบิกได้เต็มจำนวน 100%</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-heading font-semibold text-slate-700 mb-1">ประเภทสถานพยาบาลและการรักษา (ข้อ 7.4, 7.5)</label>
+                        <select id="calcHospType" onchange="calculateMedicalClaim()" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm focus:border-pea-600 focus:outline-none">
+                            <option value="gov_ipd">รพ.ราชการ - คนไข้ใน (IPD) เบิกได้ 100%</option>
+                            <option value="gov_opd">รพ.ราชการ - คนไข้นอก (OPD) เบิกได้ 100%</option>
+                            <option value="priv_ipd" selected>รพ.เอกชน - คนไข้ใน (IPD) ค่ารักษาครึ่งหนึ่ง (50%)</option>
+                            <option value="priv_opd">รพ.เอกชน / คลินิกเอกชน - คนไข้นอก (OPD) ไม่เกิน 3,600 บ./ปี</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4 p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+                    <div>
+                        <label class="block text-xs font-heading font-semibold text-slate-700 mb-1">จำนวนวันนอนพัก (วัน)</label>
+                        <input type="number" id="calcDays" value="5" min="0" oninput="calculateMedicalClaim()" class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-heading font-semibold text-slate-700 mb-1">ค่าห้อง+ค่าอาหาร+ICU รวม (บาท)</label>
+                        <input type="number" id="calcRoomTotal" value="7500" min="0" oninput="calculateMedicalClaim()" class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-heading font-semibold text-slate-700 mb-1">ค่ารักษาพยาบาลที่เบิกได้รวม (บาท)</label>
+                        <input type="number" id="calcMedTotal" value="40000" min="0" oninput="calculateMedicalClaim()" class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-5">
+                    <div>
+                        <label class="block text-xs font-heading font-semibold text-slate-700 mb-1">ส่วนลดจาก รพ. (%) (ข้อ 33-34)</label>
+                        <input type="number" id="calcDiscountPct" value="0" min="0" max="100" oninput="calculateMedicalClaim()" class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-heading font-semibold text-slate-700 mb-1">เงินที่เบิกจากหน่วยงานอื่นแล้ว (ข้อ 8.4)</label>
+                        <input type="number" id="calcOtherAgency" value="0" min="0" oninput="calculateMedicalClaim()" class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm" placeholder="เช่น ราชการ/ปกส.">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-heading font-semibold text-slate-700 mb-1">กรณีอุบัติเหตุจากรถ (ข้อ 25)</label>
+                        <select id="calcCarAccident" onchange="calculateMedicalClaim()" class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm">
+                            <option value="none">ไม่ใช่กรณีประสบภัยจากรถ</option>
+                            <option value="deduct30k">ยังไม่ได้เบิก พ.ร.บ. / รถไม่ทำ พ.ร.บ. (หัก 30,000 บ.)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Calculation Result Box -->
+                <div id="calcResultBox" class="rounded-2xl bg-gradient-to-br from-purple-50 to-indigo-50 border border-purple-200 p-4 sm:p-5">
+                    <!-- Dynamically populated -->
+                </div>
+            </div>
+
+            <!-- Tool 2: 90-Day Deadline & Child Age 20 Checker -->
+            <div class="space-y-6">
+                <!-- 90-Day Deadline Checker (Clause 14) -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
+                    <div class="flex items-center gap-2.5 mb-3 pb-2.5 border-b border-slate-100">
+                        <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center">
+                            <i class="fa-solid fa-calendar-day"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-heading font-bold text-sm sm:text-base text-slate-800">2. คำนวณกรอบเวลา 90 วัน (ข้อ 14)</h3>
+                            <p class="text-xs text-slate-500">ตรวจสอบวันครบกำหนดยื่นคำร้องนับจากวันออกใบเสร็จ</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-heading font-semibold text-slate-700 mb-1">ประเภทการนับวันเริ่มใช้สิทธิ</label>
+                            <select id="dateCheckType" onchange="calculate90Days()" class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-xs">
+                                <option value="normal">กรณีปกติ / ป่วยหนักกะทันหัน (นับจากวันที่ใบเสร็จรับเงิน - ข้อ 14.1)</option>
+                                <option value="other_agency">กรณีเบิกหน่วยงานอื่นก่อน (นับจากวันที่หน่วยงานอื่นอนุมัติจ่าย - ข้อ 14.4)</option>
+                                <option value="installment">กรณีรักษาต่อเนื่องคิดเป็นงวดๆ (นับจากวันออกใบเสร็จครั้งสุดท้าย - ข้อ 14.5)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-heading font-semibold text-slate-700 mb-1">เลือกวันที่ในใบเสร็จ / วันที่อนุมัติจ่าย</label>
+                            <input type="date" id="receiptDateInput" onchange="calculate90Days()" class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm">
+                        </div>
+                        <div id="date90Result" class="p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs space-y-1">
+                            <!-- Populated via JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Child Majority Age Checker (Clause 2.3) -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
+                    <div class="flex items-center gap-2.5 mb-3 pb-2.5 border-b border-slate-100">
+                        <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
+                            <i class="fa-solid fa-child-reaching"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-heading font-bold text-sm sm:text-base text-slate-800">3. คำนวณวันบรรลุนิติภาวะบุตร (ข้อ 2.3)</h3>
+                            <p class="text-xs text-slate-500">ตรวจสอบวันสุดท้ายที่บุตรมีสิทธิเบิกค่ารักษาพยาบาล (ก่อนครบ 20 ปีบริบูรณ์)</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-heading font-semibold text-slate-700 mb-1">วันเดือนปีเกิดของบุตร (ค.ศ. หรือปรับจาก พ.ศ.)</label>
+                            <input type="date" id="childBirthInput" value="1991-02-03" onchange="calculateChildAge()" class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm">
+                            <span class="text-[11px] text-slate-400">ค่าเริ่มต้นคือตัวอย่างในคู่มือ ข้อ 2.3: เกิด 3 ก.พ. 2534 (1991)</span>
+                        </div>
+                        <div id="childAgeResult" class="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs space-y-1">
+                            <!-- Populated via JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tool 4: Interactive Family & Dual-Entitlement Decision Wizard (Clauses 8, 9, 10, 13, 27-29) -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-6">
+            <div class="flex items-center gap-3 mb-4 pb-3 border-b border-slate-100">
+                <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-sitemap"></i>
+                </div>
+                <div>
+                    <h3 class="font-heading font-bold text-base sm:text-lg text-slate-800">
+                        4. ตัวช่วยวินิจฉัยสิทธิการใช้ค่ารักษาพยาบาลของบุคคลในครอบครัว & บุตร (ตามข้อ 8, 9, 10, 13, 27-29)
+                    </h3>
+                    <p class="text-xs text-slate-500">เลือกกรณีความสัมพันธ์และสิทธิทางราชการ/ประกันสังคม/ลูกจ้าง เพื่อดูแนวทางปฏิบัติที่ถูกต้องตามระเบียบ</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div>
+                    <label class="block text-xs font-heading font-semibold text-slate-700 mb-1">เลือกกลุ่มกรณีที่ต้องการตรวจสอบ</label>
+                    <select id="wizScenarioGroup" onchange="runEntitlementWizard()" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm">
+                        <option value="parent_gov">1. บิดา/มารดา มีบุตรเป็นพนักงาน กฟภ. และบุตรอีกคนรับราชการ (ตารางข้อ 9)</option>
+                        <option value="child_claim">2. การใช้สิทธิเบิกค่ารักษาพยาบาลของบุตร (ตารางข้อ 13)</option>
+                        <option value="sso_family">3. บุคคลในครอบครัวเป็นผู้ประกันตน ประกันสังคม ม.33 / ม.39 / ม.40 (ข้อ 27-29)</option>
+                        <option value="spouse_worker">4. คู่สมรสเป็นลูกจ้าง กฟภ. หรือทำประกันสุขภาพส่วนตัว (ข้อ 8.1, 26)</option>
+                    </select>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-xs font-heading font-semibold text-slate-700 mb-1">เลือกรายละเอียดเงื่อนไขย่อย</label>
+                    <select id="wizSubCase" onchange="renderWizardDecision()" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm">
+                        <!-- Dynamically populated -->
+                    </select>
+                </div>
+            </div>
+
+            <div id="wizDecisionOutput" class="p-4 rounded-2xl bg-blue-50/80 border border-blue-200 text-sm">
+                <!-- Populated via JS -->
+            </div>
+        </div>
+    </div>
+</main>
+<!-- Floating AI Chatbot Widget (ทุกหน้า) -->
+<div id="rwFloatingChatWidget" class="fixed bottom-5 right-5 z-50 no-print">
+    <!-- Floating FAB Trigger Button -->
+    <button
+        id="rwChatFab"
+        type="button"
+        onclick="RW.toggleChat()"
+        class="group flex items-center gap-2.5 pl-4 pr-5 py-3 rounded-full bg-gradient-to-r from-pea-800 via-pea-700 to-purple-700 hover:from-pea-700 hover:to-purple-600 text-white shadow-2xl border-2 border-amber-400 transition-all duration-200 hover:scale-105"
+        title="ถาม AI ผู้ช่วยตรวจจ่าย กฟภ."
+    >
+        <div class="w-8 h-8 rounded-full bg-amber-400 text-slate-900 flex items-center justify-center shadow font-bold">
+            <i class="fa-solid fa-robot text-base"></i>
+        </div>
+        <div class="text-left">
+            <div class="text-[10px] text-amber-300 font-heading font-semibold leading-none">AI Assistant</div>
+            <div class="text-xs font-heading font-bold leading-tight mt-0.5">ถาม AI.</div>
+        </div>
+    </button>
+
+    <!-- Chat Box Drawer Panel -->
+    <div
+        id="rwChatPanel"
+        class="hidden w-[94vw] sm:w-[400px] h-[560px] max-h-[82vh] bg-white rounded-3xl shadow-2xl border border-purple-200 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200"
+    >
+        <!-- Chat Header -->
+        <div class="bg-gradient-to-r from-pea-900 via-pea-700 to-purple-800 text-white px-4 py-3 flex items-center justify-between border-b-2 border-amber-400 shrink-0">
+            <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-amber-400 text-slate-900 flex items-center justify-center font-bold text-sm shadow">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-1.5">
+                        <h3 class="font-heading font-bold text-xs sm:text-sm text-white">AI ผู้ช่วยตรวจจ่าย กฟภ.</h3>
+                        <span class="px-1.5 py-0.2 rounded-full text-[9px] font-heading font-semibold bg-emerald-400/20 text-emerald-200 border border-emerald-400/40">พร้อมใช้งาน</span>
+                    </div>
+                    <p class="text-[10px] text-purple-200">คู่มือ 44 ข้อ + เบี้ยเลี้ยง/ที่พัก (TAX)</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-1">
+                <button
+                    type="button"
+                    onclick="RW.clearChat()"
+                    class="w-7 h-7 rounded-lg hover:bg-white/15 text-purple-200 hover:text-white flex items-center justify-center transition"
+                    title="ล้างการสนทนา"
+                >
+                    <i class="fa-solid fa-rotate-right text-xs"></i>
+                </button>
+                <button
+                    type="button"
+                    onclick="RW.toggleChat(false)"
+                    class="w-7 h-7 rounded-lg hover:bg-white/15 text-purple-200 hover:text-white flex items-center justify-center transition"
+                    title="ปิดหน้าต่างแชท"
+                >
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Quick Questions Chips -->
+        <div class="bg-purple-50/70 px-3 py-1.5 border-b border-purple-100 shrink-0">
+            <div class="text-[10px] font-heading font-semibold text-pea-800 mb-1 flex items-center justify-between">
+                <span><i class="fa-solid fa-bolt text-amber-500 mr-1"></i>คำถามด่วน:</span>
+            </div>
+            <div class="flex gap-1.5 overflow-x-auto pb-1 text-[10px]">
+                <button type="button" onclick="RW.askQuestion('ค่าห้องและค่าอาหารของพนักงาน ครอบครัว และลูกจ้าง เบิกได้วันละเท่าไหร่?')" class="px-2 py-0.5 rounded-full bg-white hover:bg-pea-700 hover:text-white text-slate-700 border border-purple-200 whitespace-nowrap transition">
+                    ค่าห้อง พนง./ลูกจ้าง
+                </button>
+                <button type="button" onclick="RW.askQuestion('พนักงานระดับ 9 ไปปฏิบัติงาน 3 วัน 2 คืน เบิกค่าเบี้ยเลี้ยงและค่าที่พักอย่างไร ต้องระบุ TAX เท่าไหร่?')" class="px-2 py-0.5 rounded-full bg-white hover:bg-pea-700 hover:text-white text-slate-700 border border-purple-200 whitespace-nowrap transition">
+                    เบี้ยเลี้ยง+ที่พัก TAX
+                </button>
+                <button type="button" onclick="RW.askQuestion('คู่สมรสเป็นผู้ประกันตน มาตรา 33 หรือ มาตรา 39 เบิกค่ารักษาพยาบาลกับ กฟภ. ได้ไหม?')" class="px-2 py-0.5 rounded-full bg-white hover:bg-pea-700 hover:text-white text-slate-700 border border-purple-200 whitespace-nowrap transition">
+                    ประกันสังคม ม.33/39
+                </button>
+            </div>
+        </div>
+
+        <!-- Chat Messages Container -->
+        <div id="rwFloatingChatMessages" class="flex-1 overflow-y-auto p-3.5 space-y-3 bg-slate-50 text-xs">
+            <div class="flex items-start gap-2.5">
+                <div class="w-7 h-7 rounded-lg bg-pea-700 text-amber-300 flex items-center justify-center text-xs shrink-0 mt-0.5">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <div class="bg-white border border-slate-200 rounded-2xl rounded-tl-sm p-3 text-slate-700 shadow-sm space-y-1">
+                    <div class="font-heading font-bold text-pea-800">สวัสดีครับ! ถามได้ทุกข้อระเบียบครับ</div>
+                    <p class="text-[11px] text-slate-600 leading-relaxed">
+                        ถามสิทธิค่าห้อง (1,500/1,100/1,000 บ.), อัตราเบี้ยเลี้ยง หรือหลักเกณฑ์ยื่นเบิก 90 วันได้เลยครับ
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Input Form -->
+        <form onsubmit="RW.handleChatSubmit(event)" class="p-2.5 bg-white border-t border-slate-200 flex items-center gap-1.5 shrink-0">
+            <input
+                id="rwFloatingChatInput"
+                type="text"
+                placeholder="พิมพ์คำถาม เช่น ฟอกไตเอกชนเบิกได้เท่าไหร่..."
+                class="flex-1 rounded-xl border border-slate-300 px-3 py-2 text-xs focus:border-pea-600 focus:outline-none"
+                autocomplete="off"
+            >
+            <button
+                id="rwFloatingChatSendBtn"
+                type="submit"
+                class="px-3.5 py-2 rounded-xl bg-pea-700 hover:bg-pea-800 text-white font-heading font-semibold text-xs transition flex items-center gap-1 shrink-0 shadow"
+            >
+                <i class="fa-solid fa-paper-plane text-[10px]"></i>
+                <span>ส่ง</span>
+            </button>
+        </form>
+    </div>
+</div>
+<!-- Shared Feedback / Report Modal -->
+<div id="rwFeedbackModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 no-print">
+    <div class="bg-white rounded-3xl shadow-2xl border border-slate-200 w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        <div class="bg-gradient-to-r from-pea-900 to-pea-700 text-white px-5 py-4 flex items-center justify-between border-b-2 border-amber-400">
+            <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-xl bg-amber-400 text-slate-900 flex items-center justify-center font-bold">
+                    <i class="fa-solid fa-comment-dots"></i>
+                </div>
+                <div>
+                    <h3 class="font-heading font-bold text-base">แจ้งข้อเสนอแนะ / แจ้งปัญหา</h3>
+                    <p class="text-xs text-purple-200">ข้อมูลจะถูกส่งให้ผู้จัดทำเพื่อการปรับปรุงคู่มือ</p>
+                </div>
+            </div>
+            <button type="button" onclick="RW.closeFeedback()" class="w-8 h-8 rounded-lg hover:bg-white/15 text-purple-200 hover:text-white flex items-center justify-center transition">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </div>
+
+        <form id="rwFeedbackForm" onsubmit="RW.submitFeedback(event)" class="p-5 space-y-4">
+            <div>
+                <label class="block text-xs font-heading font-semibold text-slate-700 mb-1">ประเภทการแจ้ง <span class="text-rose-500">*</span></label>
+                <select id="rwFbType" required class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:border-pea-600 focus:outline-none">
+                    <option value="แจ้งข้อมูลไม่ถูกต้อง / ข้อระเบียบคลาดเคลื่อน">แจ้งข้อมูลไม่ถูกต้อง / ข้อระเบียบคลาดเคลื่อน</option>
+                    <option value="เสนอแนะเพิ่มเติม / ปรับปรุงระบบ">เสนอแนะเพิ่มเติม / ปรับปรุงระบบ</option>
+                    <option value="แจ้งปัญหาการใช้งานเว็บไซต์ / AI">แจ้งปัญหาการใช้งานเว็บไซต์ / AI</option>
+                    <option value="อื่นๆ">อื่นๆ</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-xs font-heading font-semibold text-slate-700 mb-1">รายละเอียด / ข้อเสนอแนะ <span class="text-rose-500">*</span></label>
+                <textarea id="rwFbDetail" required rows="4" placeholder="ระบุรายละเอียด เช่น ข้อที่พบว่าคลาดเคลื่อน หรือคำแนะนำเพิ่มเติม..." class="w-full rounded-xl border border-slate-300 p-3 text-sm focus:border-pea-600 focus:outline-none"></textarea>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-heading font-semibold text-slate-700 mb-1">ชื่อ - นามสกุล / สังกัด (ไม่บังคับ)</label>
+                    <input type="text" id="rwFbSender" placeholder="เช่น นายขุนพล / ผสน.กฟส.จอมทอง" class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm focus:border-pea-600 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-heading font-semibold text-slate-700 mb-1">เบอร์โทรติดต่อ / อีเมล (ไม่บังคับ)</label>
+                    <input type="text" id="rwFbContact" placeholder="เบอร์โทรหรืออีเมล" class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm focus:border-pea-600 focus:outline-none">
+                </div>
+            </div>
+
+            <div id="rwFbAlertBox" class="hidden p-3 rounded-xl text-xs"></div>
+
+            <div class="flex items-center justify-end gap-2.5 pt-2 border-t border-slate-100">
+                <button type="button" onclick="RW.closeFeedback()" class="px-4 py-2.5 rounded-xl border border-slate-300 hover:bg-slate-50 text-slate-700 font-heading font-semibold text-sm transition">
+                    ยกเลิก
+                </button>
+                <button type="submit" id="rwFbSubmitBtn" class="px-5 py-2.5 rounded-xl bg-pea-700 hover:bg-pea-800 text-white font-heading font-semibold text-sm shadow transition flex items-center gap-2">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    <span>ยืนยัน ส่งข้อมูล</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<footer class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6 text-[11px] text-slate-500">
+    <div class="border-t border-slate-200 pt-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
+        <span>อ้างอิงระเบียบกองทุนสงเคราะห์ ว่าด้วยการรักษาพยาบาล พ.ศ. 2559 และหลักเกณฑ์ที่เกี่ยวข้อง (กฟภ. / PEA N1)</span>
+        <span><i class="fa-solid fa-user-gear mr-1"></i>จัดทำโดย : นายขุนพล สมจิตร (510218) นบท.6 ผสน.กฟส.จอมทอง</span>
+    </div>
+</footer>
+<script>
+// หน้า: เครื่องมือจำลองคำนวณ & วินิจฉัยสิทธิ
+// เครื่องคำนวณทำงานในเบราว์เซอร์ทั้งหมด — มีแค่ wizard ที่ใช้ข้อมูลจาก Apps Script (src/data/wizard.json)
+let WIZARD_OPTIONS = null;
+
+// ==========================================
+// INTERACTIVE CALCULATOR 1: MEDICAL CLAIM
+// ==========================================
+function calculateMedicalClaim() {
+    const patientType = document.getElementById('calcPatientType').value;
+    const hospType = document.getElementById('calcHospType').value;
+    const days = Math.max(0, parseFloat(document.getElementById('calcDays').value) || 0);
+    const roomTotal = Math.max(0, parseFloat(document.getElementById('calcRoomTotal').value) || 0);
+    const medTotal = Math.max(0, parseFloat(document.getElementById('calcMedTotal').value) || 0);
+    const discountPct = Math.min(100, Math.max(0, parseFloat(document.getElementById('calcDiscountPct').value) || 0));
+    const otherAgency = Math.max(0, parseFloat(document.getElementById('calcOtherAgency').value) || 0);
+    const carAccident = document.getElementById('calcCarAccident').value;
+
+    const factor = 1 - (discountPct / 100);
+    const roomAfterDisc = roomTotal * factor;
+    const medAfterDisc = medTotal * factor;
+
+    let roomCapPerDay = 1500;
+    let patientRoleLabel = 'ผู้ปฏิบัติงาน (พนักงาน กฟภ.) เพดาน 1,500 บ./วัน';
+    if (patientType === 'family') {
+        roomCapPerDay = 1100;
+        patientRoleLabel = 'บุคคลในครอบครัวของพนักงาน เพดาน 1,100 บ./วัน';
+    } else if (patientType === 'worker') {
+        roomCapPerDay = 1000;
+        patientRoleLabel = 'ลูกจ้าง กฟภ. และครอบครัวของลูกจ้าง เพดาน 1,000 บ./วัน';
+    }
+
+    let eligibleRoom = 0;
+    let eligibleMed = 0;
+    let explanation = [];
+
+    if (patientType === 'duty') {
+        eligibleRoom = roomAfterDisc;
+        eligibleMed = medAfterDisc;
+        explanation.push('กรณีเจ็บป่วยเนื่องจากปฏิบัติหน้าที่ (ข้อ 35): เบิกค่าห้อง ค่าอาหาร และค่ารักษาพยาบาลได้เต็มจำนวน 100%');
+    } else if (hospType === 'gov_ipd') {
+        const maxRoomAllowed = days * roomCapPerDay;
+        eligibleRoom = Math.min(roomAfterDisc, maxRoomAllowed);
+        eligibleMed = medAfterDisc;
+        explanation.push(`รพ.ราชการ (คนไข้ใน): ค่าห้อง+อาหารเบิกตามจริงแต่ไม่เกิน ${roomCapPerDay.toLocaleString()} บ./วัน (${days} วัน = เพดาน ${maxRoomAllowed.toLocaleString()} บ.) [${patientRoleLabel}] ส่วนค่ารักษาที่เบิกได้ เบิกได้ 100%`);
+    } else if (hospType === 'gov_opd') {
+        eligibleRoom = 0;
+        eligibleMed = medAfterDisc;
+        explanation.push('รพ.ราชการ (คนไข้นอก): เบิกค่ารักษาพยาบาลได้เท่าที่จ่ายจริง 100% (ไม่มีค่าห้องผู้ป่วยใน)');
+    } else if (hospType === 'priv_ipd') {
+        const maxRoomAllowed = days * roomCapPerDay;
+        eligibleRoom = Math.min(roomAfterDisc, maxRoomAllowed);
+        eligibleMed = medAfterDisc * 0.5;
+        explanation.push(`รพ.เอกชน (คนไข้ใน): ค่าห้อง+อาหารเบิกตามจริงแต่ไม่เกิน ${roomCapPerDay.toLocaleString()} บ./วัน (${days} วัน = เพดาน ${maxRoomAllowed.toLocaleString()} บ.) [${patientRoleLabel}] ส่วนค่ารักษาพยาบาลเบิกได้ครึ่งหนึ่ง (50%)`);
+    } else if (hospType === 'priv_opd') {
+        eligibleRoom = 0;
+        eligibleMed = Math.min(medAfterDisc, 3600);
+        explanation.push('รพ.เอกชน / คลินิกเอกชน (คนไข้นอก): เบิกได้เท่าที่จ่ายจริง แต่รวมกันไม่เกินปีละ 3,600 บาท (ข้อ 7.5.3 - 7.5.4)');
+    }
+
+    let grossPeaEntitlement = eligibleRoom + eligibleMed;
+    let netPayable = grossPeaEntitlement - otherAgency;
+
+    if (carAccident === 'deduct30k') {
+        netPayable -= 30000;
+        explanation.push('หักค่าเสียหายเบื้องต้น พ.ร.บ. คุ้มครองผู้ประสบภัยจากรถ 30,000 บาท (ตามข้อ 25.4 / 25.5)');
+    }
+
+    netPayable = Math.max(0, netPayable);
+
+    // Determine Approval Authority (Clause 43)
+    let approver = 'ผู้จัดการการไฟฟ้าส่วนภูมิภาคสาขา (ไม่เกิน 50,000 บาท - ข้อ 43.4)';
+    if (netPayable > 300000) {
+        approver = 'ผู้ช่วยผู้ว่าการ (มีอำนาจตามที่จ่ายจริง - ข้อ 43.1)';
+    } else if (netPayable > 100000) {
+        approver = 'ผอ.ฝ่าย (เขต) / ผจก.กฟภ. ชั้น 1 (ไม่เกิน 300,000 บาท - ข้อ 43.2)';
+    } else if (netPayable > 50000) {
+        approver = 'ผอ.กอง (เขต) / ผจก.กฟภ. ชั้น 2-3 (ไม่เกิน 100,000 บาท - ข้อ 43.3)';
+    }
+
+    const fmt = RW.fmt;
+
+    document.getElementById('calcResultBox').innerHTML = `
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
+            <div class="p-3 rounded-xl bg-white border border-purple-200">
+                <div class="text-xs text-slate-500">1. สิทธิค่าห้อง+อาหารที่เบิกได้</div>
+                <div class="text-base font-heading font-bold text-slate-800">${fmt(eligibleRoom)} บาท</div>
+            </div>
+            <div class="p-3 rounded-xl bg-white border border-purple-200">
+                <div class="text-xs text-slate-500">2. สิทธิค่ารักษาพยาบาลที่เบิกได้</div>
+                <div class="text-base font-heading font-bold text-slate-800">${fmt(eligibleMed)} บาท</div>
+            </div>
+            <div class="p-3 rounded-xl bg-pea-800 text-white shadow">
+                <div class="text-xs text-purple-200">สุทธิเบิกจาก กฟภ. ได้</div>
+                <div class="text-lg font-heading font-bold text-amber-300">${fmt(netPayable)} บาท</div>
+            </div>
+        </div>
+        <div class="text-xs text-slate-700 space-y-1">
+            <div><i class="fa-solid fa-circle-info text-pea-600 mr-1"></i><strong>วิธีคำนวณ:</strong> ${explanation.join(' | ')}</div>
+            ${patientType === 'worker' ? `<div class="text-amber-800 font-medium"><i class="fa-solid fa-people-arrows mr-1"></i><strong>หมายเหตุข้อ 8.1:</strong> กรณีลูกจ้างมีคู่สมรสเป็นพนักงาน กฟภ. สามารถนำค่าห้องส่วนเกินสิทธิของลูกจ้าง (เกิน 1,000 บ./วัน) ไปเบิกเพิ่มในสิทธิครอบครัวของพนักงาน (เพดาน 1,100 บ./วัน) ได้อีกไม่เกินวันละ 100 บาท</div>` : ''}
+            <div><i class="fa-solid fa-gavel text-pea-600 mr-1"></i><strong>ผู้มีอำนาจอนุมัติจ่ายเงิน (ข้อ 43):</strong> <span class="font-semibold text-pea-800">${approver}</span></div>
+        </div>
+    `;
+}
+
+// ==========================================
+// INTERACTIVE CALCULATOR 2: 90-DAY DEADLINE
+// ==========================================
+function calculate90Days() {
+    const val = document.getElementById('receiptDateInput').value;
+    if (!val) return;
+    const startDate = new Date(val + 'T00:00:00');
+    const endDate = new Date(startDate);
+    endDate.setDate(endDate.getDate() + 90);
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const diffDays = Math.ceil((endDate - today) / (1000 * 60 * 60 * 24));
+
+    const opts = { year: 'numeric', month: 'long', day: 'numeric' };
+    const startThai = startDate.toLocaleDateString('th-TH', opts);
+    const endThai = endDate.toLocaleDateString('th-TH', opts);
+
+    let statusBadge = '';
+    if (diffDays >= 0) {
+        statusBadge = `<span class="text-emerald-700 font-bold">ยังอยู่ในกำหนดเวลา (เหลืออีก ${diffDays} วัน)</span>`;
+    } else {
+        statusBadge = `<span class="text-rose-600 font-bold">เกินกำหนด 90 วันแล้ว (${Math.abs(diffDays)} วัน) ต้องเสนอคณะกรรมการกองทุนสงเคราะห์ฯ พิจารณาผ่อนผัน</span>`;
+    }
+
+    document.getElementById('date90Result').innerHTML = `
+        <div>• <strong>วันเริ่มต้นนับสิทธิ:</strong> ${startThai}</div>
+        <div>• <strong>วันครบกำหนด 90 วัน:</strong> <span class="font-bold text-pea-800">${endThai}</span></div>
+        <div>• <strong>สถานะเทียบกับวันนี้:</strong> ${statusBadge}</div>
+    `;
+}
+
+// ==========================================
+// INTERACTIVE CALCULATOR 3: CHILD AGE 20
+// ==========================================
+function calculateChildAge() {
+    const val = document.getElementById('childBirthInput').value;
+    if (!val) return;
+    const birth = new Date(val + 'T00:00:00');
+
+    // Turns 20 on the day before 20th anniversary
+    const majorityDate = new Date(birth.getFullYear() + 20, birth.getMonth(), birth.getDate() - 1);
+    const lastEligibleDate = new Date(birth.getFullYear() + 20, birth.getMonth(), birth.getDate() - 2);
+
+    const opts = { year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById('childAgeResult').innerHTML = `
+        <div>• <strong>วันเกิดบุตร:</strong> ${birth.toLocaleDateString('th-TH', opts)}</div>
+        <div>• <strong>วันที่บรรลุนิติภาวะ (ครบ 20 ปีบริบูรณ์):</strong> <span class="font-semibold text-amber-800">${majorityDate.toLocaleDateString('th-TH', opts)}</span></div>
+        <div>• <strong>วันสุดท้ายที่มีสิทธิเบิกกับ กฟภ. (ข้อ 2.3):</strong> <span class="font-bold text-emerald-800">${lastEligibleDate.toLocaleDateString('th-TH', opts)}</span></div>
+        <div class="text-[11px] text-slate-600 mt-1">*หากนอน รพ. คาบเกี่ยววันบรรลุนิติภาวะ ให้ รพ. แยกค่าใช้จ่าย และเบิกเฉพาะถึงวันสุดท้ายที่ยังไม่บรรลุนิติภาวะ (ข้อ 5)</div>
+    `;
+}
+
+// ==========================================
+// INTERACTIVE WIZARD 4: ENTITLEMENT DECISION
+// ==========================================
+function runEntitlementWizard() {
+    const output = document.getElementById('wizDecisionOutput');
+    if (!WIZARD_OPTIONS) {
+        output.innerHTML = RW.loadingBox('กำลังโหลดแนวทางวินิจฉัย...');
+        return;
+    }
+    const group = document.getElementById('wizScenarioGroup').value;
+    const subSelect = document.getElementById('wizSubCase');
+    const options = WIZARD_OPTIONS[group] || [];
+    subSelect.innerHTML = options.map((opt, idx) => `<option value="${idx}">${opt.label}</option>`).join('');
+    renderWizardDecision();
+}
+
+function renderWizardDecision() {
+    if (!WIZARD_OPTIONS) return;
+    const group = document.getElementById('wizScenarioGroup').value;
+    const idx = parseInt(document.getElementById('wizSubCase').value, 10) || 0;
+    const item = (WIZARD_OPTIONS[group] || [])[idx];
+    if (!item) return;
+    document.getElementById('wizDecisionOutput').innerHTML = `
+        <div class="font-heading font-bold text-blue-900 mb-1"><i class="fa-solid fa-check-double mr-1.5"></i>แนวทางปฏิบัติที่ถูกต้องตามระเบียบ:</div>
+        <div class="text-slate-800 leading-relaxed">${item.result}</div>
+    `;
+}
+
+function initWizard() {
+    runEntitlementWizard();
+    RW.loadData(d => {
+        WIZARD_OPTIONS = d.wizard;
+        runEntitlementWizard();
+    }).catch(err => {
+        document.getElementById('wizDecisionOutput').innerHTML = RW.errorBox(err.message, 'initWizard');
+    });
+}
+
+// Set today's date for 90-day calculator
+document.getElementById('receiptDateInput').value = new Date().toISOString().split('T')[0];
+calculateMedicalClaim();
+calculate90Days();
+calculateChildAge();
+initWizard();
+</script>
+</body>
+</html>

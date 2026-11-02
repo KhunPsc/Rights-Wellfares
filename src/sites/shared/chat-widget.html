@@ -1,0 +1,111 @@
+<!-- Floating AI Chatbot Widget (ทุกหน้า) -->
+<div id="rwFloatingChatWidget" class="fixed bottom-5 right-5 z-50 no-print">
+    <!-- Floating FAB Trigger Button -->
+    <button
+        id="rwChatFab"
+        type="button"
+        onclick="RW.toggleChat()"
+        class="group flex items-center gap-2.5 pl-4 pr-5 py-3 rounded-full bg-gradient-to-r from-pea-800 via-pea-700 to-purple-700 hover:from-pea-700 hover:to-purple-600 text-white shadow-2xl border-2 border-amber-400 transition-all duration-200 hover:scale-105"
+        title="ถาม AI ผู้ช่วยตรวจจ่าย กฟภ."
+    >
+        <div class="w-8 h-8 rounded-full bg-amber-400 text-slate-900 flex items-center justify-center shadow font-bold">
+            <i class="fa-solid fa-robot text-base"></i>
+        </div>
+        <div class="text-left">
+            <div class="text-[10px] text-amber-300 font-heading font-semibold leading-none">AI Assistant</div>
+            <div class="text-xs font-heading font-bold leading-tight mt-0.5">ถาม AI.</div>
+        </div>
+    </button>
+
+    <!-- Chat Box Drawer Panel -->
+    <div
+        id="rwChatPanel"
+        class="hidden w-[94vw] sm:w-[400px] h-[560px] max-h-[82vh] bg-white rounded-3xl shadow-2xl border border-purple-200 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200"
+    >
+        <!-- Chat Header -->
+        <div class="bg-gradient-to-r from-pea-900 via-pea-700 to-purple-800 text-white px-4 py-3 flex items-center justify-between border-b-2 border-amber-400 shrink-0">
+            <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-amber-400 text-slate-900 flex items-center justify-center font-bold text-sm shadow">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-1.5">
+                        <h3 class="font-heading font-bold text-xs sm:text-sm text-white">AI ผู้ช่วยตรวจจ่าย กฟภ.</h3>
+                        <span class="px-1.5 py-0.2 rounded-full text-[9px] font-heading font-semibold bg-emerald-400/20 text-emerald-200 border border-emerald-400/40">พร้อมใช้งาน</span>
+                    </div>
+                    <p class="text-[10px] text-purple-200">คู่มือ 44 ข้อ + เบี้ยเลี้ยง/ที่พัก (TAX)</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-1">
+                <button
+                    type="button"
+                    onclick="RW.clearChat()"
+                    class="w-7 h-7 rounded-lg hover:bg-white/15 text-purple-200 hover:text-white flex items-center justify-center transition"
+                    title="ล้างการสนทนา"
+                >
+                    <i class="fa-solid fa-rotate-right text-xs"></i>
+                </button>
+                <button
+                    type="button"
+                    onclick="RW.toggleChat(false)"
+                    class="w-7 h-7 rounded-lg hover:bg-white/15 text-purple-200 hover:text-white flex items-center justify-center transition"
+                    title="ปิดหน้าต่างแชท"
+                >
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Quick Questions Chips -->
+        <div class="bg-purple-50/70 px-3 py-1.5 border-b border-purple-100 shrink-0">
+            <div class="text-[10px] font-heading font-semibold text-pea-800 mb-1 flex items-center justify-between">
+                <span><i class="fa-solid fa-bolt text-amber-500 mr-1"></i>คำถามด่วน:</span>
+            </div>
+            <div class="flex gap-1.5 overflow-x-auto pb-1 text-[10px]">
+                <button type="button" onclick="RW.askQuestion('ค่าห้องและค่าอาหารของพนักงาน ครอบครัว และลูกจ้าง เบิกได้วันละเท่าไหร่?')" class="px-2 py-0.5 rounded-full bg-white hover:bg-pea-700 hover:text-white text-slate-700 border border-purple-200 whitespace-nowrap transition">
+                    ค่าห้อง พนง./ลูกจ้าง
+                </button>
+                <button type="button" onclick="RW.askQuestion('พนักงานระดับ 9 ไปปฏิบัติงาน 3 วัน 2 คืน เบิกค่าเบี้ยเลี้ยงและค่าที่พักอย่างไร ต้องระบุ TAX เท่าไหร่?')" class="px-2 py-0.5 rounded-full bg-white hover:bg-pea-700 hover:text-white text-slate-700 border border-purple-200 whitespace-nowrap transition">
+                    เบี้ยเลี้ยง+ที่พัก TAX
+                </button>
+                <button type="button" onclick="RW.askQuestion('คู่สมรสเป็นผู้ประกันตน มาตรา 33 หรือ มาตรา 39 เบิกค่ารักษาพยาบาลกับ กฟภ. ได้ไหม?')" class="px-2 py-0.5 rounded-full bg-white hover:bg-pea-700 hover:text-white text-slate-700 border border-purple-200 whitespace-nowrap transition">
+                    ประกันสังคม ม.33/39
+                </button>
+            </div>
+        </div>
+
+        <!-- Chat Messages Container -->
+        <div id="rwFloatingChatMessages" class="flex-1 overflow-y-auto p-3.5 space-y-3 bg-slate-50 text-xs">
+            <div class="flex items-start gap-2.5">
+                <div class="w-7 h-7 rounded-lg bg-pea-700 text-amber-300 flex items-center justify-center text-xs shrink-0 mt-0.5">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <div class="bg-white border border-slate-200 rounded-2xl rounded-tl-sm p-3 text-slate-700 shadow-sm space-y-1">
+                    <div class="font-heading font-bold text-pea-800">สวัสดีครับ! ถามได้ทุกข้อระเบียบครับ</div>
+                    <p class="text-[11px] text-slate-600 leading-relaxed">
+                        ถามสิทธิค่าห้อง (1,500/1,100/1,000 บ.), อัตราเบี้ยเลี้ยง หรือหลักเกณฑ์ยื่นเบิก 90 วันได้เลยครับ
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Input Form -->
+        <form onsubmit="RW.handleChatSubmit(event)" class="p-2.5 bg-white border-t border-slate-200 flex items-center gap-1.5 shrink-0">
+            <input
+                id="rwFloatingChatInput"
+                type="text"
+                placeholder="พิมพ์คำถาม เช่น ฟอกไตเอกชนเบิกได้เท่าไหร่..."
+                class="flex-1 rounded-xl border border-slate-300 px-3 py-2 text-xs focus:border-pea-600 focus:outline-none"
+                autocomplete="off"
+            >
+            <button
+                id="rwFloatingChatSendBtn"
+                type="submit"
+                class="px-3.5 py-2 rounded-xl bg-pea-700 hover:bg-pea-800 text-white font-heading font-semibold text-xs transition flex items-center gap-1 shrink-0 shadow"
+            >
+                <i class="fa-solid fa-paper-plane text-[10px]"></i>
+                <span>ส่ง</span>
+            </button>
+        </form>
+    </div>
+</div>

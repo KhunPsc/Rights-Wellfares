@@ -50,11 +50,22 @@ scripts/               build-knowledge.mjs: รวม wiki/ → apps-script/Know
 ### Lint — ตรวจสุขภาพ wiki
 หาหน้าที่ไม่มีลิงก์เข้า (orphan), ลิงก์เสีย, ข้อมูลขัดแย้ง, หน้าที่ไม่มีแหล่งอ้างอิง, หัวข้อที่ถูกพูดถึงแต่ยังไม่มีหน้า แล้วบันทึกผลใน `log.md`
 
-## Chatbot
+## Chatbot & Google Sites Architecture
 
-- หน้าเว็บ: HTML ก้อนเดียวใน Google Sites (Embed code) สำเนาอยู่ที่ `vault/raw/google-site/site-embed.html`
-  หน้าเว็บสร้าง system prompt จากข้อมูลในหน้าเอง แล้ว POST ไปที่ Apps Script
-- `apps-script/รหัส.js`: `doPost` เป็น proxy ไป Gemini + บันทึก Feedback ลง Google Sheet
-- API key เก็บใน Script Properties ชื่อ `GEMINI_API_KEY` ห้ามใส่ในโค้ด ห้าม commit
-- `npm run build` สร้าง `apps-script/Knowledge.js` จาก `vault/wiki/` (ไฟล์ generated ห้ามแก้มือ, ยังไม่ได้ต่อเข้า doPost)
-- `npm run push` = build + `clasp push` (ทับโค้ดบน Apps Script ทั้งโปรเจกต์) แล้วต้อง Deploy → Manage deployments → อัปเดตเวอร์ชันเพื่อให้ URL `/exec` เดิมใช้โค้ดใหม่
+- **ข้อมูลกลาง (Single Source of Truth)**: เก็บใน `src/data/*.json` (ระเบียบ 44 ข้อ, หมวดหมู่, อัตราเบี้ยเลี้ยง/ที่พัก, wizard, ฟอร์ม)
+- **Backend (Apps Script)**: อยู่ใน `apps-script/`
+  - `Router.js`: `doGet` (bootstrap/version) + `doPost` (chat/feedback)
+  - `Chat.js`: ประกอบ System Prompt ฝั่ง Server ปลอดภัยจาก prompt injection/quota abuse พร้อม Exponential Backoff & Rate Limit
+  - `Feedback.js`: บันทึกลง Google Sheet พร้อมป้องกัน Formula Injection
+  - `Data.js` (generated): รวมจาก `src/data/` ผ่าน `npm run build`
+  - `Knowledge.js` (generated): รวมจาก `vault/wiki/`
+  - API key เก็บใน Script Properties ชื่อ `GEMINI_API_KEY`
+- **Frontend (Google Sites Pages)**: อยู่ใน `src/sites/`
+  - แยกเป็น 6 หน้าใน `src/sites/pages/`: `home`, `manual`, `allowance`, `tools`, `tables`, `chat`
+  - คอมไพล์เป็น Embed code ก้อนเล็ก (30-45 KB) ใน `dist/sites/<page>.html` ด้วย `npm run build:sites`
+  - ปรับ URL หน้าใน Sites ได้ที่ `src/sites/config.json`
+- **คำสั่งสำคัญ**:
+  - `npm run build` = รวม wiki (`Knowledge.js`) + src/data (`Data.js`)
+  - `npm run build:sites` = บิลด์โค้ดฝัง Google Sites ไปที่ `dist/sites/*.html`
+  - `npm run push` = build + `clasp push`
+  - `npm run deploy` = build + push + อัปเดตเวอร์ชัน deployment บน Apps Script อัตโนมัติ
