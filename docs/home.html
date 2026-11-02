@@ -257,7 +257,7 @@ window.RW_CONFIG = {"apiUrl":"https://script.google.com/macros/s/AKfycbxuj4rSSQD
 // ============================================================================
 const RW = (() => {
     const cfg = window.RW_CONFIG || {};
-    const CACHE_KEY = 'rw_bootstrap_v1';
+    const CACHE_KEY = 'rw_bootstrap_v2';
     let data = null;
     let loading = null;
 
@@ -513,12 +513,35 @@ const RW = (() => {
 
         try {
             const d = await ensureData();
-            const newsList = d.news || [];
-            const item = (newsId ? newsList.find(n => n.id === newsId) : newsList[0]) || newsList[0];
-            if (!item) {
-                body.innerHTML = `<p class="text-sm text-slate-600">ไม่พบข้อมูลข่าวสาร</p>`;
-                return;
-            }
+            const newsList = (d && d.news) || [];
+            const fallbackItem = {
+                id: "news-2569-08-27-weight-loss-pen",
+                date: "27 สิงหาคม 2569",
+                badge: "ประกาศระเบียบใหม่",
+                title: "หลักเกณฑ์และแนวทางการเบิกจ่ายค่ารักษาพยาบาลด้วยวิธีปักปากกาควบคุมน้ำหนัก (Weight Loss Injection Pen)",
+                ref: "หนังสือ กสก.(สก)1375/2569 ลว. 27 ส.ค. 2569",
+                signer: "นางสาวศุภรพรรณ เชาวนปรีชา (อก.สก.)",
+                contact: "แผนกสวัสดิการรักษาพยาบาล โทร. 5028, 5225",
+                summary: "กฟภ. กำหนดแนวทางเบิกจ่ายค่ารักษาด้วยวิธีปักปากกาควบคุมน้ำหนัก ให้เฉพาะกรณีมีความจำเป็นทางการแพทย์เพื่อรักษาโรคเท่านั้น ไม่รวมถึงการรักษาเพื่อความสวยงาม โดยต้องเข้าเกณฑ์ BMI 30 ขึ้นไป หรือ BMI 27 ร่วมกับโรคแทรกซ้อน หรือผู้ป่วยโรคเบาหวาน",
+                criteria: [
+                    {
+                        title: "1. กรณีผู้ป่วยโรคอ้วนหรือภาวะน้ำหนักเกิน (ต้องเข้าเงื่อนไขข้อใดข้อหนึ่ง)",
+                        items: [
+                            "มีค่าดัชนีมวลกาย (BMI) ตั้งแต่ 30 ขึ้นไป",
+                            "มีค่าดัชนีมวลกาย (BMI) ตั้งแต่ 27 ขึ้นไป ร่วมกับมีโรคประจำตัวหรือภาวะแทรกซ้อนที่เกิดจากน้ำหนักเกินอย่างน้อย 1 โรค (เช่น ความดันโลหิตสูง, ไขมันในเลือดสูง, ภาวะหยุดหายใจขณะหลับ, ไขมันพอกตับ หรือข้อเข่าเสื่อม)"
+                        ]
+                    },
+                    {
+                        title: "2. ผู้ที่ป่วยเป็นโรคเบาหวาน",
+                        items: [
+                            "ผู้ป่วยโรคเบาหวานที่มีข้อบ่งชี้ทางการแพทย์"
+                        ]
+                    }
+                ],
+                requirement: "ในใบรับรองแพทย์ต้องระบุเหตุผลและความจำเป็นทางการแพทย์ที่ต้องได้รับการรักษาด้วยวิธีดังกล่าวอย่างชัดเจน",
+                restriction: "❌ ไม่รวมถึงการรักษาเพื่อความสวยงาม หากประสงค์ใช้เพื่อลดน้ำหนักเพื่อความสวยงามจะไม่สามารถเบิกได้"
+            };
+            const item = (newsId ? newsList.find(n => n.id === newsId) : newsList[0]) || fallbackItem;
 
             head.innerHTML = `
                 <div class="flex items-center gap-2 flex-wrap">
@@ -832,7 +855,7 @@ function closeFeedbackModal() { RW.closeFeedback(); }
     </div>
 
     <!-- News Feed / Announcement Ticker Strip -->
-    <section id="newsFeedSection" class="hidden bg-gradient-to-r from-amber-500/10 via-purple-500/10 to-indigo-500/10 rounded-2xl border border-amber-300/80 p-3 sm:p-3.5 shadow-sm">
+    <section id="newsFeedSection" class="bg-gradient-to-r from-amber-500/10 via-purple-500/10 to-indigo-500/10 rounded-2xl border border-amber-300/80 p-3 sm:p-3.5 shadow-sm">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div class="flex items-center gap-2.5 min-w-0 flex-1">
                 <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-gradient-to-r from-amber-500 to-rose-500 text-white font-heading font-bold text-[11px] shrink-0 shadow-sm animate-pulse">
@@ -840,7 +863,9 @@ function closeFeedbackModal() { RW.closeFeedback(); }
                     <span>ข่าวระเบียบล่าสุด</span>
                 </span>
                 <div id="newsTickerHeadline" class="text-xs font-heading font-semibold text-slate-800 truncate cursor-pointer hover:text-pea-800 transition" onclick="RW.openNewsModal()" title="คลิกเพื่ออ่านรายละเอียดฉบับเต็ม">
-                    <!-- Populated dynamically via JS -->
+                    <span class="text-amber-800 font-bold mr-1.5">[27 สิงหาคม 2569]</span>
+                    <span>หลักเกณฑ์และแนวทางการเบิกจ่ายค่ารักษาพยาบาลด้วยวิธีปักปากกาควบคุมน้ำหนัก (Weight Loss Injection Pen)</span>
+                    <span class="text-[11px] text-slate-500 ml-1">(หนังสือ กสก.(สก)1375/2569)</span>
                 </div>
             </div>
             <div class="flex items-center gap-2 shrink-0 self-end sm:self-center">
