@@ -546,6 +546,28 @@ const RW = (() => {
         }
     }
 
+    function showImage(src, title) {
+        const modal = document.getElementById('rwImageModal');
+        const img = document.getElementById('rwImageModalImg');
+        const t = document.getElementById('rwImageModalTitle');
+        const dl = document.getElementById('rwImageModalDownload');
+        if (!modal || !img) {
+            window.open(src, '_blank');
+            return;
+        }
+        img.src = src;
+        if (t) t.textContent = title || 'รูปภาพประกอบ';
+        if (dl) dl.href = src;
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeImageModal() {
+        const modal = document.getElementById('rwImageModal');
+        if (modal) modal.classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+
     return {
         config: cfg,
         get data() { return data; },
@@ -554,7 +576,8 @@ const RW = (() => {
         openClause, closeClause,
         openNewsModal, closeNewsModal,
         toggleChat, clearChat, askQuestion, handleChatSubmit,
-        openFeedback, closeFeedback, submitFeedback
+        openFeedback, closeFeedback, submitFeedback,
+        showImage, closeImageModal
     };
 })();
 
@@ -563,3 +586,5 @@ function switchMainView(view) { RW.go(view); }
 function jumpToClause(num) { RW.openClause(num); }
 function openFeedbackModal() { RW.openFeedback(); }
 function closeFeedbackModal() { RW.closeFeedback(); }
+function showImage(src, title) { RW.showImage(src, title); }
+function closeImageModal() { RW.closeImageModal(); }

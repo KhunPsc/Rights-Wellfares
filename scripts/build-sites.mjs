@@ -1,6 +1,6 @@
 // Build Google Sites embed code: src/sites/pages/<page>.html (+ <page>.js) + shared/* → dist/sites/<page>.html
 // แต่ละไฟล์ใน dist/sites/ คือโค้ดที่นำไปวางใน Google Sites → แทรก → ฝัง (Embed) → "ฝังโค้ด"
-import { readFile, writeFile, readdir, mkdir, copyFile } from 'node:fs/promises';
+import { readFile, writeFile, readdir, mkdir, copyFile, cp } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -84,6 +84,14 @@ if (existsSync(join(docsDir, 'home.html'))) {
   await copyFile(join(docsDir, 'home.html'), join(docsDir, 'index.html'));
 }
 await writeFile(join(docsDir, '.nojekyll'), '', 'utf8');
+
+// Copy static assets from src/sites/assets -> dist/sites/assets & docs/assets
+const srcAssets = join(srcDir, 'assets');
+if (existsSync(srcAssets)) {
+  await cp(srcAssets, join(outDir, 'assets'), { recursive: true });
+  await cp(srcAssets, join(docsDir, 'assets'), { recursive: true });
+  console.log('Copied static assets to dist/sites/assets and docs/assets');
+}
 
 const missing = Object.entries(config.pages || {}).filter(([, url]) => !url).map(([k]) => k);
 if (missing.length) {

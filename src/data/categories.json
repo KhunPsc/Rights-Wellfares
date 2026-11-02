@@ -128,8 +128,9 @@
     "shortName": "หลักเกณฑ์และแนวทางอื่น ๆ",
     "icon": "fa-book-bookmark",
     "clauses": [
-      "guidelines-weight-loss-pen"
+      "guidelines-weight-loss-pen",
+      "guidelines-sriphat-hospital"
     ],
-    "desc": "หลักเกณฑ์และแนวทางการเบิกจ่ายเพิ่มเติมตามหนังสือสั่งการ เช่น ปากกาควบคุมน้ำหนัก (Weight Loss Injection Pen)"
+    "desc": "หลักเกณฑ์และแนวทางการเบิกจ่ายเพิ่มเติมตามหนังสือสั่งการ เช่น ปากกาควบคุมน้ำหนัก, แนวปฏิบัติศูนย์ศรีพัฒน์ มช."
   }
 ]

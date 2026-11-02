@@ -37,7 +37,7 @@ function initHomePage() {
                         ${RW.escapeHtml(c.desc)}
                     </div>
                     <div class="mt-1.5 text-[10px] font-heading font-medium text-pea-700">
-                        ${c.clauses ? c.clauses.length : 0} ข้อ
+                        ${c.clauses ? c.clauses.length : 0} ${c.id === 'cat-guidelines' ? 'เรื่อง' : 'ข้อ'}
                     </div>
                 </div>
             </a>

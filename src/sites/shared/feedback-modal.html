@@ -57,3 +57,23 @@
         </form>
     </div>
 </div>
+
+<!-- Shared Image Lightbox Modal -->
+<div id="rwImageModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden flex flex-col items-center justify-center p-3 sm:p-6 no-print" onclick="if(event.target === this) RW.closeImageModal()">
+    <div class="relative max-w-4xl max-h-[92vh] w-full flex flex-col bg-slate-900 rounded-3xl overflow-hidden shadow-2xl border border-white/10 animate-in fade-in zoom-in-95 duration-200">
+        <div class="flex items-center justify-between px-4 py-3 bg-slate-900/95 border-b border-white/10 text-white">
+            <div id="rwImageModalTitle" class="text-sm font-heading font-medium truncate pr-4 text-slate-200">รูปภาพประกอบ</div>
+            <div class="flex items-center gap-2">
+                <a id="rwImageModalDownload" href="#" download target="_blank" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-xs text-white transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-download"></i><span>ดาวน์โหลด</span>
+                </a>
+                <button type="button" onclick="RW.closeImageModal()" class="w-8 h-8 rounded-lg hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+        </div>
+        <div class="flex-1 overflow-auto p-2 sm:p-4 flex items-center justify-center bg-slate-950/50">
+            <img id="rwImageModalImg" src="" alt="ขยายรูปภาพ" class="max-h-[78vh] w-auto max-w-full rounded-xl object-contain shadow-lg cursor-zoom-out" onclick="RW.closeImageModal()">
+        </div>
+    </div>
+</div>
