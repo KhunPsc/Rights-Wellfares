@@ -1,6 +1,6 @@
 // Build Google Sites embed code: src/sites/pages/<page>.html (+ <page>.js) + shared/* → dist/sites/<page>.html
 // แต่ละไฟล์ใน dist/sites/ คือโค้ดที่นำไปวางใน Google Sites → แทรก → ฝัง (Embed) → "ฝังโค้ด"
-import { readFile, writeFile, readdir, mkdir } from 'node:fs/promises';
+import { readFile, writeFile, readdir, mkdir, copyFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -8,6 +8,7 @@ import { fileURLToPath } from 'node:url';
 const root = fileURLToPath(new URL('..', import.meta.url));
 const srcDir = join(root, 'src', 'sites');
 const outDir = join(root, 'dist', 'sites');
+const docsDir = join(root, 'docs');
 
 const read = (p) => readFile(join(srcDir, p), 'utf8');
 const config = JSON.parse(await read('config.json'));
@@ -39,6 +40,7 @@ function inlineScript(code, name) {
 
 const pages = (await readdir(join(srcDir, 'pages'))).filter((f) => f.endsWith('.html')).map((f) => f.slice(0, -5));
 await mkdir(outDir, { recursive: true });
+await mkdir(docsDir, { recursive: true });
 
 for (const page of pages) {
   let body = await read(`pages/${page}.html`);
@@ -73,8 +75,15 @@ ${pageJs ? inlineScript(pageJs, `pages/${page}.js`) : ''}
 </html>
 `;
   await writeFile(join(outDir, `${page}.html`), html, 'utf8');
-  console.log(`dist/sites/${page}.html  ${(Buffer.byteLength(html) / 1024).toFixed(1)} KB`);
+  await writeFile(join(docsDir, `${page}.html`), html, 'utf8');
+  console.log(`dist/sites/${page}.html & docs/${page}.html  ${(Buffer.byteLength(html) / 1024).toFixed(1)} KB`);
 }
+
+// GitHub Pages: create index.html and .nojekyll in docs/
+if (existsSync(join(docsDir, 'home.html'))) {
+  await copyFile(join(docsDir, 'home.html'), join(docsDir, 'index.html'));
+}
+await writeFile(join(docsDir, '.nojekyll'), '', 'utf8');
 
 const missing = Object.entries(config.pages || {}).filter(([, url]) => !url).map(([k]) => k);
 if (missing.length) {

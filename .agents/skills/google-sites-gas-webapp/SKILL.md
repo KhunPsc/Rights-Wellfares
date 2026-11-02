@@ -172,7 +172,19 @@ npm run deploy
    ```
 3. สคริปต์จะรวม CSS, JavaScript, Header, Nav, Floating Chatbot และ Feedback Modal เข้าไปในแต่ละหน้าใน `dist/sites/*.html`
 
-### ขั้นตอนที่ 5: นำโค้ดไปวางใน Google Sites
+### ขั้นตอนที่ 5: นำไปติดตั้งใน Google Sites (เลือกวิธีใดวิธีหนึ่ง)
+
+#### วิธีที่ A: ฝังด้วย URL ผ่าน GitHub Pages (แนะนำสูงสุด — อัปเดตอัตโนมัติ 100%)
+1. เปิด GitHub Pages ใน Repository: **Settings** -> **Pages** -> Source: **Deploy from a branch** -> Branch: **main**, Folder: **/docs** -> กด **Save**
+2. ใน Google Sites ไปยังหน้าที่ต้องการ เลือก **แทรก (Insert)** -> **ฝัง (Embed)** -> เลือกแท็บ **ด้วย URL (By URL)**
+3. วางลิงก์หน้าของ GitHub Pages เช่น:
+   * หน้าหลัก: `https://<username>.github.io/<repo>/home.html`
+   * หน้าคู่มือ: `https://<username>.github.io/<repo>/manual.html`
+   * หน้าดาวน์โหลดฟอร์ม: `https://<username>.github.io/<repo>/forms.html`
+4. เลือกรูปแบบ **"ทั้งหน้า (Entire page)"** แล้วกดแทรก
+5. **หลังจากนี้เมื่อมีการแก้ไขโค้ดและ git push หน้าเว็บบน Google Sites จะอัปเดตเองโดยอัตโนมัติทันที ไม่ต้องแก้ที่ Google Sites อีกเลย**
+
+#### วิธีที่ B: ฝังโค้ดโดยตรง (Embed code)
 1. ไปที่หน้า Google Sites ที่ต้องการ
 2. เมนูด้านขวาเลือก **แทรก (Insert)** -> **ฝัง (Embed)** -> เลือกแท็บ **ฝังโค้ด (Embed code)**
 3. เปิดไฟล์ที่ตรงกันใน `dist/sites/<page>.html` คัดลอกโค้ดทั้งหมด (Ctrl+A -> Ctrl+C) แล้ววาง
