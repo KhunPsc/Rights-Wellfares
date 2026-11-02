@@ -39,6 +39,31 @@
         </div>
     </div>
 
+    <!-- News Feed / Announcement Ticker Strip -->
+    <section id="newsFeedSection" class="hidden bg-gradient-to-r from-amber-500/10 via-purple-500/10 to-indigo-500/10 rounded-2xl border border-amber-300/80 p-3 sm:p-3.5 shadow-sm">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex items-center gap-2.5 min-w-0 flex-1">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-gradient-to-r from-amber-500 to-rose-500 text-white font-heading font-bold text-[11px] shrink-0 shadow-sm animate-pulse">
+                    <i class="fa-solid fa-bullhorn text-xs"></i>
+                    <span>ข่าวระเบียบล่าสุด</span>
+                </span>
+                <div id="newsTickerHeadline" class="text-xs font-heading font-semibold text-slate-800 truncate cursor-pointer hover:text-pea-800 transition" onclick="RW.openNewsModal()" title="คลิกเพื่ออ่านรายละเอียดฉบับเต็ม">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </div>
+            <div class="flex items-center gap-2 shrink-0 self-end sm:self-center">
+                <button
+                    type="button"
+                    onclick="RW.openNewsModal()"
+                    class="px-3 py-1.5 rounded-xl bg-white hover:bg-amber-100 text-amber-900 border border-amber-300 font-heading font-semibold text-xs shadow-sm flex items-center gap-1.5 transition cursor-pointer"
+                >
+                    <span>อ่านรายละเอียด</span>
+                    <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
     <!-- Quick Highlights Strip -->
     <section class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
         <div class="text-xs font-heading font-semibold text-slate-500 mb-2.5 flex items-center gap-1.5">

@@ -463,6 +463,132 @@ const RW = (() => {
         if (modal) modal.classList.add('hidden');
     }
 
+    // ---------- popup แสดงข่าวสาร / ประกาศระเบียบ ----------
+    function ensureNewsModal() {
+        let modal = document.getElementById('rwNewsModal');
+        if (modal) return modal;
+        modal = document.createElement('div');
+        modal.id = 'rwNewsModal';
+        modal.className = 'fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-start sm:items-center justify-center p-3 sm:p-6';
+        modal.innerHTML = `
+            <div class="bg-white rounded-3xl shadow-2xl border border-slate-200 w-full max-w-2xl max-h-[92vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+                <div class="bg-gradient-to-r from-pea-900 via-pea-800 to-purple-800 text-white px-5 py-4 flex items-start justify-between gap-3 border-b-2 border-amber-400 shrink-0">
+                    <div id="rwNewsModalHead" class="min-w-0 space-y-1"></div>
+                    <button onclick="RW.closeNewsModal()" class="w-8 h-8 rounded-lg hover:bg-white/15 text-purple-200 hover:text-white flex items-center justify-center shrink-0 cursor-pointer" title="ปิด">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+                <div id="rwNewsModalBody" class="p-5 sm:p-6 overflow-y-auto space-y-4 text-xs sm:text-sm"></div>
+                <div class="p-3.5 bg-slate-50 border-t border-slate-200 flex flex-wrap items-center justify-between gap-2 shrink-0">
+                    <button
+                        type="button"
+                        onclick="RW.closeNewsModal(); RW.askQuestion('แนวทางการเบิกจ่ายค่ารักษาด้วยวิธีปักปากกาควบคุมน้ำหนัก (Weight Loss Injection Pen) ตามหนังสือ กสก.(สก)1375/2569 มีเงื่อนไขอย่างไร?');"
+                        class="px-3.5 py-2 rounded-xl bg-purple-100 hover:bg-purple-200 text-pea-800 font-heading font-semibold text-xs flex items-center gap-1.5 transition cursor-pointer"
+                    >
+                        <i class="fa-solid fa-robot text-amber-600"></i>
+                        <span>ถาม AI ผู้ช่วยเกี่ยวกับเรื่องนี้</span>
+                    </button>
+                    <button
+                        type="button"
+                        onclick="RW.closeNewsModal()"
+                        class="px-4 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 font-heading font-semibold text-xs transition cursor-pointer"
+                    >
+                        ปิดหน้าต่าง
+                    </button>
+                </div>
+            </div>`;
+        modal.addEventListener('click', (e) => { if (e.target === modal) closeNewsModal(); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeNewsModal(); });
+        document.body.appendChild(modal);
+        return modal;
+    }
+
+    async function openNewsModal(newsId) {
+        const modal = ensureNewsModal();
+        const head = document.getElementById('rwNewsModalHead');
+        const body = document.getElementById('rwNewsModalBody');
+        head.innerHTML = `<div class="font-heading font-bold text-white">ข่าวสารระเบียบ</div>`;
+        body.innerHTML = loadingBox('กำลังโหลดข้อมูล...');
+        modal.classList.remove('hidden');
+
+        try {
+            const d = await ensureData();
+            const newsList = d.news || [];
+            const item = (newsId ? newsList.find(n => n.id === newsId) : newsList[0]) || newsList[0];
+            if (!item) {
+                body.innerHTML = `<p class="text-sm text-slate-600">ไม่พบข้อมูลข่าวสาร</p>`;
+                return;
+            }
+
+            head.innerHTML = `
+                <div class="flex items-center gap-2 flex-wrap">
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-heading font-semibold bg-amber-400 text-slate-900 shadow-sm">${escapeHtml(item.badge || 'ประกาศ')}</span>
+                    <span class="text-[11px] text-purple-200">${escapeHtml(item.date || '')}</span>
+                </div>
+                <h2 class="font-heading font-bold text-sm sm:text-base text-white leading-snug">${escapeHtml(item.title)}</h2>
+                <div class="text-[11px] text-amber-200/90 font-medium">${escapeHtml(item.ref || '')}</div>
+            `;
+
+            body.innerHTML = `
+                <!-- Warning / Restriction Alert -->
+                <div class="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-900 space-y-1">
+                    <div class="font-heading font-bold flex items-center gap-1.5 text-xs sm:text-sm">
+                        <i class="fa-solid fa-triangle-exclamation text-rose-600"></i>
+                        <span>ข้อกำหนดสำคัญ: เฉพาะความจำเป็นทางการแพทย์เพื่อรักษาโรค</span>
+                    </div>
+                    <p class="text-[11px] sm:text-xs leading-relaxed text-rose-800">
+                        ${escapeHtml(item.restriction || 'ไม่รวมถึงการรักษาเพื่อความสวยงาม')}
+                    </p>
+                </div>
+
+                <!-- Summary Box -->
+                <div class="p-3.5 rounded-2xl bg-purple-50/70 border border-purple-200 text-slate-700 leading-relaxed text-xs">
+                    ${escapeHtml(item.summary || '')}
+                </div>
+
+                <!-- Criteria Cards -->
+                <div class="space-y-2.5">
+                    <h3 class="font-heading font-bold text-xs sm:text-sm text-slate-800 flex items-center gap-1.5">
+                        <i class="fa-solid fa-clipboard-check text-pea-700"></i>
+                        <span>หลักเกณฑ์การพิจารณาเบิกจ่าย</span>
+                    </h3>
+                    ${(item.criteria || []).map(c => `
+                        <div class="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2">
+                            <div class="font-heading font-semibold text-xs text-pea-900">${escapeHtml(c.title)}</div>
+                            ${c.items && c.items.length ? `
+                                <ul class="space-y-1.5 list-disc pl-5 text-[11px] sm:text-xs text-slate-600 leading-relaxed">
+                                    ${c.items.map(it => `<li>${escapeHtml(it)}</li>`).join('')}
+                                </ul>
+                            ` : ''}
+                        </div>
+                    `).join('')}
+                </div>
+
+                <!-- Requirement Note -->
+                <div class="p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs flex items-start gap-2">
+                    <i class="fa-solid fa-file-medical text-amber-600 mt-0.5 text-sm shrink-0"></i>
+                    <div>
+                        <strong>ข้อกำหนดในใบรับรองแพทย์:</strong>
+                        <span>${escapeHtml(item.requirement || '')}</span>
+                    </div>
+                </div>
+
+                <!-- Signer & Contact Footer Info -->
+                <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 text-[11px] text-slate-600 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
+                    <div><strong>ผู้ลงนาม:</strong> ${escapeHtml(item.signer || '')}</div>
+                    <div><i class="fa-solid fa-phone mr-1 text-pea-700"></i><strong>ติดต่อ:</strong> ${escapeHtml(item.contact || '')}</div>
+                </div>
+            `;
+        } catch (err) {
+            body.innerHTML = errorBox(err.message, 'openNewsModal');
+        }
+    }
+
+    function closeNewsModal() {
+        const modal = document.getElementById('rwNewsModal');
+        if (modal) modal.classList.add('hidden');
+    }
+
     // ---------- Floating AI Chatbot Widget Logic ----------
     let floatingChatHistory = [];
 
@@ -651,6 +777,7 @@ const RW = (() => {
         loadData, ensureData, post, go, back, pageUrl,
         escapeHtml, fmt, errorBox, loadingBox,
         openClause, closeClause,
+        openNewsModal, closeNewsModal,
         toggleChat, clearChat, askQuestion, handleChatSubmit,
         openFeedback, closeFeedback, submitFeedback
     };

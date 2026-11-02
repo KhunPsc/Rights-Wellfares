@@ -1,9 +1,23 @@
-// หน้าแรก: โหลด Categories เพื่อแสดงหมวดหมู่ระเบียบ
+// หน้าแรก: โหลด Categories เพื่อแสดงหมวดหมู่ระเบียบ และ News Feed
 function initHomePage() {
     const grid = document.getElementById('homeCategoryGrid');
     grid.innerHTML = RW.loadingBox('กำลังโหลดรายการหมวดหมู่...');
 
     RW.loadData(d => {
+        // News Feed / Announcement Ticker
+        const newsList = d.news || [];
+        const newsSection = document.getElementById('newsFeedSection');
+        const newsHeadline = document.getElementById('newsTickerHeadline');
+        if (newsSection && newsHeadline && newsList.length > 0) {
+            const latest = newsList[0];
+            newsHeadline.innerHTML = `
+                <span class="text-amber-800 font-bold mr-1.5">[${RW.escapeHtml(latest.date)}]</span>
+                <span>${RW.escapeHtml(latest.title)}</span>
+                <span class="text-[11px] text-slate-500 ml-1">(${RW.escapeHtml(latest.ref)})</span>
+            `;
+            newsSection.classList.remove('hidden');
+        }
+
         const cats = (d.categories || []).filter(c => c.id !== 'all');
         const manualUrl = RW.pageUrl('manual') || 'manual.html';
         grid.innerHTML = cats.map(c => `

@@ -16,6 +16,7 @@ const data = {
   allowanceRates: await readJson('allowance-rates.json'),
   wizard: await readJson('wizard.json'),
   forms: await readJson('forms.json'),
+  news: await readJson('news.json'),
 };
 const chatPrompt = (await readFile(join(dataDir, 'chat-prompt.md'), 'utf8')).trim();
 
