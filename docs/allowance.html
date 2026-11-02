@@ -430,13 +430,14 @@ const RW = (() => {
         modal.classList.remove('hidden');
         try {
             const d = await ensureData();
-            const c = d.clauses.find(x => x.num === Number(num));
+            const c = d.clauses.find(x => String(x.num) === String(num));
             if (!c) {
-                body.innerHTML = `<p class="text-sm text-slate-600">ไม่พบข้อ ${Number(num)}</p>`;
+                body.innerHTML = `<p class="text-sm text-slate-600">ไม่พบข้อมูลระเบียบที่ระบุ</p>`;
                 return;
             }
+            const numLabel = typeof c.num === 'number' ? `ข้อ ${c.num}` : 'หลักเกณฑ์และแนวทางปฏิบัติ';
             head.innerHTML = `
-                <div class="text-[11px] text-amber-200 font-heading">ข้อ ${c.num} · ${escapeHtml(c.page)}</div>
+                <div class="text-[11px] text-amber-200 font-heading">${numLabel} · ${escapeHtml(c.page)}</div>
                 <div class="font-heading font-bold text-sm sm:text-base">${escapeHtml(c.title)}</div>`;
             body.innerHTML = c.content;
 

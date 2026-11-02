@@ -430,13 +430,14 @@ const RW = (() => {
         modal.classList.remove('hidden');
         try {
             const d = await ensureData();
-            const c = d.clauses.find(x => x.num === Number(num));
+            const c = d.clauses.find(x => String(x.num) === String(num));
             if (!c) {
-                body.innerHTML = `<p class="text-sm text-slate-600">ไม่พบข้อ ${Number(num)}</p>`;
+                body.innerHTML = `<p class="text-sm text-slate-600">ไม่พบข้อมูลระเบียบที่ระบุ</p>`;
                 return;
             }
+            const numLabel = typeof c.num === 'number' ? `ข้อ ${c.num}` : 'หลักเกณฑ์และแนวทางปฏิบัติ';
             head.innerHTML = `
-                <div class="text-[11px] text-amber-200 font-heading">ข้อ ${c.num} · ${escapeHtml(c.page)}</div>
+                <div class="text-[11px] text-amber-200 font-heading">${numLabel} · ${escapeHtml(c.page)}</div>
                 <div class="font-heading font-bold text-sm sm:text-base">${escapeHtml(c.title)}</div>`;
             body.innerHTML = c.content;
 
@@ -1127,8 +1128,9 @@ function renderCategorySidebar() {
     const nav = document.getElementById('categoryNavList');
     document.getElementById('categoryCountLabel').textContent = `${CATEGORIES.filter(c => c.id !== 'all').length} หมวดหลัก`;
     nav.innerHTML = CATEGORIES.map(cat => {
-        const count = cat.id === 'all' ? CLAUSES_DATA.length : cat.clauses.length;
+        const count = cat.id === 'all' ? CLAUSES_DATA.length : (cat.clauses ? cat.clauses.length : 0);
         const isActive = currentCategory === cat.id;
+        const unit = cat.id === 'cat-guidelines' ? 'เรื่อง' : 'ข้อ';
         return `
             <button
                 onclick="selectCategory('${cat.id}')"
@@ -1144,7 +1146,7 @@ function renderCategorySidebar() {
                 </span>
                 <span class="px-2 py-0.5 rounded-full text-[11px] ${
                     isActive ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600'
-                }">${count} ข้อ</span>
+                }">${count} ${cat.id === 'all' ? 'รายการ' : unit}</span>
             </button>
         `;
     }).join('');
@@ -1192,13 +1194,14 @@ function highlightText(htmlStr, query) {
 function getFilteredClauses() {
     const catObj = CATEGORIES.find(c => c.id === currentCategory);
     return CLAUSES_DATA.filter(item => {
-        const matchCat = currentCategory === 'all' || (catObj && catObj.clauses && catObj.clauses.includes(item.num));
+        const matchCat = currentCategory === 'all' || (catObj && catObj.clauses && catObj.clauses.some(c => String(c) === String(item.num)));
         if (!matchCat) return false;
         if (!currentSearchQuery) return true;
         const q = currentSearchQuery.toLowerCase();
         const plainContent = item.content.replace(/<[^>]+>/g, ' ').toLowerCase();
         return (
-            `ข้อ ${item.num}`.includes(q) ||
+            (typeof item.num === 'number' && `ข้อ ${item.num}`.includes(q)) ||
+            String(item.num).toLowerCase().includes(q) ||
             item.title.toLowerCase().includes(q) ||
             item.summary.toLowerCase().includes(q) ||
             plainContent.includes(q)
@@ -1213,7 +1216,7 @@ function renderClausesList() {
     const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
     currentPage = Math.min(Math.max(1, currentPage), totalPages);
 
-    document.getElementById('clauseCounterBadge').textContent = `แสดง ${filtered.length} / ${CLAUSES_DATA.length} ข้อ`;
+    document.getElementById('clauseCounterBadge').textContent = `แสดง ${filtered.length} / ${CLAUSES_DATA.length} รายการ`;
 
     if (filtered.length === 0) {
         container.innerHTML = `
@@ -1232,7 +1235,7 @@ function renderClausesList() {
 
     const pageItems = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
     container.innerHTML = pageItems.map(item => {
-        const isExpanded = expandedClauses.has(item.num) || currentSearchQuery.length > 0;
+        const isExpanded = expandedClauses.has(item.num) || expandedClauses.has(String(item.num)) || currentSearchQuery.length > 0;
         const catName = CATEGORIES.find(c => c.id === item.cat)?.shortName || '';
         const titleHtml = highlightText(item.title, currentSearchQuery);
         const summaryHtml = highlightText(item.summary, currentSearchQuery);
@@ -1241,17 +1244,24 @@ function renderClausesList() {
         return `
             <article id="clause-card-${item.num}" class="clause-card bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                 <button
-                    onclick="toggleClause(${item.num})"
-                    class="w-full text-left p-4 sm:p-5 flex items-start justify-between gap-4 hover:bg-slate-50/80 transition"
+                    onclick="toggleClause('${item.num}')"
+                    class="w-full text-left p-4 sm:p-5 flex items-start justify-between gap-4 hover:bg-slate-50/80 transition cursor-pointer"
                 >
                     <div class="flex items-start gap-3.5">
-                        <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-pea-700 to-purple-800 text-white font-heading font-bold text-sm flex flex-col items-center justify-center shrink-0 shadow-sm">
-                            <span class="text-[10px] font-normal text-purple-200 leading-none">ข้อ</span>
-                            <span class="text-base leading-tight">${item.num}</span>
-                        </div>
+                        ${typeof item.num === 'number' ? `
+                            <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-pea-700 to-purple-800 text-white font-heading font-bold text-sm flex flex-col items-center justify-center shrink-0 shadow-sm">
+                                <span class="text-[10px] font-normal text-purple-200 leading-none">ข้อ</span>
+                                <span class="text-base leading-tight">${item.num}</span>
+                            </div>
+                        ` : `
+                            <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-500 to-rose-600 text-white font-heading font-bold text-sm flex flex-col items-center justify-center shrink-0 shadow-sm">
+                                <i class="fa-solid fa-file-medical text-base"></i>
+                                <span class="text-[9px] font-medium leading-none mt-0.5 text-amber-100">แนวทาง</span>
+                            </div>
+                        `}
                         <div>
                             <div class="flex flex-wrap items-center gap-2 mb-1">
-                                <span class="px-2 py-0.5 rounded-md bg-purple-100 text-pea-800 font-heading font-semibold text-[11px]">${catName}</span>
+                                <span class="px-2 py-0.5 rounded-md ${typeof item.num === 'number' ? 'bg-purple-100 text-pea-800' : 'bg-amber-100 text-amber-900'} font-heading font-semibold text-[11px]">${catName}</span>
                                 <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[11px]"><i class="fa-regular fa-file-pdf mr-1"></i>${item.page}</span>
                             </div>
                             <h3 class="font-heading font-bold text-slate-900 text-sm sm:text-base">${titleHtml}</h3>
@@ -1303,10 +1313,13 @@ function goToPage(page) {
 }
 
 function toggleClause(num) {
-    if (expandedClauses.has(num)) {
+    const key = String(num);
+    if (expandedClauses.has(num) || expandedClauses.has(key)) {
         expandedClauses.delete(num);
+        expandedClauses.delete(key);
     } else {
         expandedClauses.add(num);
+        expandedClauses.add(key);
     }
     renderClausesList();
 }
@@ -1330,10 +1343,11 @@ function jumpToClause(num) {
         document.getElementById('clearSearchBtn').classList.add('hidden');
         selectCategory('all');
     }
-    const idx = CLAUSES_DATA.findIndex(c => c.num === num);
+    const idx = CLAUSES_DATA.findIndex(c => String(c.num) === String(num));
     if (idx < 0) return;
     currentPage = Math.floor(idx / PAGE_SIZE) + 1;
     expandedClauses.add(num);
+    expandedClauses.add(String(num));
     renderClausesList();
     setTimeout(() => {
         const el = document.getElementById(`clause-card-${num}`);
