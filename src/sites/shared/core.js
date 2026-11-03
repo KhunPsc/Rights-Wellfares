@@ -3,7 +3,7 @@
 //   RW.loadData(cb)   ดึงข้อมูลจาก Apps Script + cache ใน localStorage (stale-while-revalidate)
 //   RW.post(body)     POST ไป Apps Script (text/plain เพื่อเลี่ยง CORS preflight)
 //   RW.go(page)       ไปหน้าอื่นใน Google Sites ตาม config.pages
-//   jumpToClause(n)   เปิดข้อคู่มือใน popup (หน้า manual override เป็นเลื่อนไปที่การ์ด)
+//   jumpToClause(n)   เปิดข้อคู่มือใน popup (ปุ่มในป๊อปอัปพาไปบทที่มีข้อนั้นในหน้า book)
 //   switchMainView(v) = RW.go(v) — เนื้อหาในข้อคู่มือยังเรียกชื่อนี้อยู่
 // ============================================================================
 const RW = (() => {
@@ -155,9 +155,9 @@ const RW = (() => {
                 <div class="bg-gradient-to-r from-pea-900 to-pea-700 text-white px-5 py-3.5 flex items-start justify-between gap-3 border-b-2 border-amber-400 shrink-0">
                     <div id="rwClauseModalHead" class="min-w-0"></div>
                     <div class="flex items-center gap-2 shrink-0">
-                        <a id="rwClauseModalGoBtn" class="hidden px-2.5 py-1 rounded-lg bg-white/20 hover:bg-white/30 text-white text-xs font-heading font-medium transition flex items-center gap-1.5 no-underline" title="เปิดดูในหน้าคู่มือฉบับเต็ม">
+                        <a id="rwClauseModalGoBtn" class="hidden px-2.5 py-1 rounded-lg bg-white/20 hover:bg-white/30 text-white text-xs font-heading font-medium transition flex items-center gap-1.5 no-underline" title="เปิดอ่านในหนังสือ">
                             <i class="fa-solid fa-up-right-from-square text-[10px]"></i>
-                            <span class="hidden sm:inline">เปิดในหน้าคู่มือ</span>
+                            <span class="hidden sm:inline">เปิดในหนังสือ</span>
                         </a>
                         <button onclick="RW.closeClause()" class="w-8 h-8 rounded-lg hover:bg-white/15 text-purple-200 hover:text-white flex items-center justify-center shrink-0" title="ปิด">
                             <i class="fa-solid fa-xmark text-lg"></i>
@@ -194,14 +194,16 @@ const RW = (() => {
 
             const goBtn = document.getElementById('rwClauseModalGoBtn');
             if (goBtn) {
-                if (cfg.page === 'manual') {
-                    goBtn.classList.add('hidden');
-                } else {
-                    goBtn.classList.remove('hidden');
-                    const manualUrl = pageUrl('manual') || 'manual.html';
-                    goBtn.href = manualUrl + '?clause=' + encodeURIComponent(c.num);
+                // ไปที่ข้อนี้ในเล่มคู่มือ 44 ข้อ (บท = หมวดที่มีข้อนี้)
+                const book = (d.books || []).find(b => b.chapters.some(ch => ch.clauses));
+                const ch = book && book.chapters.find(x => (x.clauses || []).map(String).includes(String(c.num)));
+                goBtn.classList.toggle('hidden', !ch);
+                if (ch) {
+                    const key = `${book.id}|${ch.num}|${c.num}`;
+                    goBtn.href = `${pageUrl('book') || 'book.html'}?book=${encodeURIComponent(book.id)}&ch=${ch.num}&clause=${encodeURIComponent(c.num)}`;
                     goBtn.onclick = () => {
-                        try { localStorage.setItem('rw_selected_clause', String(c.num)); } catch (e) {}
+                        try { localStorage.setItem('rw_book', key); } catch (e) {}
+                        if (cfg.page === 'book' && window.bookGo) { closeClause(); return window.bookGo(book.id, ch.num, String(c.num)); }
                     };
                 }
             }

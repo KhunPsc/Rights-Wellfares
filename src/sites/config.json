@@ -3,7 +3,6 @@
   "linkTarget": "_self",
   "pages": {
     "home": "home.html",
-    "manual": "manual.html",
     "tables": "tables.html",
     "tools": "tools.html",
     "allowance": "allowance.html",

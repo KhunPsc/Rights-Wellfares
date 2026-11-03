@@ -113,18 +113,49 @@ function resetNewsTimer() {
     startNewsTimer();
 }
 
-// Search Bar Logic (Home Page -> Manual Page)
+// ค้นหาในหนังสือทุกเล่ม (เนื้อหาบท + ข้อในเล่ม 44 ข้อ) แสดงผลใต้ช่องค้นหา
+let HOME_DATA = null;
+const plainText = (html) => String(html || '').replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ');
+
+function searchBooks(q) {
+    const needle = q.toLowerCase();
+    const hits = [];
+    for (const b of HOME_DATA.books || []) {
+        for (const ch of b.chapters) {
+            const items = ch.clauses
+                ? ch.clauses.map(n => HOME_DATA.clauses.find(c => String(c.num) === String(n))).filter(Boolean)
+                    .map(c => ({ clause: String(c.num), title: (typeof c.num === 'number' ? 'ข้อ ' + c.num + ' ' : '') + c.title, text: c.title + ' ' + c.summary + ' ' + plainText(c.content) }))
+                : [{ clause: '', title: ch.title, text: ch.title + ' ' + plainText(ch.content) }];
+            for (const it of items) {
+                const i = it.text.toLowerCase().indexOf(needle);
+                if (i < 0) continue;
+                const start = Math.max(0, i - 40);
+                hits.push({ book: b, ch, clause: it.clause, title: it.title, snippet: (start ? '…' : '') + it.text.slice(start, i + needle.length + 80) + '…', at: i });
+            }
+        }
+    }
+    return hits;
+}
+
 function handleHomeSearch(event) {
     if (event) event.preventDefault();
     const input = document.getElementById('globalSearchInput');
+    const box = document.getElementById('homeSearchResults');
     const q = (input ? input.value : '').trim();
-    if (!q) return;
-    try {
-        localStorage.setItem('rw_search_query', q);
-        localStorage.setItem('rw_selected_cat', 'all');
-    } catch (e) {}
-    const manualUrl = RW.pageUrl('manual') || 'manual.html';
-    window.location.href = `${manualUrl}?q=${encodeURIComponent(q)}&cat=all`;
+    if (!q || !HOME_DATA || !box) return;
+    const hits = searchBooks(q);
+    const base = RW.pageUrl('book') || 'book.html';
+    const mark = (s) => RW.escapeHtml(s).replace(new RegExp(RW.escapeHtml(q).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi'), m => `<mark class="bg-amber-200 rounded px-0.5">${m}</mark>`);
+    box.innerHTML = `
+        <div class="px-4 py-2.5 border-b border-slate-100 text-xs text-slate-500 font-heading">พบ ${hits.length} รายการสำหรับ "${RW.escapeHtml(q)}"${hits.length > 30 ? ' (แสดง 30 รายการแรก)' : ''}</div>
+        ${hits.length ? `<ul class="divide-y divide-slate-100 max-h-[28rem] overflow-y-auto">${hits.slice(0, 30).map(h => {
+            const key = `${h.book.id}|${h.ch.num}|${h.clause}`;
+            return `<li><a href="${base}?book=${encodeURIComponent(h.book.id)}&ch=${h.ch.num}${h.clause ? '&clause=' + encodeURIComponent(h.clause) : ''}" onclick="try{localStorage.setItem('rw_book','${key}')}catch(e){}" class="block px-4 py-3 hover:bg-purple-50/60 no-underline">
+                <span class="block text-[11px] text-pea-600 font-heading font-semibold">${RW.escapeHtml(h.book.short)} · บทที่ ${h.ch.num} ${RW.escapeHtml(h.ch.title)}</span>
+                <span class="block text-sm font-heading font-semibold text-slate-800">${mark(h.title)}</span>
+                <span class="block text-xs text-slate-500 mt-0.5 line-clamp-2">${mark(h.snippet)}</span></a></li>`;
+        }).join('')}</ul>` : '<p class="px-4 py-6 text-center text-sm text-slate-500">ไม่พบ — ลองคำอื่น หรือถาม AI ผู้ช่วย</p>'}`;
+    box.classList.remove('hidden');
 }
 
 function clearHomeSearch() {
@@ -135,6 +166,8 @@ function clearHomeSearch() {
     }
     const btn = document.getElementById('clearSearchBtn');
     if (btn) btn.classList.add('hidden');
+    const box = document.getElementById('homeSearchResults');
+    if (box) box.classList.add('hidden');
 }
 
 // Expose navigation & search functions
@@ -150,7 +183,7 @@ function renderBookShelf(books) {
     if (!shelf) return;
     const base = RW.pageUrl('book') || 'book.html';
     shelf.innerHTML = books.map(b => {
-        const ready = b.chapters.filter(c => c.content || c.link).length;
+        const ready = b.chapters.filter(c => c.content || c.link || c.clauses).length;
         return `
         <a href="${base}?book=${encodeURIComponent(b.id)}" onclick="try{localStorage.setItem('rw_book','${b.id}|0')}catch(e){}"
            class="group relative bg-gradient-to-br from-pea-900 via-pea-700 to-purple-800 rounded-2xl p-5 pl-7 text-white shadow-md hover:shadow-xl hover:-translate-y-0.5 transition no-underline block overflow-hidden">
@@ -177,10 +210,8 @@ function initHomePage() {
         });
     }
 
-    const grid = document.getElementById('homeCategoryGrid');
-    grid.innerHTML = RW.loadingBox('กำลังโหลดรายการหมวดหมู่...');
-
     RW.loadData(d => {
+        HOME_DATA = d;
         // News Feed / Announcement Banner Carousel (สูงสุด 10 เรื่อง)
         newsItems = (d.news || []).slice(0, 10);
         const newsSection = document.getElementById('newsFeedSection');
@@ -216,32 +247,9 @@ function initHomePage() {
 
         renderBookShelf(d.books || []);
 
-        const cats = (d.categories || []).filter(c => c.id !== 'all');
-        const manualUrl = RW.pageUrl('manual') || 'manual.html';
-        grid.innerHTML = cats.map(c => `
-            <a
-                href="${manualUrl}?cat=${encodeURIComponent(c.id)}"
-                onclick="try{localStorage.setItem('rw_selected_cat','${c.id}')}catch(e){}"
-                class="cursor-pointer p-3.5 rounded-xl border border-slate-200 hover:border-purple-300 hover:bg-purple-50/50 transition flex items-start gap-3 group block no-underline"
-            >
-                <div class="w-9 h-9 rounded-lg bg-purple-100 text-pea-700 flex items-center justify-center shrink-0 group-hover:scale-105 transition">
-                    <i class="fa-solid ${c.icon}"></i>
-                </div>
-                <div class="min-w-0 flex-1">
-                    <div class="font-heading font-semibold text-xs text-slate-800 truncate group-hover:text-pea-800 transition">
-                        ${RW.escapeHtml(c.shortName)}
-                    </div>
-                    <div class="text-[11px] text-slate-500 mt-0.5 line-clamp-2">
-                        ${RW.escapeHtml(c.desc)}
-                    </div>
-                    <div class="mt-1.5 text-[10px] font-heading font-medium text-pea-700">
-                        ${c.clauses ? c.clauses.length : 0} ${c.id === 'cat-guidelines' ? 'เรื่อง' : 'ข้อ'}
-                    </div>
-                </div>
-            </a>
-        `).join('');
     }).catch(err => {
-        grid.innerHTML = RW.errorBox(err.message, 'initHomePage');
+        const shelf = document.getElementById('homeBookShelf');
+        if (shelf) shelf.innerHTML = RW.errorBox(err.message, 'initHomePage');
     });
 }
 

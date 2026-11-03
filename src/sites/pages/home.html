@@ -78,7 +78,7 @@
                 autocomplete="off"
                 autocapitalize="off"
                 spellcheck="false"
-                aria-label="ค้นหาข้อมูลในคู่มือ"
+                aria-label="ค้นหาในหนังสือทุกเล่ม"
                 placeholder="ค้นหา เช่น ค่าห้อง, ลูกจ้าง, 90 วัน, ล้างไต, เบี้ยเลี้ยง, ปากกาลดน้ำหนัก..."
                 class="w-full min-w-0 pl-11 pr-24 py-3 sm:py-3.5 rounded-2xl bg-white text-slate-900 placeholder-slate-400 text-base sm:text-sm border border-slate-300 focus:border-pea-600 focus:ring-4 focus:ring-purple-100 focus:outline-none shadow-sm transition"
             >
@@ -101,6 +101,7 @@
                 </button>
             </div>
         </form>
+        <div id="homeSearchResults" class="hidden mt-3 bg-white rounded-2xl border border-slate-200 shadow-sm"></div>
     </section>
 
     <!-- Quick Highlights Strip -->
@@ -160,24 +161,5 @@
             <!-- Populated via JS -->
         </div>
     </section>
-
-    <!-- Category Overview List -->
-    <div class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm">
-        <div class="flex items-center justify-between mb-4">
-            <div>
-                <h2 class="font-heading font-bold text-base text-slate-800">
-                    <i class="fa-solid fa-layer-group text-pea-600 mr-1.5"></i>หมวดหมู่ระเบียบหลัก (8 หมวด)
-                </h2>
-                <p class="text-xs text-slate-500 mt-0.5">คลิกแต่ละหมวดเพื่อเปิดอ่านในหน้าคู่มือ</p>
-            </div>
-            <a href="manual.html" class="text-xs font-heading font-semibold text-pea-700 hover:text-pea-800 flex items-center gap-1 no-underline">
-                <span>ดูทั้งหมด</span>
-                <i class="fa-solid fa-chevron-right text-[10px]"></i>
-            </a>
-        </div>
-        <div id="homeCategoryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            <!-- Populated via JS -->
-        </div>
-    </div>
 
 </main>

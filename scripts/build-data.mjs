@@ -24,6 +24,13 @@ const data = {
 
 // เนื้อหาแต่ละบท: vault/books/<book id>/<เลขบท 2 หลัก>.md — ยังไม่มีไฟล์ = บทนั้น "กำลังจัดทำ" (content: null)
 for (const book of data.books) {
+  if (book.fromCategories) {
+    // เล่มคู่มือ 44 ข้อ: บท = หมวดใน categories.json · หน้าเว็บดึงเนื้อหาจาก clauses ตามรายการ ch.clauses (ไม่ซ้ำข้อมูลใน bootstrap)
+    book.chapters = data.categories.filter((c) => c.clauses).map((c, i) => ({
+      num: i + 1, title: c.name.replace(/^\d+\.\s*/, ''), clauses: c.clauses,
+    }));
+    continue;
+  }
   for (const ch of book.chapters) {
     const file = join(root, 'vault', 'books', book.id, `${String(ch.num).padStart(2, '0')}.md`);
     ch.content = existsSync(file) ? markdownToHtml(await readFile(file, 'utf8')) : null;
@@ -84,4 +91,4 @@ await writeFile(
 );
 
 const chapters = data.books.flatMap((b) => b.chapters);
-console.log(`Data.js: version ${version}, ${data.clauses.length} clauses, books ${chapters.filter((c) => c.content).length}/${chapters.length} chapters written, ${json.length.toLocaleString()} chars`);
+console.log(`Data.js: version ${version}, ${data.clauses.length} clauses, books ${chapters.filter((c) => c.content || c.clauses).length}/${chapters.length} chapters ready, ${json.length.toLocaleString()} chars`);
