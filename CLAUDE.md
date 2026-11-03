@@ -55,7 +55,7 @@ scripts/               build-knowledge.mjs: รวม wiki/ → apps-script/Know
 - **ข้อมูลกลาง (Single Source of Truth)**: เก็บใน `src/data/*.json` (ระเบียบ 44 ข้อ, หมวดหมู่, อัตราเบี้ยเลี้ยง/ที่พัก, wizard, ฟอร์ม)
 - **Backend (Apps Script)**: อยู่ใน `apps-script/`
   - `Router.js`: `doGet` (bootstrap/version) + `doPost` (chat/feedback)
-  - `Chat.js`: ประกอบ System Prompt ฝั่ง Server ปลอดภัยจาก prompt injection/quota abuse พร้อม Exponential Backoff & Rate Limit
+  - `Chat.js`: ประกอบ System Prompt ฝั่ง Server (คู่มือ 48 ข้อ + หน้า wiki ที่เกี่ยวกับคำถาม ≤ 20K ตัวอักษร เลือกด้วย bigram) พร้อม Exponential Backoff & Rate Limit — ทดสอบการเลือกหน้าด้วย `npm test`
   - `Feedback.js`: บันทึกลง Google Sheet พร้อมป้องกัน Formula Injection
   - `Data.js` (generated): รวมจาก `src/data/` ผ่าน `npm run build`
   - `Knowledge.js` (generated): รวมจาก `vault/wiki/`
