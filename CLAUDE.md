@@ -77,3 +77,4 @@ scripts/               build-knowledge.mjs: รวม wiki/ → apps-script/Know
   - `npm run build:sites` = บิลด์โค้ดฝัง Google Sites ไปที่ `dist/sites/*.html` (Tailwind สร้าง CSS ตอน build ตาม `tailwind.config.cjs` — ครั้งแรกต้อง `npm install`)
   - `npm run push` = build + `clasp push`
   - `npm run deploy` = build + push + อัปเดตเวอร์ชัน deployment บน Apps Script อัตโนมัติ
+- **ปล่อยงานขึ้นจริง** = `npm run deploy` (ข้อมูล/แชต) + `npm run build:sites` แล้ว commit `docs/` และ `git push` (GitHub Pages) — Google Sites ผูก URL ของ GitHub Pages ไว้ จึงไม่ต้องวางโค้ดใน Sites ใหม่
