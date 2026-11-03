@@ -834,8 +834,7 @@ function closeImageModal() { RW.closeImageModal(); }
         <!-- Links (จอใหญ่) -->
         <div class="hidden lg:flex items-center gap-0.5 ml-auto text-xs font-heading">
             <a href="home.html" data-nav="home" class="px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-pea-800 transition no-underline">ชั้นหนังสือ</a>
-            <a href="allowance.html" data-nav="allowance" class="px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-pea-800 transition no-underline">เบี้ยเลี้ยง-ที่พัก</a>
-            <a href="tables.html" data-nav="tables" class="px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-pea-800 transition no-underline">ตารางสรุป</a>
+            <a href="tables.html" data-nav="tables" class="px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-pea-800 transition no-underline">สรุปการใช้สิทธิ์</a>
             <a href="forms.html" data-nav="forms" class="px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-pea-800 transition no-underline">แบบฟอร์ม</a>
         </div>
 
@@ -844,8 +843,8 @@ function closeImageModal() { RW.closeImageModal(); }
             <button type="button" onclick="RW.toggleChat(true)" class="inline-flex items-center gap-1.5 px-3 h-9 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-heading font-semibold text-xs shadow-sm transition cursor-pointer" title="ถาม AI ผู้ช่วย">
                 <i class="fa-solid fa-robot"></i><span class="hidden sm:inline">ถาม AI</span>
             </button>
-            <button type="button" onclick="RW.openFeedback()" class="w-9 h-9 inline-flex items-center justify-center rounded-xl text-amber-700 hover:bg-amber-50 border border-amber-200 transition cursor-pointer" title="Feedback / แจ้งปัญหา" aria-label="Feedback / แจ้งปัญหา">
-                <i class="fa-solid fa-comment-dots"></i>
+            <button type="button" onclick="RW.openFeedback()" class="w-9 h-9 inline-flex items-center justify-center rounded-xl text-amber-700 hover:bg-amber-50 border border-amber-200 transition cursor-pointer" title="Feedback / เสนอแนะ / แจ้งปัญหา" aria-label="Feedback / เสนอแนะ / แจ้งปัญหา">
+                <i class="fa-solid fa-flag"></i>
             </button>
             <button type="button" onclick="document.getElementById('rwNavMenu').classList.toggle('hidden')" class="lg:hidden w-9 h-9 inline-flex items-center justify-center rounded-xl text-slate-600 hover:bg-slate-100 transition cursor-pointer" aria-label="เมนู" aria-controls="rwNavMenu">
                 <i class="fa-solid fa-bars"></i>
@@ -857,8 +856,7 @@ function closeImageModal() { RW.closeImageModal(); }
     <div id="rwNavMenu" class="hidden lg:hidden border-t border-slate-200 bg-white">
         <div class="max-w-7xl mx-auto px-4 py-2 grid grid-cols-2 sm:grid-cols-3 gap-1 text-sm font-heading">
             <a href="home.html" data-nav="home" class="px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-100 no-underline"><i class="fa-solid fa-book w-5 text-pea-600"></i>ชั้นหนังสือ</a>
-            <a href="allowance.html" data-nav="allowance" class="px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-100 no-underline"><i class="fa-solid fa-suitcase-rolling w-5 text-pea-600"></i>เบี้ยเลี้ยง-ที่พัก</a>
-            <a href="tables.html" data-nav="tables" class="px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-100 no-underline"><i class="fa-solid fa-table w-5 text-pea-600"></i>ตารางสรุป</a>
+            <a href="tables.html" data-nav="tables" class="px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-100 no-underline"><i class="fa-solid fa-table w-5 text-pea-600"></i>สรุปการใช้สิทธิ์</a>
             <a href="forms.html" data-nav="forms" class="px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-100 no-underline"><i class="fa-solid fa-download w-5 text-pea-600"></i>แบบฟอร์ม</a>
         </div>
     </div>
