@@ -1,0 +1,13 @@
+{
+  "_comment": "การ์ด 'เกิดอะไรขึ้นกับคุณ?' บนหน้าแรก — กดแล้วไปบทในหนังสือ (book + ch) · ตัวเลขใน figure ที่อยู่ใน facts.json ต้องตรงกัน (location highlight:<id>)",
+  "highlights": [
+    { "id": "sick", "icon": "fa-hospital-user", "color": "purple", "title": "ไม่สบาย / นอนโรงพยาบาล", "figure": "ค่าห้อง 1,500/วัน · OPD เอกชน 3,600/ปี", "book": "welfare44", "ch": 2 },
+    { "id": "birth", "icon": "fa-baby", "color": "pink", "title": "คลอดบุตร", "figure": "1,200 บาท/ครั้ง · ยื่นภายใน 90 วัน", "book": "kfn1", "ch": 3 },
+    { "id": "school", "icon": "fa-graduation-cap", "color": "blue", "title": "ลูกเข้าเรียน", "figure": "รัฐเต็มจำนวน · เอกชนสูงกว่า ม.ปลาย ครึ่งหนึ่ง", "book": "kfn1", "ch": 2 },
+    { "id": "child", "icon": "fa-children", "color": "emerald", "title": "เงินช่วยเหลือบุตร", "figure": "พนักงาน 500 บาท/เดือน/คน", "book": "kfn1", "ch": 4 },
+    { "id": "travel", "icon": "fa-suitcase-rolling", "color": "indigo", "title": "เดินทางไปปฏิบัติงาน", "figure": "เบี้ยเลี้ยง 300 / 370 / 460 · รถส่วนตัว 5 บาท/กม.", "book": "kfn1", "ch": 11 },
+    { "id": "ot", "icon": "fa-clock", "color": "amber", "title": "ทำงานล่วงเวลา / วันหยุด", "figure": "1.5 / 1 / 3 เท่า", "book": "kfn1", "ch": 12 },
+    { "id": "ordain", "icon": "fa-hands-praying", "color": "orange", "title": "อุปสมบท", "figure": "2,000 บาท", "book": "kfn1", "ch": 5 },
+    { "id": "funeral", "icon": "fa-dove", "color": "slate", "title": "พนักงานเสียชีวิต", "figure": "ค่าทำศพ 3 เท่าของเงินเดือน + 100,000", "book": "kfn1", "ch": 6 }
+  ]
+}

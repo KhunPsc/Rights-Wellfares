@@ -201,6 +201,33 @@ function renderBookShelf(books) {
     }).join('');
 }
 
+// การ์ด "เกิดอะไรขึ้นกับคุณ?" — สีเขียนเต็มชื่อ class เพื่อให้ Tailwind สร้าง CSS ตอน build
+const HIGHLIGHT_COLORS = {
+    purple: 'bg-purple-50 border-purple-200 hover:bg-purple-100 [&_.hl-icon]:bg-pea-700',
+    pink: 'bg-pink-50 border-pink-200 hover:bg-pink-100 [&_.hl-icon]:bg-pink-600',
+    blue: 'bg-blue-50 border-blue-200 hover:bg-blue-100 [&_.hl-icon]:bg-blue-600',
+    emerald: 'bg-emerald-50 border-emerald-200 hover:bg-emerald-100 [&_.hl-icon]:bg-emerald-600',
+    indigo: 'bg-indigo-50 border-indigo-200 hover:bg-indigo-100 [&_.hl-icon]:bg-indigo-600',
+    amber: 'bg-amber-50 border-amber-200 hover:bg-amber-100 [&_.hl-icon]:bg-amber-500',
+    orange: 'bg-orange-50 border-orange-200 hover:bg-orange-100 [&_.hl-icon]:bg-orange-500',
+    slate: 'bg-slate-50 border-slate-200 hover:bg-slate-100 [&_.hl-icon]:bg-slate-600',
+};
+
+function renderHighlights(items) {
+    const box = document.getElementById('homeHighlights');
+    if (!box) return;
+    const base = RW.pageUrl('book') || 'book.html';
+    box.innerHTML = items.map(h => `
+        <a href="${base}?book=${encodeURIComponent(h.book)}&ch=${h.ch}" onclick="try{localStorage.setItem('rw_book','${h.book}|${h.ch}')}catch(e){}"
+           class="group p-3 rounded-xl border transition flex items-start gap-2.5 no-underline ${HIGHLIGHT_COLORS[h.color] || HIGHLIGHT_COLORS.slate}">
+            <span class="hl-icon w-9 h-9 shrink-0 rounded-lg text-white flex items-center justify-center"><i class="fa-solid ${h.icon}"></i></span>
+            <span class="min-w-0">
+                <span class="block font-heading font-bold text-sm text-slate-800 leading-snug group-hover:text-pea-800">${RW.escapeHtml(h.title)}</span>
+                <span class="block mt-0.5 text-[11px] text-slate-600 leading-snug">${RW.escapeHtml(h.figure)}</span>
+            </span>
+        </a>`).join('');
+}
+
 function initHomePage() {
     // Setup Home Search Input events
     const sInput = document.getElementById('globalSearchInput');
@@ -247,6 +274,7 @@ function initHomePage() {
         }
 
         renderBookShelf(d.books || []);
+        renderHighlights(d.highlights || []);
 
     }).catch(err => {
         const shelf = document.getElementById('homeBookShelf');

@@ -1,6 +1,6 @@
 // Markdown ชุดย่อยสำหรับเนื้อหาหนังสือ (vault/books/**) → HTML พร้อม class Tailwind
-// รองรับ: ## / ### / #### หัวข้อ, ย่อหน้า, - และ 1. รายการ (ซ้อนด้วยการเว้น 2 ช่อง), | ตาราง |, > หมายเหตุ, **ตัวหนา**
-// shortcut: ไม่รองรับลิงก์/รูป/โค้ด — ถ้าเนื้อหาต้องใช้ค่อยเพิ่ม หรือเปลี่ยนไปใช้ไลบรารี markdown
+// รองรับ: ## / ### / #### หัวข้อ, ย่อหน้า, - และ 1. รายการ (ซ้อนด้วยการเว้น 2 ช่อง), | ตาราง |, > หมายเหตุ, **ตัวหนา**, ![คำอธิบาย](รูป) ทั้งบรรทัด
+// shortcut: ไม่รองรับลิงก์/โค้ด/รูปกลางบรรทัด — ถ้าเนื้อหาต้องใช้ค่อยเพิ่ม หรือเปลี่ยนไปใช้ไลบรารี markdown
 
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const inline = (s) => esc(s.trim()).replace(/\*\*(.+?)\*\*/g, '<strong class="font-semibold text-slate-900">$1</strong>');
@@ -41,13 +41,23 @@ function renderTable(rows) {
   return `<div class="overflow-x-auto my-3"><table class="w-full text-sm border border-slate-200 rounded-xl"><thead class="bg-purple-50 text-pea-900"><tr>${th}</tr></thead><tbody>${tr}</tbody></table></div>`;
 }
 
-export function markdownToHtml(md) {
+// options.image(src) → URL ที่ใช้บนเว็บ (เช่น แปลง path ใน vault เป็น assets/...)
+export function markdownToHtml(md, options = {}) {
   const lines = md.replace(/\r\n/g, '\n').split('\n');
   const out = [];
   let i = 0;
   while (i < lines.length) {
     const line = lines[i];
     if (!line.trim()) { i++; continue; }
+
+    const img = line.match(/^!\[([^\]]*)\]\(([^)\s]+)\)\s*$/);
+    if (img) {
+      const src = options.image ? options.image(img[2]) : img[2];
+      if (/^\s*javascript:/i.test(src)) throw new Error(`markdown: unsafe image src ${src}`);
+      const cap = img[1].trim() ? `<figcaption class="mt-1.5 text-xs text-slate-500 text-center">${inline(img[1])}</figcaption>` : '';
+      out.push(`<figure class="my-4"><a href="${esc(src)}" target="_blank" rel="noopener"><img src="${esc(src)}" alt="${esc(img[1])}" loading="lazy" class="mx-auto max-w-full rounded-xl border border-slate-200"></a>${cap}</figure>`);
+      i++; continue;
+    }
 
     const h = line.match(/^(#{2,4})\s+(.*)$/);
     if (h) { out.push(`<h${h[1].length} class="${HEADING[h[1].length]}">${inline(h[2])}</h${h[1].length}>`); i++; continue; }

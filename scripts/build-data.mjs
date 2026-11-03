@@ -3,7 +3,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { markdownToHtml } from './lib/markdown.mjs';
 import { createHash } from 'node:crypto';
-import { join } from 'node:path';
+import { join, resolve, dirname, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
@@ -20,9 +20,19 @@ const data = {
   forms: await readJson('forms.json'),
   news: await readJson('news.json'),
   books: await readJson('books.json'),
+  highlights: (await readJson('highlights.json')).highlights,
 };
 
 // เนื้อหาแต่ละบท: vault/books/<book id>/<เลขบท 2 หลัก>.md — ยังไม่มีไฟล์ = บทนั้น "กำลังจัดทำ" (content: null)
+// รูปในบท: เขียน path แบบ Obsidian (เทียบกับไฟล์ .md) ได้เฉพาะไฟล์ใน vault/raw/assets/ — build-sites คัดลอกไปไว้ที่ assets/raw/
+const rawAssets = join(root, 'vault', 'raw', 'assets');
+function bookImage(mdFile, src) {
+  if (/^https:\/\//.test(src)) return src;
+  const abs = resolve(dirname(mdFile), src);
+  const rel = relative(rawAssets, abs);
+  if (rel.startsWith('..') || !existsSync(abs)) throw new Error(`${mdFile}: รูป "${src}" ต้องอยู่ใน vault/raw/assets/ และต้องมีไฟล์จริง`);
+  return 'assets/raw/' + rel.split(sep).map(encodeURIComponent).join('/');
+}
 for (const book of data.books) {
   if (book.fromCategories) {
     // เล่มคู่มือ 44 ข้อ: บท = หมวดใน categories.json · หน้าเว็บดึงเนื้อหาจาก clauses ตามรายการ ch.clauses (ไม่ซ้ำข้อมูลใน bootstrap)
@@ -33,7 +43,7 @@ for (const book of data.books) {
   }
   for (const ch of book.chapters) {
     const file = join(root, 'vault', 'books', book.id, `${String(ch.num).padStart(2, '0')}.md`);
-    ch.content = existsSync(file) ? markdownToHtml(await readFile(file, 'utf8')) : null;
+    ch.content = existsSync(file) ? markdownToHtml(await readFile(file, 'utf8'), { image: (src) => bookImage(file, src) }) : null;
   }
 }
 const chatPrompt = (await readFile(join(dataDir, 'chat-prompt.md'), 'utf8')).trim();
@@ -48,6 +58,10 @@ for (const cat of data.categories) {
 for (const c of data.clauses) {
   if (!c.num || !c.title || !c.content) throw new Error(`clause ${c.num} missing num/title/content`);
 }
+for (const h of data.highlights) {
+  const book = data.books.find((b) => b.id === h.book);
+  if (!book || !book.chapters.some((c) => c.num === h.ch)) throw new Error(`highlights.json: ${h.id} ชี้ไปบทที่ไม่มี (${h.book} บท ${h.ch})`);
+}
 
 // ตัวเลขสำคัญต้องตรงกันทุกที่ (wiki / clauses.json / chat-prompt.md / allowance-rates.json) — ดู src/data/facts.json
 // shortcut: ตรวจแค่ว่ามีตัวเลขนั้นอยู่ — ถ้าแก้บางจุดแต่ยังเหลือค่าเดิมจุดอื่นในที่เดียวกันจะไม่จับ; ถ้าเจอปัญหานี้ค่อยเพิ่มรายการ "ค่าเก่าที่ห้ามมี"
@@ -56,6 +70,11 @@ const wikiDir = join(root, 'vault', 'wiki');
 async function sourceText(loc) {
   const [kind, ref] = loc.split(/:(.*)/);
   if (kind === 'prompt') return chatPrompt;
+  if (kind === 'highlight') {
+    const h = data.highlights.find((x) => x.id === ref);
+    if (!h) throw new Error(`facts.json: highlight ${ref} not found`);
+    return h.title + ' ' + h.figure;
+  }
   if (kind === 'wiki') return readFile(join(wikiDir, ref), 'utf8');
   if (kind === 'clause') {
     const c = data.clauses.find((x) => String(x.num) === ref);

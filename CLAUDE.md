@@ -55,6 +55,8 @@ scripts/               build-knowledge.mjs: รวม wiki/ → apps-script/Know
 - รายชื่อเล่มและบท: `src/data/books.json` (เพิ่มเล่มใหม่ = เพิ่ม object ในอาร์เรย์)
 - เนื้อหาแต่ละบท: `vault/books/<book id>/<เลขบท 2 หลัก>.md` (แก้ใน Obsidian ได้) — ไม่มีไฟล์ = บทนั้นแสดง "กำลังจัดทำ"
 - Markdown ที่รองรับ: `##`/`###`/`####`, ย่อหน้า, `-` และ `1.` (ซ้อนด้วยเว้น 2 ช่อง), `| ตาราง |`, `> หมายเหตุ`, `**ตัวหนา**` (ตัวแปลง `scripts/lib/markdown.mjs`)
+- รูปในบท: `![คำอธิบาย](../../raw/assets/ชื่อไฟล์.jpg)` ทั้งบรรทัด — ไฟล์ต้องอยู่ใน `vault/raw/assets/` (build คัดลอกไปที่ `docs/assets/raw/` ซึ่งเผยแพร่สาธารณะบน GitHub Pages)
+- การ์ด "เกิดอะไรขึ้นกับคุณ?" หน้าแรก: `src/data/highlights.json` (ชี้ไป book + ch) · ตัวเลขบนการ์ดตรวจด้วย `facts.json` (location `highlight:<id>`)
 - เล่มที่มี `"fromCategories": true` (เล่ม `welfare44` = คู่มือ 44 ข้อ) สร้างบทจาก `categories.json` ตอน build — บท = หมวด เนื้อหา = ข้อใน `clauses.json` (ไม่ต้องมีไฟล์ใน vault/books)
 - บทที่ชี้ไปเล่มอื่นใช้ `link: { book, label, text }` (เช่น กฟน.1 บท 1 → เล่ม 44 ข้อ) · `tools` ที่ระดับเล่มหรือบท = ปุ่มไปหน้าเครื่องมือ
 - หน้าอ่าน `book.html?book=<id>&ch=<n>&clause=<ข้อ>`: สารบัญเป็น sidebar เปลี่ยนบทในหน้าเดียว · ช่องค้นหาหน้าแรกค้นทุกเล่ม

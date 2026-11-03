@@ -104,50 +104,14 @@
         <div id="homeSearchResults" class="hidden mt-3 bg-white rounded-2xl border border-slate-200 shadow-sm"></div>
     </section>
 
-    <!-- Quick Highlights Strip -->
-    <section class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
-        <div class="text-xs font-heading font-semibold text-slate-500 mb-2.5 flex items-center gap-1.5">
-            <i class="fa-solid fa-star text-amber-500"></i>
-            <span>สรุปสาระสำคัญที่ใช้บ่อย (คลิกดูรายละเอียด):</span>
+    <!-- เข้าตามเหตุการณ์: การ์ดจาก src/data/highlights.json → บทในหนังสือ -->
+    <section>
+        <div class="flex items-center justify-between mb-3">
+            <h2 class="font-heading font-bold text-base text-slate-800"><i class="fa-solid fa-compass text-pea-600 mr-1.5"></i>เกิดอะไรขึ้นกับคุณ?</h2>
+            <span class="text-xs text-slate-500">เลือกเรื่องเพื่อเปิดอ่านบทที่เกี่ยวข้อง</span>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-2.5 text-xs">
-            <div onclick="RW.openClause(7)" class="cursor-pointer p-2.5 rounded-xl bg-purple-50 hover:bg-purple-100 border border-purple-200 transition flex items-center gap-2.5 lg:col-span-2">
-                <div class="w-9 h-9 rounded-lg bg-pea-700 text-white flex items-center justify-center shrink-0"><i class="fa-solid fa-bed"></i></div>
-                <div class="leading-tight">
-                    <div class="text-slate-500 font-medium">ค่าห้อง+อาหาร/วัน (ข้อ 7.3)</div>
-                    <div class="font-heading font-bold text-pea-800 mt-0.5">
-                        พนง. 1,500 | ครอบครัว 1,100 | ลูกจ้าง/ครอบครัว 1,000
-                    </div>
-                </div>
-            </div>
-            <div onclick="RW.openClause(7)" class="cursor-pointer p-2.5 rounded-xl bg-blue-50 hover:bg-blue-100 border border-blue-200 transition flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center shrink-0"><i class="fa-solid fa-hospital-user"></i></div>
-                <div>
-                    <div class="text-slate-500 font-medium">OPD เอกชน + คลินิก</div>
-                    <div class="font-heading font-bold text-blue-900">รวมไม่เกิน 3,600 บ./ปี</div>
-                </div>
-            </div>
-            <div onclick="RW.openClause(7)" class="cursor-pointer p-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center shrink-0"><i class="fa-solid fa-procedures"></i></div>
-                <div>
-                    <div class="text-slate-500 font-medium">IPD รพ.เอกชน</div>
-                    <div class="font-heading font-bold text-emerald-900">เบิกได้ครึ่งหนึ่ง (50%)</div>
-                </div>
-            </div>
-            <div onclick="RW.openClause(14)" class="cursor-pointer p-2.5 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-200 transition flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-lg bg-amber-500 text-white flex items-center justify-center shrink-0"><i class="fa-solid fa-clock"></i></div>
-                <div>
-                    <div class="text-slate-500 font-medium">ระยะเวลายื่นเบิก</div>
-                    <div class="font-heading font-bold text-amber-900">ภายใน 90 วัน นับจากใบเสร็จ</div>
-                </div>
-            </div>
-            <a href="allowance.html" class="cursor-pointer p-2.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 transition flex items-center gap-2.5 block no-underline">
-                <div class="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center shrink-0"><i class="fa-solid fa-suitcase-rolling"></i></div>
-                <div>
-                    <div class="text-slate-500 font-medium">เบี้ยเลี้ยง & ที่พัก (TAX)</div>
-                    <div class="font-heading font-bold text-indigo-900">300-460 | พัก 650-1,350</div>
-                </div>
-            </a>
+        <div id="homeHighlights" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+            <!-- Populated via JS -->
         </div>
     </section>
 

@@ -20,4 +20,9 @@ assert.match(table, /<td[^>]*>1<\/td><td[^>]*>2<\/td>/);
 assert.match(md('> หมายเหตุ'), /<div class="[^"]*amber[^"]*">หมายเหตุ<\/div>/);
 assert.equal((md('## ก\nย่อหน้า\n- รายการ').match(/<(h2|p|ul)/g) || []).length, 3, 'block boundaries');
 
+const fig = md('![ตาราง](a/b.jpg)', { image: (src) => 'assets/' + src });
+assert.match(fig, /<figure[^>]*><a href="assets\/a\/b.jpg"[^>]*><img src="assets\/a\/b.jpg" alt="ตาราง"/);
+assert.match(fig, /<figcaption[^>]*>ตาราง<\/figcaption>/);
+assert.throws(() => md('![x](javascript:void)'), /unsafe/);
+
 console.log('markdown tests passed');

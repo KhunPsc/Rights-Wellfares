@@ -101,6 +101,12 @@ if (existsSync(srcAssets)) {
   await cp(srcAssets, join(docsDir, 'assets'), { recursive: true });
   console.log('Copied static assets to dist/sites/assets and docs/assets');
 }
+// รูปต้นฉบับที่หนังสือใช้ (vault/raw/assets) → assets/raw/ — ดู bookImage ใน build-data.mjs
+const rawAssets = join(root, 'vault', 'raw', 'assets');
+if (existsSync(rawAssets)) {
+  await cp(rawAssets, join(outDir, 'assets', 'raw'), { recursive: true });
+  await cp(rawAssets, join(docsDir, 'assets', 'raw'), { recursive: true });
+}
 
 const missing = Object.entries(config.pages || {}).filter(([, url]) => !url).map(([k]) => k);
 if (missing.length) {
