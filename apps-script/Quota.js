@@ -4,8 +4,9 @@
 //   ScriptLock กันคำขอพร้อมกันอ่าน-เขียนตัวนับทับกัน
 // ============================================================================
 var QUOTA = {
-  // Gemini free tier: 15 RPM / 250 RPD (รีเซ็ตเที่ยงคืนเวลาแปซิฟิก ≈ 14:00–15:00 น. ไทย) — เผื่อไว้สำหรับ retry
-  chat: { perMinute: 14, perDay: 240, tz: 'America/Los_Angeles' },
+  // Gemini free tier: 15 RPM / 250 RPD / 250K TPM (รีเซ็ตรายวันเที่ยงคืนเวลาแปซิฟิก ≈ 14:00–15:00 น. ไทย)
+  // คำถามละ ~25K token ขาเข้า (คู่มือ 48 ข้อ + wiki) → 250K TPM รับได้ ~10 คำถาม/นาที — ตั้ง 9 เผื่อ retry
+  chat: { perMinute: 9, perDay: 240, tz: 'America/Los_Angeles' },
   feedback: { perMinute: 10, perDay: 100, tz: 'Asia/Bangkok' }
 };
 

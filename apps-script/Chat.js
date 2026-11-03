@@ -22,6 +22,7 @@ var CHAT_MAX_QUESTION_CHARS = 1000;
 var CHAT_MAX_HISTORY = 10; // จำนวนข้อความย้อนหลัง (user+model) ที่ส่งต่อให้ Gemini
 var CHAT_WIKI_MAX_CHARS = 20000; // งบตัวอักษรของหน้า wiki ที่แนบต่อคำถาม (ทั้ง wiki ~130K ตัวอักษร ใหญ่เกินโควต้า)
 var CHAT_WIKI_MAX_PAGES = 5;
+var CHAT_MAX_OUTPUT_TOKENS = 1024; // คำตอบยาวสุด (~ข้อความไทย 2–3 พันตัวอักษร) — กันคำตอบยาวผิดปกติกินโควต้า token
 
 function handleChat(body) {
   var question = String(body.question || '').trim();
@@ -52,7 +53,7 @@ function handleChat(body) {
     payload: JSON.stringify({
       contents: contents,
       systemInstruction: { parts: [{ text: buildSystemPrompt_(wikiPages) }] },
-      generationConfig: { temperature: 0.2 }
+      generationConfig: { temperature: 0.2, maxOutputTokens: CHAT_MAX_OUTPUT_TOKENS }
     }),
     muteHttpExceptions: true
   };
@@ -70,12 +71,18 @@ function handleChat(body) {
     return errorOut_('gemini_error', 'ระบบ AI ขัดข้องชั่วคราว กรุณาลองใหม่ภายหลังครับ');
   }
 
-  var parts = result.candidates && result.candidates[0] && result.candidates[0].content && result.candidates[0].content.parts;
+  var candidate = result.candidates && result.candidates[0];
+  var parts = candidate && candidate.content && candidate.content.parts;
   var answerText = parts && parts[0] && parts[0].text
     ? parts[0].text
     : 'ไม่สามารถประมวลผลคำตอบได้ กรุณาลองใหม่อีกครั้ง';
+  if (candidate && candidate.finishReason === 'MAX_TOKENS') answerText += '\n\n(คำตอบยาวเกินกำหนดจึงถูกตัด — ลองถามให้เจาะจงขึ้นครับ)';
 
-  return jsonOut_({ ok: true, answer: answerText });
+  // จำนวน token (ไม่ใช่ข้อมูลลับ) — ใช้ดูว่าใกล้โควต้า TPM แค่ไหน
+  var u = result.usageMetadata || {};
+  var usage = { prompt: u.promptTokenCount || 0, answer: u.candidatesTokenCount || 0, total: u.totalTokenCount || 0 };
+  console.log('chat tokens', JSON.stringify(usage));
+  return jsonOut_({ ok: true, answer: answerText, usage: usage });
 }
 
 // รับเฉพาะ { role: 'user'|'model', parts: [{ text }] } และตัดให้เหลือ CHAT_MAX_HISTORY ข้อความล่าสุด
