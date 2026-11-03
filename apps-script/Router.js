@@ -4,7 +4,6 @@
 //   GET  ?action=version    → เวอร์ชันข้อมูล (ให้ client เช็ก cache)
 //   POST { action: 'chat', question, history }
 //   POST { action: 'feedback', type, detail, sender, contact, page }
-//   POST แบบเดิม (ไม่มี action) = chat — เพื่อให้ index.html ตัวเก่ายังใช้ได้ระหว่างย้ายระบบ
 // ทุก response มีทั้ง ok (ใหม่) และ status (เดิม)
 // ============================================================================
 
@@ -30,7 +29,7 @@ function doPost(e) {
     if (body.action === 'feedback') {
       return handleFeedbackSubmission(body);
     }
-    if (!body.action || body.action === 'chat') {
+    if (body.action === 'chat') {
       return handleChat(body);
     }
     return errorOut_('unknown_action', 'ไม่รู้จัก action: ' + body.action);

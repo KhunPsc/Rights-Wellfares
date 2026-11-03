@@ -1,5 +1,5 @@
-// Build Google Sites embed code: src/sites/pages/<page>.html (+ <page>.js) + shared/* → dist/sites/<page>.html
-// แต่ละไฟล์ใน dist/sites/ คือโค้ดที่นำไปวางใน Google Sites → แทรก → ฝัง (Embed) → "ฝังโค้ด"
+// Build หน้าเว็บ: src/sites/pages/<page>.html (+ <page>.js) + shared/* → docs/<page>.html (GitHub Pages)
+// Google Sites ฝัง URL ของ GitHub Pages ไว้ จึงไม่ต้องวางโค้ดใน Sites ใหม่ทุกครั้ง
 import { readFile, writeFile, readdir, mkdir, copyFile, cp } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
@@ -8,7 +8,6 @@ import { execFileSync } from 'node:child_process';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 const srcDir = join(root, 'src', 'sites');
-const outDir = join(root, 'dist', 'sites');
 const docsDir = join(root, 'docs');
 
 const read = (p) => readFile(join(srcDir, p), 'utf8');
@@ -47,7 +46,6 @@ function inlineScript(code, name) {
 }
 
 const pages = (await readdir(join(srcDir, 'pages'))).filter((f) => f.endsWith('.html')).map((f) => f.slice(0, -5));
-await mkdir(outDir, { recursive: true });
 await mkdir(docsDir, { recursive: true });
 
 for (const page of pages) {
@@ -83,9 +81,8 @@ ${pageJs ? inlineScript(pageJs, `pages/${page}.js`) : ''}
 </body>
 </html>
 `;
-  await writeFile(join(outDir, `${page}.html`), html, 'utf8');
   await writeFile(join(docsDir, `${page}.html`), html, 'utf8');
-  console.log(`dist/sites/${page}.html & docs/${page}.html  ${(Buffer.byteLength(html) / 1024).toFixed(1)} KB`);
+  console.log(`docs/${page}.html  ${(Buffer.byteLength(html) / 1024).toFixed(1)} KB`);
 }
 
 // GitHub Pages: create index.html and .nojekyll in docs/
@@ -94,17 +91,15 @@ if (existsSync(join(docsDir, 'home.html'))) {
 }
 await writeFile(join(docsDir, '.nojekyll'), '', 'utf8');
 
-// Copy static assets from src/sites/assets -> dist/sites/assets & docs/assets
+// Copy static assets from src/sites/assets -> docs/assets
 const srcAssets = join(srcDir, 'assets');
 if (existsSync(srcAssets)) {
-  await cp(srcAssets, join(outDir, 'assets'), { recursive: true });
   await cp(srcAssets, join(docsDir, 'assets'), { recursive: true });
-  console.log('Copied static assets to dist/sites/assets and docs/assets');
+  console.log('Copied static assets to docs/assets');
 }
 // รูปต้นฉบับที่หนังสือใช้ (vault/raw/assets) → assets/raw/ — ดู bookImage ใน build-data.mjs
 const rawAssets = join(root, 'vault', 'raw', 'assets');
 if (existsSync(rawAssets)) {
-  await cp(rawAssets, join(outDir, 'assets', 'raw'), { recursive: true });
   await cp(rawAssets, join(docsDir, 'assets', 'raw'), { recursive: true });
 }
 

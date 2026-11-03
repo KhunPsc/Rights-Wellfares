@@ -16,7 +16,7 @@
    │                             │                                  │
    │── POST {question, history} ─>│                                  │
    │                             │ 1. เช็กความยาวคำถาม (<= 1,000 char)│
-   │                             │ 2. เช็ก Rate Limit (15 RPM)       │
+   │                             │ 2. เช็กโควตารวม (Quota.js)        │
    │                             │ 3. ดึง API Key จาก ScriptProperties│
    │                             │ 4. สังเคราะห์ System Prompt จาก    │
    │                             │    Data.js + chat-prompt.md เท่านั้น│
@@ -32,20 +32,14 @@
   ```javascript
   var apiKey = PropertiesService.getScriptProperties().getProperty('GEMINI_API_KEY');
   ```
-* **Rate Limiting ผ่าน CacheService**:
-  ```javascript
-  function throttleGemini_() {
-    var cache = CacheService.getScriptCache();
-    var key = 'gemini_rate_count';
-    var count = parseInt(cache.get(key) || '0', 10);
-    if (count >= 15) { // จำกัดสูงสุด 15 ครั้ง/นาที ทั่วทั้งระบบ
-      throw new Error('ระบบ AI มีผู้ใช้งานหนาแน่น กรุณารอ 1 นาทีแล้วลองใหม่อีกครั้ง');
-    }
-    cache.put(key, String(count + 1), 60);
-  }
-  ```
-* **Exponential Backoff**:
-  หาก Gemini ตอบกลับด้วย HTTP 429 (Resource Exhausted) ให้สคริปต์หน่วงเวลาและลองใหม่ 2 ครั้ง (1.5s, 3s)
+* **ส่ง key ทาง header** `x-goog-api-key` ไม่ใส่ใน URL (`?key=`) — ถ้าการเชื่อมต่อล้ม ข้อความ error จะมี URL ติดไปด้วย · `Router.js` log error ไว้ฝั่ง server แล้วตอบผู้ใช้ด้วยข้อความทั่วไปเท่านั้น
+* **โควตารวมทุกผู้ใช้** (`apps-script/Quota.js` → `takeQuota_('chat')`): Apps Script ไม่รู้ IP ผู้เรียก จึงจำกัดรายคนไม่ได้
+  - ต่อนาที: ตัวนับใน `CacheService` (key ตามนาที หมดอายุเอง) · ต่อวัน: Script Properties เก็บ `"วันที่|จำนวน"` ตามเวลาแปซิฟิก (รอบเดียวกับ Gemini)
+  - ครอบด้วย `LockService.getScriptLock()` กันคำขอพร้อมกันนับทับกัน · เกินโควตาตอบปฏิเสธทันที (ไม่ sleep รอคิว)
+  - ตั้งตาม Gemini free tier 15 RPM / 250 RPD / 250K TPM — คำถามละ ~25K token ขาเข้า จึงตั้ง 9/นาที 240/วัน · ดูยอดวันนี้: รัน `showQuotaUsage` · ทดสอบ: `scripts/test-quota.mjs`
+* **จำกัดคำตอบ** `maxOutputTokens: 1024` และส่ง `usage` (จำนวน token) กลับใน response เพื่อติดตามโควตา
+* **Retry**: ลองใหม่เฉพาะ 429/5xx สูงสุด 3 ครั้ง (รอ 2s, 4s) และ retry แต่ละครั้งนับโควตาด้วย
+* **Prompt injection**: system prompt ระบุว่าข้อความผู้ใช้และประวัติแชตเป็นข้อมูล ไม่ใช่คำสั่ง — ห้ามเปลี่ยนบทบาท/เปิดเผยคำสั่งระบบ/ตอบนอกขอบเขต
 
 ---
 
@@ -59,6 +53,8 @@
 เมื่อเจ้าหน้าที่เปิดดู Google Sheet โปรแกรมจะคำนวณสูตรนั้นทันที และอาจส่งข้อมูลในตารางออกไปหาบุคคลภายนอก
 
 ### มาตรการป้องกัน (Sanitization)
+> ในโปรเจกต์นี้คือ `cell_(value, maxLen)` ใน `apps-script/Feedback.js` (ตัดความยาว + เติม `'`) และ Feedback มีโควตา 10/นาที 100/วัน — โค้ดด้านล่างเป็นตัวอย่างหลักการ
+
 ก่อนนำสตริงใดๆ ไปบันทึกใน Google Sheet ต้องตรวจสอบอักขระตัวแรก หากขึ้นต้นด้วยอักขระสั่งการของสูตร (`=`, `+`, `-`, `@`, `\t`, `\r`) ให้เติมเครื่องหมาย Single Quote (`'`) นำหน้าเสมอ:
 
 ```javascript

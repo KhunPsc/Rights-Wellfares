@@ -19,8 +19,8 @@ description: >-
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
 │                        Google Sites (Frontend)                         │
-│  - เมนูหลักของ Google Sites (หน้าแรก, คู่มือ, เบี้ยเลี้ยง, คำนวณ, ...)           │
-│  - แต่ละหน้าฝัง HTML ขนาดเล็ก (30-70 KB) จาก dist/sites/<page>.html     │
+│  - ฝัง URL ของ GitHub Pages (docs/) ด้วย Insert → Embed → By URL      │
+│  - เปลี่ยนหน้าภายใน iframe เดียว (relative links, same tab)            │
 └────────────────────────────────────┬───────────────────────────────────┘
                                      │
                  ┌───────────────────┴───────────────────┐
@@ -77,7 +77,7 @@ description: >-
 │   └── sites/                   # Frontend: โค้ดสำหรับคอมไพล์ลง Google Sites
 │       ├── config.json          # กำหนด apiUrl และ URL หน้าต่างๆ ใน Google Sites
 │       ├── shared/              # คอมโพเนนต์ที่ใช้ร่วมกันทุกหน้า (Inlined ตอน build)
-│       │   ├── head.html        # CDN Tailwind, Fonts (Prompt, Sarabun), FontAwesome
+│       │   ├── head.html        # Fonts (Prompt, Sarabun), FontAwesome (SRI) — Tailwind compile ตอน build
 │       │   ├── ui.css           # สไตล์สากล, CSS Variables, Gradients
 │       │   ├── core.js          # Client SDK: RW.loadData, RW.post, RW.go, Caching
 │       │   ├── nav.html         # แถบนำทางด้านบน (ปุ่มย้อนกลับ, หน้าหลัก)
@@ -85,26 +85,22 @@ description: >-
 │       │   ├── feedback-modal.html # Modal แบบฟอร์มแจ้งปัญหา/ข้อเสนอแนะ
 │       │   └── footer.html      # แถบด้านล่าง
 │       └── pages/               # หน้าเฉพาะแต่ละหน้า (.html + .js)
-│           ├── home.html / home.js
-│           ├── manual.html / manual.js
-│           ├── allowance.html / allowance.js
-│           ├── tools.html / tools.js
-│           ├── tables.html
+│           ├── home.html / home.js        # ชั้นหนังสือ + การ์ดเหตุการณ์ + ค้นหาทุกเล่ม
+│           ├── book.html / book.js        # อ่านหนังสือ (สารบัญ sidebar)
+│           ├── map.html / map.js          # แผนที่ความรู้ (force-graph)
+│           ├── tables.html                # สรุปการใช้สิทธิ์
 │           ├── forms.html / forms.js
-│           └── chat.html / chat.js
+│           ├── chat.html / chat.js
+│           ├── allowance.html / allowance.js  # ไม่อยู่ในเมนู (ลิงก์จากบทหนังสือ)
+│           └── tools.html / tools.js          # ซ่อนไว้ก่อน
 │
 ├── scripts/                     # Build Automation Scripts (Node.js)
-│   ├── build-data.mjs           # แปลง src/data/* → apps-script/Data.js
-│   └── build-sites.mjs          # รวม shared + pages → dist/sites/*.html
+│   ├── build-knowledge.mjs      # vault/wiki → apps-script/Knowledge.js
+│   ├── build-data.mjs           # src/data + vault/books + แผนที่ → apps-script/Data.js (ตรวจ facts.json)
+│   ├── build-sites.mjs          # shared + pages → docs/*.html (Tailwind build-time)
+│   └── test-*.mjs               # npm test
 │
-└── dist/sites/                  # ผลลัพธ์พร้อมใช้งาน (นำโค้ดในนี้ไปฝังใน Google Sites)
-    ├── home.html
-    ├── manual.html
-    ├── allowance.html
-    ├── tools.html
-    ├── tables.html
-    ├── forms.html
-    └── chat.html
+└── docs/                        # GitHub Pages (Settings → Pages → main /docs) — Google Sites ฝัง URL นี้
 ```
 
 ---
@@ -113,7 +109,7 @@ description: >-
 
 ### กฎที่ 1: การนำทางในเว็บแอป (Single-Host Same-Tab Navigation)
 * **เมื่อใช้ GitHub Pages เป็นโฮสต์หลัก (แนะนำสูงสุด)**:
-  - ทุกลิงก์นำทางระหว่างหน้าภายในเว็บแอป (`home.html`, `manual.html`, `allowance.html`, `tools.html`, `tables.html`, `forms.html`, `chat.html`) ให้ใช้ **Relative Links** พร้อมการนำทางในแท็บเดิม (`target="_self"` หรือ `window.location.href`)
+  - ทุกลิงก์นำทางระหว่างหน้าภายในเว็บแอป (`home.html`, `book.html`, `map.html`, `tables.html`, `forms.html`, `chat.html`) ให้ใช้ **Relative Links** พร้อมการนำทางในแท็บเดิม (`target="_self"` หรือ `window.location.href`)
   - **ข้อดี:** ผู้ใช้สลับหน้าไป-มาได้ลื่นไหล ไม่ต้องเปิดแท็บใหม่ และปุ่มย้อนกลับ (Back) ของเบราว์เซอร์ทำงานได้ปกติ
   - **การฝังใน Google Sites:** ให้ฝังลิงก์หลัก `https://<user>.github.io/<repo>/` เพียงจุดเดียวใน Google Sites โดยการคลิกเปลี่ยนหน้าทั้งหมดจะทำงานอยู่ภายในกรอบ iframe เดิมอย่างราบรื่น
 * **ลิงก์ดาวน์โหลดภายนอก (Direct Download)**:
@@ -136,7 +132,8 @@ description: >-
 
 ### กฎที่ 4: ความปลอดภัยของ AI & Form Input
 * ห้ามส่ง API Key หรือกำหนด System Prompt จาก Client เด็ดขาด
-* ฝั่ง Apps Script ต้องคุม Rate Limit (เช่น 15 คำขอ/นาที ผ่าน `CacheService`)
+* ฝั่ง Apps Script ต้องคุมโควตารวม (`apps-script/Quota.js`: ตัวนับต่อนาทีใน `CacheService` + ต่อวันใน Script Properties + `LockService`) — Gemini free tier 15 RPM / 250 RPD / 250K TPM และคำถามละ ~25K token จึงตั้งแชต 9/นาที 240/วัน
+* ส่ง API key ทาง header `x-goog-api-key` (ไม่ใส่ใน URL) และไม่ส่ง error ภายในกลับให้ผู้ใช้
 * ป้องกัน Formula Injection ใน Google Sheet: ถ้าค่าที่กรอกขึ้นต้นด้วย `=`, `+`, `-`, `@` ให้เติมเครื่องหมาย `'` นำหน้าเสมอ
 
 ---
@@ -164,33 +161,17 @@ npm run deploy
 ```
 * หมายเหตุ: ใน Apps Script ให้ตั้งค่า Script Properties:
   - `GEMINI_API_KEY`: API Key จาก Google AI Studio
-  - `FEEDBACK_SHEET_ID`: (ถ้าต้องการแยก Sheet) หรือให้สคริปต์สร้างแท็บชีตอัตโนมัติ
 
-### ขั้นตอนที่ 4: บิลด์ Frontend สำหรับ Google Sites
-1. ตรวจสอบ URL ของแต่ละหน้าที่สร้างบน Google Sites ใน `src/sites/config.json`
-2. รันคำสั่งบิลด์:
-   ```bash
-   npm run build:sites
-   ```
-3. สคริปต์จะรวม CSS, JavaScript, Header, Nav, Floating Chatbot และ Feedback Modal เข้าไปในแต่ละหน้าใน `dist/sites/*.html`
+### ขั้นตอนที่ 4: บิลด์ Frontend และขึ้น GitHub Pages
+```bash
+npm run build:sites      # src/sites → docs/*.html
+git add -A && git commit -m "..." && git push
+```
 
-### ขั้นตอนที่ 5: นำไปติดตั้งใน Google Sites (เลือกวิธีใดวิธีหนึ่ง)
-
-#### วิธีที่ A: ฝังด้วย URL ผ่าน GitHub Pages (แนะนำสูงสุด — อัปเดตอัตโนมัติ 100%)
-1. เปิด GitHub Pages ใน Repository: **Settings** -> **Pages** -> Source: **Deploy from a branch** -> Branch: **main**, Folder: **/docs** -> กด **Save**
-2. ใน Google Sites ไปยังหน้าที่ต้องการ เลือก **แทรก (Insert)** -> **ฝัง (Embed)** -> เลือกแท็บ **ด้วย URL (By URL)**
-3. วางลิงก์หน้าของ GitHub Pages เช่น:
-   * หน้าหลัก: `https://<username>.github.io/<repo>/home.html`
-   * หน้าคู่มือ: `https://<username>.github.io/<repo>/manual.html`
-   * หน้าดาวน์โหลดฟอร์ม: `https://<username>.github.io/<repo>/forms.html`
-4. เลือกรูปแบบ **"ทั้งหน้า (Entire page)"** แล้วกดแทรก
-5. **หลังจากนี้เมื่อมีการแก้ไขโค้ดและ git push หน้าเว็บบน Google Sites จะอัปเดตเองโดยอัตโนมัติทันที ไม่ต้องแก้ที่ Google Sites อีกเลย**
-
-#### วิธีที่ B: ฝังโค้ดโดยตรง (Embed code)
-1. ไปที่หน้า Google Sites ที่ต้องการ
-2. เมนูด้านขวาเลือก **แทรก (Insert)** -> **ฝัง (Embed)** -> เลือกแท็บ **ฝังโค้ด (Embed code)**
-3. เปิดไฟล์ที่ตรงกันใน `dist/sites/<page>.html` คัดลอกโค้ดทั้งหมด (Ctrl+A -> Ctrl+C) แล้ววาง
-4. ขยายกล่อง Embed ให้พอดีกับหน้าจอ แล้วกด **เผยแพร่ (Publish)**
+### ขั้นตอนที่ 5: ฝังใน Google Sites (ทำครั้งเดียว)
+1. GitHub: **Settings → Pages → Deploy from a branch → main / docs**
+2. Google Sites: **แทรก → ฝัง → ด้วย URL** วาง `https://<username>.github.io/<repo>/` แล้วเลือก "ทั้งหน้า"
+3. หลังจากนี้ `git push` แล้ว Sites อัปเดตเอง ไม่ต้องวางโค้ดใหม่
 
 ---
 

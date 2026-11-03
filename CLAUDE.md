@@ -18,10 +18,14 @@ vault/                 Obsidian vault (เปิดโฟลเดอร์น�
     agencies/          หน่วยงานที่เกี่ยวข้อง
     forms/             แบบฟอร์ม/เอกสารที่ต้องใช้
     sources/           สรุปของเอกสารต้นฉบับแต่ละชิ้นใน raw/
+  books/<id>/NN.md     เนื้อหาบทของหนังสือบนชั้น
   templates/           เทมเพลตหน้า
-apps-script/           โค้ด chatbot (push ด้วย clasp)
-scripts/               build-knowledge.mjs: รวม wiki/ → apps-script/Knowledge.js
+apps-script/           backend: ข้อมูล, chatbot, feedback, โควตา (push ด้วย clasp)
+src/data/              ข้อมูลกลาง (JSON) · src/sites/ โค้ดหน้าเว็บ → docs/ (GitHub Pages)
+scripts/               build-knowledge / build-data / build-sites + test-*.mjs (npm test)
 ```
+
+ขั้นตอนเพิ่ม/แก้เนื้อหาแบบละเอียดสำหรับคน: [HOW_TO_UPDATE.md](HOW_TO_UPDATE.md) · ภาพรวมโปรเจกต์: [README.md](README.md)
 
 ## กฎการเขียน wiki
 
@@ -76,11 +80,11 @@ scripts/               build-knowledge.mjs: รวม wiki/ → apps-script/Know
   - API key เก็บใน Script Properties ชื่อ `GEMINI_API_KEY`
 - **Frontend (Google Sites Pages)**: อยู่ใน `src/sites/`
   - หน้าใน `src/sites/pages/`: `home` (ชั้นหนังสือ + ค้นหาทุกเล่ม), `book` (อ่านหนังสือ), `map` (แผนที่ความรู้), `allowance`, `tools`, `tables`, `forms`, `chat`
-  - คอมไพล์เป็น Embed code ก้อนเล็ก (30-45 KB) ใน `dist/sites/<page>.html` ด้วย `npm run build:sites`
+  - build เป็นหน้าเว็บใน `docs/<page>.html` (GitHub Pages) ด้วย `npm run build:sites` — Google Sites ฝัง URL ของ GitHub Pages ไว้
   - ปรับ URL หน้าใน Sites ได้ที่ `src/sites/config.json`
 - **คำสั่งสำคัญ**:
   - `npm run build` = รวม wiki (`Knowledge.js`) + src/data (`Data.js`) + ตรวจตัวเลขสำคัญให้ตรงกันทุกที่ตาม `src/data/facts.json` (build ล้มถ้าไม่ตรง)
-  - `npm run build:sites` = บิลด์โค้ดฝัง Google Sites ไปที่ `dist/sites/*.html` (Tailwind สร้าง CSS ตอน build ตาม `tailwind.config.cjs` — ครั้งแรกต้อง `npm install`)
+  - `npm run build:sites` = บิลด์หน้าเว็บไปที่ `docs/*.html` (Tailwind สร้าง CSS ตอน build ตาม `tailwind.config.cjs` — ครั้งแรกต้อง `npm install`)
   - `npm run push` = build + `clasp push`
   - `npm run deploy` = build + push + อัปเดตเวอร์ชัน deployment บน Apps Script อัตโนมัติ
 - **ปล่อยงานขึ้นจริง** = `npm run deploy` (ข้อมูล/แชต) + `npm run build:sites` แล้ว commit `docs/` และ `git push` (GitHub Pages) — Google Sites ผูก URL ของ GitHub Pages ไว้ จึงไม่ต้องวางโค้ดใน Sites ใหม่

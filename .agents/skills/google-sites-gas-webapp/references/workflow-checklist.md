@@ -1,60 +1,34 @@
 # Workflow & Deployment Checklist
 
-เช็กลิสต์ขั้นตอนการพัฒนา เพิ่มหน้าใหม่ และ Deploy ระบบ Multi-Page Google Sites + GAS Web App
+เช็กลิสต์การเพิ่มหน้าใหม่ แก้ข้อมูล และ Deploy (หน้าเว็บโฮสต์บน GitHub Pages — Google Sites ฝัง URL ไว้)
 
 ---
 
-## 1. เพิ่มหน้าใหม่ใน Google Sites (Add New Page)
+## 1. เพิ่มหน้าใหม่ (Add New Page)
 
-1. [ ] **สร้างหน้าใน Google Sites**:
-   - สร้างหน้าใหม่ใน Google Sites (เช่น `https://sites.google.com/view/mysite/new-page`)
-2. [ ] **อัปเดต URL ใน `src/sites/config.json`**:
-   - เพิ่มชื่อหน้าและ URL ในหัวข้อ `pages`:
-     ```json
-     "pages": {
-       "newPage": "https://sites.google.com/view/mysite/new-page"
-     }
-     ```
-3. [ ] **สร้างไฟล์หน้าใน `src/sites/pages/`**:
-   - สร้าง `newPage.html` (ใส่ `<!-- @title ชื่อหน้า -->` บรรทัดแรก)
-   - สร้าง `newPage.js` (ถ้ามีการทำงานของ JavaScript)
-4. [ ] **ตรวจสอบลิงก์ทุกจุดในหน้านั้น**:
-   - ลิงก์ข้ามหน้าต้องมี `target="_blank" rel="noopener"` เสมอ
-   - ห้ามใช้ `target="_top"` เด็ดขาด
-5. [ ] **รันคำสั่ง Build**:
-   ```bash
-   npm run build:sites
-   ```
-6. [ ] **นำโค้ดไปฝังใน Google Sites**:
-   - เปิดไฟล์ `dist/sites/newPage.html` คัดลอกโค้ดทั้งหมด
-   - วางลงในกล่อง Embed (ฝังโค้ด) บนหน้า Google Sites แล้วกด Publish
+1. [ ] สร้าง `src/sites/pages/<page>.html` (บรรทัดแรก `<!-- @title ชื่อหน้า -->`) และ `<page>.js` ถ้ามี JavaScript
+2. [ ] เพิ่ม `"<page>": "<page>.html"` ใน `pages` ของ `src/sites/config.json`
+3. [ ] เพิ่มลิงก์ใน `src/sites/shared/nav.html` ทั้งเมนูจอใหญ่และเมนูมือถือ (`data-nav="<page>"` เพื่อไฮไลต์หน้าปัจจุบัน)
+4. [ ] ลิงก์ภายในเว็บใช้ relative link แท็บเดิม (ปุ่มย้อนกลับใช้ได้) · สถานะที่ต้องจำข้ามหน้าเก็บทั้ง query string และ `localStorage` (Google Sites อาจตัด query string)
+5. [ ] script จาก CDN ต้องระบุเวอร์ชันตายตัวและใส่ `integrity` (SRI) + `crossorigin="anonymous"`
+6. [ ] `npm run build:sites` แล้ว commit `docs/` และ `git push` — ไม่ต้องแก้ Google Sites
 
 ---
 
-## 2. แก้ไขข้อมูลระเบียบ / ตาราง / เอกสาร (Update Data)
+## 2. แก้ข้อมูล (Update Data)
 
-1. [ ] แก้ไขไฟล์ JSON ใน `src/data/` (เช่น `clauses.json`, `forms.json`)
-2. [ ] รันคำสั่งรวมข้อมูล:
-   ```bash
-   npm run build
-   ```
-   *(สคริปต์จะรวมข้อมูลเข้า `apps-script/Data.js` พร้อมแฮชเวอร์ชันใหม่)*
-3. [ ] ส่งโค้ดขึ้น Apps Script:
-   ```bash
-   clasp push
-   # หรือ deploy เวอร์ชั่นใหม่
-   npm run deploy
-   ```
-4. [ ] ตรวจสอบว่า `doGet?action=version` ส่งแฮชใหม่กลับมา
-5. [ ] ผู้ใช้งานที่เปิดหน้าเว็บอยู่จะได้รับข้อมูลใหม่โดยอัตโนมัติผ่าน Stale-While-Revalidate
+1. [ ] แก้ต้นทางใน `src/data/` / `vault/wiki/` / `vault/books/` (ดู HOW_TO_UPDATE.md ที่ root)
+2. [ ] `npm test` และ `npm run build` (ล้มถ้าตัวเลขใน `facts.json`, `topics` หรือบทที่การ์ดชี้ไม่ตรง)
+3. [ ] `npm.cmd run deploy` (ห้าม `npx clasp` — ชื่อโฟลเดอร์มี `&`)
+4. [ ] ตรวจ `?action=version` ได้แฮชใหม่ — ผู้ที่เปิดเว็บอยู่จะได้ข้อมูลใหม่เองผ่าน stale-while-revalidate
 
 ---
 
-## 3. เช็กลิสต์ความปลอดภัยก่อนนำขึ้น Production (Security Audit)
+## 3. เช็กลิสต์ความปลอดภัย (Security Audit)
 
-- [ ] **API Key**: `GEMINI_API_KEY` ถูกเก็บใน Script Properties ของ Apps Script เท่านั้น (ไม่ปรากฏในโค้ด git)
-- [ ] **Git Tracking**: ตรวจสอบว่า `.clasp.json`, `.clasprc.json`, `.env` อยู่ใน `.gitignore`
-- [ ] **Rate Limiting**: มีการเปิดใช้ `throttleGemini_()` ใน `Chat.js` ป้องกันการยิงสแปม
-- [ ] **Input Sanitization**: มีการใช้ `sanitizeCell_()` ใน `Feedback.js` ป้องกัน Formula Injection
-- [ ] **Iframe Sandbox**: ไม่มี `target="_top"` หลงเหลืออยู่ในไฟล์ HTML/JS ใดๆ
-- [ ] **Direct Download**: ลิงก์ดาวน์โหลดเอกสารใช้รูปแบบ `/uc?export=download` หรือ `/export?format=docx` พร้อม `target="_blank"`
+- [ ] **API Key**: `GEMINI_API_KEY` อยู่ใน Script Properties เท่านั้น ส่งทาง header `x-goog-api-key` · pre-commit hook กัน secret
+- [ ] **Git**: `.clasp.json`, `.clasprc.json`, `.env*`, `credentials*.json` อยู่ใน `.gitignore`
+- [ ] **โควตา**: `takeQuota_()` (`Quota.js`) ถูกเรียกใน `Chat.js` (รวม retry) และ `Feedback.js`
+- [ ] **Error**: ไม่ส่ง `err.toString()` หรือข้อความจาก Gemini กลับให้ผู้ใช้
+- [ ] **Sanitization**: `cell_()` ใน `Feedback.js` กัน formula injection · หน้าเว็บ escape ข้อความผู้ใช้และคำตอบ AI ก่อน `innerHTML`
+- [ ] **Iframe**: ไม่มี `target="_top"` · ลิงก์ดาวน์โหลดไฟล์ภายนอกใช้ `target="_blank" rel="noopener"`

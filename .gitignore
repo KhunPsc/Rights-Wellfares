@@ -17,11 +17,11 @@ client_secret*.json
 # Obsidian: per-device state
 **/.obsidian/workspace*.json
 **/.obsidian/cache
+**/.obsidian/graph.json
 **/.trash/
 
 # Build artifacts
-dist/*
-!dist/sites/
+dist/
 
 .DS_Store
 Thumbs.db
