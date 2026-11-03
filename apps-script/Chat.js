@@ -207,23 +207,19 @@ function toSet_(arr) {
 
 // ฟังก์ชันยิง API พร้อมระบบพยายามส่งใหม่ (Exponential Backoff) กรณีเซิร์ฟเวอร์หน่วง
 function callGeminiWithExponentialBackoff(url, options) {
-  var maxRetries = 3;
+  var maxAttempts = 3;
   var delay = 2000;
+  var response;
 
-  for (var i = 0; i < maxRetries; i++) {
-    var response = UrlFetchApp.fetch(url, options);
+  for (var i = 0; i < maxAttempts; i++) {
+    response = UrlFetchApp.fetch(url, options);
     var code = response.getResponseCode();
-
-    if (code === 200) {
-      var json = JSON.parse(response.getContentText());
-      if (!json.error || json.error.code !== 429) {
-        return response;
-      }
+    // ลองใหม่เฉพาะโควต้าเต็ม (429) หรือ server ล่ม (5xx) — error อื่น เช่น key/ชื่อโมเดลผิด ลองกี่รอบก็ไม่หาย
+    if (code !== 429 && code < 500) return response;
+    if (i < maxAttempts - 1) {
+      Utilities.sleep(delay); // รอเพิ่มขึ้นแบบทวีคูณ 2s, 4s
+      delay *= 2;
     }
-
-    // ถ้าติด 429 หรือ 5xx ให้รอเวลาเพิ่มขึ้นแบบทวีคูณแล้วลองใหม่
-    Utilities.sleep(delay);
-    delay *= 2;
   }
-  return UrlFetchApp.fetch(url, options);
+  return response;
 }
