@@ -186,13 +186,14 @@ function renderBookShelf(books) {
         const ready = b.chapters.filter(c => c.content || c.link || c.clauses).length;
         return `
         <a href="${base}?book=${encodeURIComponent(b.id)}" onclick="try{localStorage.setItem('rw_book','${b.id}|0')}catch(e){}"
-           class="group relative bg-gradient-to-br from-pea-900 via-pea-700 to-purple-800 rounded-2xl p-5 pl-7 text-white shadow-md hover:shadow-xl hover:-translate-y-0.5 transition no-underline block overflow-hidden">
-            <span class="absolute left-0 top-0 bottom-0 w-3 bg-black/20"></span>
-            <div class="w-11 h-11 rounded-xl bg-white/10 flex items-center justify-center text-xl text-amber-300 mb-3"><i class="fa-solid ${b.icon || 'fa-book'}"></i></div>
-            <span class="px-2 py-0.5 text-[11px] font-heading font-semibold bg-amber-400 text-slate-900 rounded-full">${RW.escapeHtml(b.short || '')}</span>
-            <h3 class="mt-2 font-heading font-bold text-base leading-snug">${RW.escapeHtml(b.title)}</h3>
-            <p class="mt-1 text-[11px] text-purple-200 line-clamp-2">${RW.escapeHtml(b.subtitle || '')}</p>
-            <div class="mt-4 pt-3 border-t border-white/15 flex items-center justify-between text-xs font-heading">
+           class="group relative aspect-[3/4] flex flex-col bg-gradient-to-br from-pea-900 via-pea-700 to-purple-800 rounded-r-2xl rounded-l-md p-4 pl-6 sm:p-5 sm:pl-7 text-white shadow-md hover:shadow-xl hover:-translate-y-1 transition no-underline overflow-hidden">
+            <span class="absolute left-0 top-0 bottom-0 w-3 bg-black/25 border-r border-white/10"></span>
+            <span class="absolute right-0 top-2 bottom-2 w-1 bg-white/10 rounded-l"></span>
+            <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-white/10 flex items-center justify-center text-lg sm:text-xl text-amber-300 mb-3"><i class="fa-solid ${b.icon || 'fa-book'}"></i></div>
+            <span class="self-start px-2 py-0.5 text-[11px] font-heading font-semibold bg-amber-400 text-slate-900 rounded-full">${RW.escapeHtml(b.short || '')}</span>
+            <h3 class="mt-2 font-heading font-bold text-sm sm:text-base leading-snug line-clamp-3">${RW.escapeHtml(b.title)}</h3>
+            <p class="mt-1 text-[11px] text-purple-200 line-clamp-3 hidden sm:block">${RW.escapeHtml(b.subtitle || '')}</p>
+            <div class="mt-auto pt-3 border-t border-white/15 flex flex-wrap items-center justify-between gap-x-2 gap-y-1 text-[11px] sm:text-xs font-heading">
                 <span class="text-purple-100">${b.chapters.length} บท · พร้อมอ่าน ${ready}</span>
                 <span class="text-amber-300 font-semibold">เปิดอ่าน <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition"></i></span>
             </div>

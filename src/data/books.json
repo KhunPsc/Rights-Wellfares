@@ -9,11 +9,6 @@
     "fromCategories": true,
     "tools": [
       {
-        "page": "tools",
-        "label": "เครื่องมือจำลองคำนวณ",
-        "icon": "fa-wand-magic-sparkles"
-      },
-      {
         "page": "tables",
         "label": "ตารางสรุปเปรียบเทียบ",
         "icon": "fa-table"

@@ -12,18 +12,19 @@ function bookParams() {
     return { book: '', ch: 0, clause: '' };
 }
 
-function bookHref(bookId, ch) {
-    return `${RW.pageUrl('book') || 'book.html'}?book=${encodeURIComponent(bookId)}&ch=${ch}`;
+function bookHref(bookId, ch, clause) {
+    return `${RW.pageUrl('book') || 'book.html'}?book=${encodeURIComponent(bookId)}&ch=${ch}${clause ? '&clause=' + encodeURIComponent(clause) : ''}`;
 }
 
 // ลิงก์ภายในหนังสือ: href ไว้เปิดแท็บใหม่ได้ · คลิกปกติเปลี่ยนบทในหน้าเดิม
-function bookLink(bookId, ch) {
-    return `href="${bookHref(bookId, ch)}" onclick="return bookGo('${bookId}', ${ch})"`;
+function bookLink(bookId, ch, clause) {
+    const c = clause ? `, '${RW.escapeHtml(String(clause))}'` : '';
+    return `href="${bookHref(bookId, ch, clause)}" onclick="return bookGo('${bookId}', ${ch}${c})"`;
 }
 
 function bookGo(bookId, ch, clause) {
     try { localStorage.setItem('rw_book', `${bookId}|${ch}|${clause || ''}`); } catch (e) {}
-    try { history.pushState(null, '', bookHref(bookId, ch) + (clause ? '&clause=' + encodeURIComponent(clause) : '')); } catch (e) { /* sandbox iframe */ }
+    try { history.pushState(null, '', bookHref(bookId, ch, clause)); } catch (e) { /* sandbox iframe */ }
     renderBook({ book: bookId, ch, clause });
     return false;
 }
@@ -100,9 +101,41 @@ function renderClause(c) {
     </section>`;
 }
 
+const clauseItems = (ch) => ch.clauses.map(n => BOOK_DATA.clauses.find(c => String(c.num) === String(n))).filter(Boolean);
+// บทที่เป็นหลักเกณฑ์/แนวทาง (id เป็นข้อความ ไม่ใช่เลขข้อ) แสดงเป็นการ์ด แล้วกดเข้าไปอ่านทีละเรื่อง
+const isCardChapter = (ch) => ch.clauses && ch.clauses.every(n => typeof n !== 'number');
+
+function renderGuidelineCards(book, ch) {
+    return `<div class="grid sm:grid-cols-2 gap-3">${clauseItems(ch).map(c => `
+        <a ${bookLink(book.id, ch.num, c.num)} class="group flex flex-col p-4 rounded-xl border border-slate-200 hover:border-purple-300 hover:bg-purple-50/40 hover:shadow-sm transition no-underline">
+            <span class="w-9 h-9 rounded-lg bg-gradient-to-br from-amber-500 to-rose-600 text-white flex items-center justify-center"><i class="fa-solid fa-file-medical text-sm"></i></span>
+            <span class="mt-3 font-heading font-bold text-sm text-slate-900 leading-snug group-hover:text-pea-800">${RW.escapeHtml(c.title)}</span>
+            <span class="mt-1 text-xs text-slate-500 line-clamp-3">${RW.escapeHtml(c.summary || '')}</span>
+            <span class="mt-auto pt-3 flex items-center justify-between text-[11px] font-heading">
+                <span class="text-slate-400"><i class="fa-regular fa-file-pdf mr-0.5"></i>${RW.escapeHtml(c.page || '')}</span>
+                <span class="text-pea-700 font-semibold">อ่าน <i class="fa-solid fa-arrow-right group-hover:translate-x-0.5 transition"></i></span>
+            </span>
+        </a>`).join('')}</div>`;
+}
+
+function renderGuidelinePager(book, ch, item) {
+    const items = clauseItems(ch);
+    const i = items.indexOf(item);
+    const link = (c, label, align) => c
+        ? `<a ${bookLink(book.id, ch.num, c.num)} class="flex-1 min-w-0 p-3 rounded-xl border border-slate-200 hover:border-purple-300 hover:bg-purple-50/50 transition no-underline ${align}">
+            <span class="block text-[11px] text-slate-500 font-heading">${label}</span>
+            <span class="block mt-0.5 text-xs font-heading font-semibold text-pea-800 line-clamp-2">${RW.escapeHtml(c.title)}</span></a>`
+        : '<span class="flex-1 hidden sm:block"></span>';
+    return `<div class="flex flex-col sm:flex-row gap-3 mt-8 pt-5 border-t border-slate-100">
+        ${link(items[i - 1], '<i class="fa-solid fa-arrow-left mr-1"></i>เรื่องก่อนหน้า', '')}
+        ${link(items[i + 1], 'เรื่องถัดไป<i class="fa-solid fa-arrow-right ml-1"></i>', 'sm:text-right')}
+    </div>`;
+}
+
 function renderBody(book, ch) {
+    if (isCardChapter(ch)) return renderGuidelineCards(book, ch);
     if (ch.clauses) {
-        const items = ch.clauses.map(n => BOOK_DATA.clauses.find(c => String(c.num) === String(n))).filter(Boolean);
+        const items = clauseItems(ch);
         const jump = items.length > 1 ? `<div class="flex flex-wrap gap-1.5 mb-6 pb-4 border-b border-slate-100"><span class="text-xs text-slate-500 mr-1 self-center">ในบทนี้:</span>${items.map(c =>
             `<a href="#clause-${RW.escapeHtml(String(c.num))}" onclick="return bookScrollTo('${RW.escapeHtml(String(c.num))}')" class="px-2 py-1 rounded-md bg-purple-50 hover:bg-purple-100 text-[11px] font-heading font-semibold text-pea-800 no-underline">${typeof c.num === 'number' ? 'ข้อ ' + c.num : RW.escapeHtml(c.title)}</a>`).join('')}</div>` : '';
         return jump + `<div class="divide-y divide-slate-100 [&>section]:pb-6">${items.map(renderClause).join('')}</div>`;
@@ -141,6 +174,15 @@ function renderBook(p) {
     const prev = book.chapters[idx - 1];
     const next = book.chapters[idx + 1];
     const tools = [...(book.tools || []), ...(ch.tools || [])];
+    const item = isCardChapter(ch) && p.clause ? clauseItems(ch).find(c => String(c.num) === String(p.clause)) : null;
+    const header = item
+        ? `<a ${bookLink(book.id, ch.num)} class="inline-flex items-center gap-1.5 text-xs font-heading font-semibold text-pea-600 hover:text-pea-800 no-underline"><i class="fa-solid fa-arrow-left"></i>บทที่ ${ch.num} ${RW.escapeHtml(ch.title)}</a>
+           <h1 class="mt-2 text-xl sm:text-2xl font-heading font-bold text-slate-900 leading-snug">${RW.escapeHtml(item.title)}</h1>
+           <p class="mt-1 text-xs text-slate-500">${RW.escapeHtml(item.summary || '')} <span class="ml-1 text-slate-400"><i class="fa-regular fa-file-pdf mr-0.5"></i>${RW.escapeHtml(item.page || '')}</span></p>`
+        : `<span class="text-xs font-heading font-semibold text-pea-600">บทที่ ${ch.num} · ${chMeta(ch)}</span>
+           <h1 class="mt-1 text-xl sm:text-2xl font-heading font-bold text-slate-900 leading-snug">${RW.escapeHtml(ch.title)}</h1>
+           ${tools.length ? `<div class="flex flex-wrap gap-2 mt-4">${tools.map(toolButton).join('')}</div>` : ''}`;
+    const body = item ? item.content + renderGuidelinePager(book, ch, item) : renderBody(book, ch);
 
     root.innerHTML = `
     ${renderBanner(book, ch, prev, next)}
@@ -151,16 +193,14 @@ function renderBook(p) {
         </aside>
         <article class="min-w-0">
             <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-8">
-                <span class="text-xs font-heading font-semibold text-pea-600">บทที่ ${ch.num} · ${chMeta(ch)}</span>
-                <h1 class="mt-1 text-xl sm:text-2xl font-heading font-bold text-slate-900 leading-snug">${RW.escapeHtml(ch.title)}</h1>
-                ${tools.length ? `<div class="flex flex-wrap gap-2 mt-4">${tools.map(toolButton).join('')}</div>` : ''}
-                <div class="mt-5 pt-5 border-t border-slate-100 text-sm text-slate-700">${renderBody(book, ch)}</div>
+                ${header}
+                <div class="mt-5 pt-5 border-t border-slate-100 text-sm text-slate-700">${body}</div>
             </div>
             ${renderFooterNav(book, prev, next)}
         </article>
     </div>`;
 
-    document.title = `บทที่ ${ch.num} ${ch.title} - ${book.short || book.title}`;
+    document.title = `${item ? item.title : 'บทที่ ' + ch.num + ' ' + ch.title} - ${book.short || book.title}`;
     const cur = root.querySelector('[data-toc] [aria-current]');
     if (cur) cur.scrollIntoView({ block: 'nearest' });
     if (!(p.clause && bookScrollTo(p.clause) === false)) window.scrollTo(0, 0);
