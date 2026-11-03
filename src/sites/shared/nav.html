@@ -1,36 +1,68 @@
-<!-- Top Navigation Bar for Subpages -->
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-1">
-    <div class="flex items-center justify-between gap-3 bg-white/80 backdrop-blur-sm border border-slate-200/80 rounded-2xl px-4 py-2.5 shadow-sm text-xs">
-        <!-- Back and Home Buttons -->
-        <div class="flex items-center gap-2">
-            <button
-                type="button"
-                onclick="RW.back()"
-                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-purple-100 hover:text-pea-800 text-slate-700 font-heading font-medium transition cursor-pointer"
-                title="ย้อนกลับไปหน้าที่แล้ว"
-            >
-                <i class="fa-solid fa-arrow-left text-[11px]"></i>
-                <span>ย้อนกลับ</span>
-            </button>
-            <a
-                href="home.html"
-                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-50 hover:bg-pea-700 hover:text-white text-pea-800 font-heading font-medium transition no-underline"
-                title="กลับหน้าหลัก"
-            >
-                <i class="fa-solid fa-house text-[11px]"></i>
-                <span>หน้าหลัก</span>
-            </a>
+<!-- Top Navbar (ทุกหน้า) -->
+<nav id="rwNav" class="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-slate-200 shadow-sm">
+    <div class="h-0.5 bg-gradient-to-r from-pea-900 via-pea-700 to-pea-gold"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center gap-3">
+        <button type="button" onclick="RW.back()" data-nav-back class="w-8 h-8 shrink-0 inline-flex items-center justify-center rounded-lg text-slate-500 hover:bg-purple-50 hover:text-pea-800 transition cursor-pointer" title="ย้อนกลับ" aria-label="ย้อนกลับ">
+            <i class="fa-solid fa-arrow-left text-sm"></i>
+        </button>
+
+        <!-- Brand -->
+        <a href="home.html" class="flex items-center gap-2.5 min-w-0 no-underline" title="หน้าหลัก">
+            <span class="w-9 h-9 shrink-0 rounded-xl bg-gradient-to-br from-pea-800 to-pea-600 text-white inline-flex items-center justify-center shadow-sm">
+                <i class="fa-solid fa-book-open text-sm"></i>
+            </span>
+            <span class="min-w-0 leading-tight">
+                <span class="block font-heading font-bold text-sm text-pea-900 truncate">สิทธิและสวัสดิการ กฟภ.</span>
+                <span class="block text-[11px] text-slate-500 truncate"><span class="font-semibold text-amber-600">PEA N1</span> · อัปเดต 30 ต.ค. 2569</span>
+            </span>
+        </a>
+
+        <!-- Links (จอใหญ่) -->
+        <div class="hidden lg:flex items-center gap-0.5 ml-auto text-xs font-heading">
+            <a href="home.html" data-nav="home" class="px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-pea-800 transition no-underline">ชั้นหนังสือ</a>
+            <a href="manual.html" data-nav="manual" class="px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-pea-800 transition no-underline">คู่มือ 44 ข้อ</a>
+            <a href="allowance.html" data-nav="allowance" class="px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-pea-800 transition no-underline">เบี้ยเลี้ยง-ที่พัก</a>
+            <a href="tools.html" data-nav="tools" class="px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-pea-800 transition no-underline">โปรแกรมคำนวณ</a>
+            <a href="tables.html" data-nav="tables" class="px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-pea-800 transition no-underline">ตารางสรุป</a>
+            <a href="forms.html" data-nav="forms" class="px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-pea-800 transition no-underline">แบบฟอร์ม</a>
         </div>
 
-        <!-- Quick Jump Shortcuts -->
-        <div class="hidden sm:flex items-center gap-1 text-[11px] font-heading">
-            <span class="text-slate-400 mr-1.5">ไปที่:</span>
-            <a href="manual.html" class="px-2.5 py-1 rounded-lg hover:bg-slate-100 text-slate-600 hover:text-pea-800 transition no-underline">คู่มือ 44 ข้อ</a>
-            <a href="allowance.html" class="px-2.5 py-1 rounded-lg hover:bg-slate-100 text-slate-600 hover:text-pea-800 transition no-underline">เบี้ยเลี้ยง-ที่พัก</a>
-            <a href="tools.html" class="px-2.5 py-1 rounded-lg hover:bg-slate-100 text-slate-600 hover:text-pea-800 transition no-underline">โปรแกรมคำนวณ</a>
-            <a href="tables.html" class="px-2.5 py-1 rounded-lg hover:bg-slate-100 text-slate-600 hover:text-pea-800 transition no-underline">ตารางสรุป</a>
-            <a href="forms.html" class="px-2.5 py-1 rounded-lg hover:bg-slate-100 text-slate-600 hover:text-pea-800 transition no-underline"><i class="fa-solid fa-download mr-1"></i>แบบฟอร์ม</a>
-            <button type="button" onclick="RW.toggleChat(true)" class="px-2.5 py-1 rounded-lg hover:bg-emerald-50 text-emerald-700 font-semibold transition cursor-pointer"><i class="fa-solid fa-robot mr-1"></i>ถาม AI</button>
+        <!-- Actions -->
+        <div class="flex items-center gap-1.5 ml-auto lg:ml-2 shrink-0">
+            <button type="button" onclick="RW.toggleChat(true)" class="inline-flex items-center gap-1.5 px-3 h-9 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-heading font-semibold text-xs shadow-sm transition cursor-pointer" title="ถาม AI ผู้ช่วย">
+                <i class="fa-solid fa-robot"></i><span class="hidden sm:inline">ถาม AI</span>
+            </button>
+            <button type="button" onclick="RW.openFeedback()" class="w-9 h-9 inline-flex items-center justify-center rounded-xl text-amber-700 hover:bg-amber-50 border border-amber-200 transition cursor-pointer" title="Feedback / แจ้งปัญหา" aria-label="Feedback / แจ้งปัญหา">
+                <i class="fa-solid fa-comment-dots"></i>
+            </button>
+            <button type="button" onclick="document.getElementById('rwNavMenu').classList.toggle('hidden')" class="lg:hidden w-9 h-9 inline-flex items-center justify-center rounded-xl text-slate-600 hover:bg-slate-100 transition cursor-pointer" aria-label="เมนู" aria-controls="rwNavMenu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
         </div>
     </div>
-</div>
+
+    <!-- Links (มือถือ/แท็บเล็ต) -->
+    <div id="rwNavMenu" class="hidden lg:hidden border-t border-slate-200 bg-white">
+        <div class="max-w-7xl mx-auto px-4 py-2 grid grid-cols-2 sm:grid-cols-3 gap-1 text-sm font-heading">
+            <a href="home.html" data-nav="home" class="px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-100 no-underline"><i class="fa-solid fa-book w-5 text-pea-600"></i>ชั้นหนังสือ</a>
+            <a href="manual.html" data-nav="manual" class="px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-100 no-underline"><i class="fa-solid fa-list-ol w-5 text-pea-600"></i>คู่มือ 44 ข้อ</a>
+            <a href="allowance.html" data-nav="allowance" class="px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-100 no-underline"><i class="fa-solid fa-suitcase-rolling w-5 text-pea-600"></i>เบี้ยเลี้ยง-ที่พัก</a>
+            <a href="tools.html" data-nav="tools" class="px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-100 no-underline"><i class="fa-solid fa-calculator w-5 text-pea-600"></i>โปรแกรมคำนวณ</a>
+            <a href="tables.html" data-nav="tables" class="px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-100 no-underline"><i class="fa-solid fa-table w-5 text-pea-600"></i>ตารางสรุป</a>
+            <a href="forms.html" data-nav="forms" class="px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-100 no-underline"><i class="fa-solid fa-download w-5 text-pea-600"></i>แบบฟอร์ม</a>
+        </div>
+    </div>
+</nav>
+<script>
+(function () {
+    var page = (window.RW_CONFIG || {}).page;
+    // หน้า book เป็นส่วนหนึ่งของชั้นหนังสือ
+    var current = page === 'book' ? 'home' : page;
+    document.querySelectorAll('#rwNav [data-nav="' + current + '"]').forEach(function (a) {
+        a.classList.remove('text-slate-600', 'text-slate-700');
+        a.classList.add('bg-purple-50', 'text-pea-800', 'font-semibold');
+        a.setAttribute('aria-current', 'page');
+    });
+    if (page === 'home') document.querySelector('#rwNav [data-nav-back]').remove();
+})();
+</script>

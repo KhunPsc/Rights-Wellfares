@@ -75,7 +75,8 @@ ${inlineScript(`window.RW_CONFIG = ${JSON.stringify(runtimeConfig)};`, 'config')
 ${inlineScript(core, 'shared/core.js')}
 </head>
 <body class="rw-embed">
-${page !== 'home' ? nav.trim() + '\n' : ''}${body.trim()}
+${nav.trim()}
+${body.trim()}
 ${page !== 'chat' ? chatWidget.trim() + '\n' : ''}${feedbackModal.trim()}
 ${footer.trim()}
 ${pageJs ? inlineScript(pageJs, `pages/${page}.js`) : ''}

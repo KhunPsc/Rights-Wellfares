@@ -26,7 +26,7 @@ function renderToc(book) {
     return `
     <div class="grid lg:grid-cols-3 gap-6">
         <div class="lg:col-span-1">
-            <div class="bg-gradient-to-br from-pea-900 via-pea-700 to-purple-800 rounded-3xl p-6 text-white shadow-xl border-b-4 border-pea-gold lg:sticky lg:top-4">
+            <div class="bg-gradient-to-br from-pea-900 via-pea-700 to-purple-800 rounded-3xl p-6 text-white shadow-xl border-b-4 border-pea-gold lg:sticky lg:top-20">
                 <div class="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center text-2xl text-amber-300 mb-4"><i class="fa-solid ${book.icon || 'fa-book'}"></i></div>
                 <span class="px-2.5 py-0.5 text-xs font-heading font-semibold bg-amber-400 text-slate-900 rounded-full">${RW.escapeHtml(book.short || '')}</span>
                 <h1 class="mt-3 text-xl font-heading font-bold leading-snug">${RW.escapeHtml(book.title)}</h1>
