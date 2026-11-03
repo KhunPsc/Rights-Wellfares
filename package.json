@@ -7,7 +7,7 @@
     "build:sites": "node scripts/build-sites.mjs",
     "push": "npm run build && clasp push",
     "deploy": "npm run push && clasp redeploy AKfycbxuj4rSSQDzlcSCVv6QmT_vLcud5P2csRg55FcW4Wa920p4u3KCz-HPtO9gFvVVjwr3 --description \"npm run deploy\"",
-    "test": "node scripts/test-chat.mjs"
+    "test": "node scripts/test-chat.mjs && node scripts/test-markdown.mjs"
   },
   "devDependencies": {
     "tailwindcss": "^3.4.17"

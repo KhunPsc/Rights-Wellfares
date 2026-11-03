@@ -1,7 +1,8 @@
 // Tailwind สร้าง CSS ตอน npm run build:sites — สแกนเฉพาะ class ที่ใช้จริง (เดิมโหลดจาก cdn.tailwindcss.com ทุกหน้า)
 // clauses.json / wizard.json มี HTML พร้อม class ฝังอยู่ (แสดงผลตอนรันจากข้อมูล bootstrap) จึงต้องสแกนด้วย
 module.exports = {
-  content: ['./src/sites/**/*.{html,js}', './src/data/*.json'],
+  // scripts/lib: class ที่ตัวแปลง markdown ของหนังสือใส่ให้เนื้อหาบท
+  content: ['./src/sites/**/*.{html,js}', './src/data/*.json', './scripts/lib/*.mjs'],
   theme: {
     extend: {
       fontFamily: {

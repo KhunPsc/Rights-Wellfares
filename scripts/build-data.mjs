@@ -1,5 +1,7 @@
 // Bundle src/data/* into apps-script/Data.js (served by doGet ?action=bootstrap and used by the chat prompt).
 import { readFile, writeFile } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
+import { markdownToHtml } from './lib/markdown.mjs';
 import { createHash } from 'node:crypto';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -17,7 +19,16 @@ const data = {
   wizard: await readJson('wizard.json'),
   forms: await readJson('forms.json'),
   news: await readJson('news.json'),
+  books: await readJson('books.json'),
 };
+
+// เนื้อหาแต่ละบท: vault/books/<book id>/<เลขบท 2 หลัก>.md — ยังไม่มีไฟล์ = บทนั้น "กำลังจัดทำ" (content: null)
+for (const book of data.books) {
+  for (const ch of book.chapters) {
+    const file = join(root, 'vault', 'books', book.id, `${String(ch.num).padStart(2, '0')}.md`);
+    ch.content = existsSync(file) ? markdownToHtml(await readFile(file, 'utf8')) : null;
+  }
+}
 const chatPrompt = (await readFile(join(dataDir, 'chat-prompt.md'), 'utf8')).trim();
 
 // sanity checks — catch broken edits before they reach production
@@ -72,4 +83,5 @@ await writeFile(
   'utf8',
 );
 
-console.log(`Data.js: version ${version}, ${data.clauses.length} clauses, ${json.length.toLocaleString()} chars`);
+const chapters = data.books.flatMap((b) => b.chapters);
+console.log(`Data.js: version ${version}, ${data.clauses.length} clauses, books ${chapters.filter((c) => c.content).length}/${chapters.length} chapters written, ${json.length.toLocaleString()} chars`);

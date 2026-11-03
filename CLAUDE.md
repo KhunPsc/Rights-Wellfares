@@ -50,6 +50,14 @@ scripts/               build-knowledge.mjs: รวม wiki/ → apps-script/Know
 ### Lint — ตรวจสุขภาพ wiki
 หาหน้าที่ไม่มีลิงก์เข้า (orphan), ลิงก์เสีย, ข้อมูลขัดแย้ง, หน้าที่ไม่มีแหล่งอ้างอิง, หัวข้อที่ถูกพูดถึงแต่ยังไม่มีหน้า แล้วบันทึกผลใน `log.md`
 
+## หนังสือ (ชั้นหนังสือหน้าแรก)
+
+- รายชื่อเล่มและบท: `src/data/books.json` (เพิ่มเล่มใหม่ = เพิ่ม object ในอาร์เรย์)
+- เนื้อหาแต่ละบท: `vault/books/<book id>/<เลขบท 2 หลัก>.md` (แก้ใน Obsidian ได้) — ไม่มีไฟล์ = บทนั้นแสดง "กำลังจัดทำ"
+- Markdown ที่รองรับ: `##`/`###`/`####`, ย่อหน้า, `-` และ `1.` (ซ้อนด้วยเว้น 2 ช่อง), `| ตาราง |`, `> หมายเหตุ`, `**ตัวหนา**` (ตัวแปลง `scripts/lib/markdown.mjs`)
+- บทที่มีหน้าเฉพาะอยู่แล้ว ใช้ `link` (เช่น บท 1 → คู่มือ 44 ข้อ) และ `tools` (ปุ่มไปเครื่องมือ)
+- เล่ม `kfn1` = คู่มือตรวจสอบใบสำคัญจ่ายเงิน กฟน.1 (26 ม.ค. 2565) ถอดจาก PDF — ข้อความต้นฉบับสระอำหาย ต้องแก้ทีละบท · จุดที่มีระเบียบใหม่กว่าให้ใส่ `> หมายเหตุ` ไม่แก้ข้อความต้นฉบับ
+
 ## Chatbot & Google Sites Architecture
 
 - **ข้อมูลกลาง (Single Source of Truth)**: เก็บใน `src/data/*.json` (ระเบียบ 44 ข้อ, หมวดหมู่, อัตราเบี้ยเลี้ยง/ที่พัก, wizard, ฟอร์ม)
@@ -61,7 +69,7 @@ scripts/               build-knowledge.mjs: รวม wiki/ → apps-script/Know
   - `Knowledge.js` (generated): รวมจาก `vault/wiki/`
   - API key เก็บใน Script Properties ชื่อ `GEMINI_API_KEY`
 - **Frontend (Google Sites Pages)**: อยู่ใน `src/sites/`
-  - แยกเป็น 6 หน้าใน `src/sites/pages/`: `home`, `manual`, `allowance`, `tools`, `tables`, `chat`
+  - หน้าใน `src/sites/pages/`: `home` (ชั้นหนังสือ), `book` (สารบัญ/อ่านบท), `manual`, `allowance`, `tools`, `tables`, `forms`, `chat`
   - คอมไพล์เป็น Embed code ก้อนเล็ก (30-45 KB) ใน `dist/sites/<page>.html` ด้วย `npm run build:sites`
   - ปรับ URL หน้าใน Sites ได้ที่ `src/sites/config.json`
 - **คำสั่งสำคัญ**:
