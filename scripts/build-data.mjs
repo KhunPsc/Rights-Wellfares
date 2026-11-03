@@ -2,6 +2,7 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { markdownToHtml } from './lib/markdown.mjs';
+import { buildGraph } from './lib/graph.mjs';
 import { createHash } from 'node:crypto';
 import { join, resolve, dirname, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -37,7 +38,7 @@ for (const book of data.books) {
   if (book.fromCategories) {
     // เล่มคู่มือ 44 ข้อ: บท = หมวดใน categories.json · หน้าเว็บดึงเนื้อหาจาก clauses ตามรายการ ch.clauses (ไม่ซ้ำข้อมูลใน bootstrap)
     book.chapters = data.categories.filter((c) => c.clauses).map((c, i) => ({
-      num: i + 1, title: c.name.replace(/^\d+\.\s*/, ''), clauses: c.clauses,
+      num: i + 1, title: c.name.replace(/^\d+\.\s*/, ''), clauses: c.clauses, topics: c.topics,
     }));
     continue;
   }
@@ -46,6 +47,8 @@ for (const book of data.books) {
     ch.content = existsSync(file) ? markdownToHtml(await readFile(file, 'utf8'), { image: (src) => bookImage(file, src) }) : null;
   }
 }
+// แผนที่ความรู้ (หน้า map) — node จาก vault/wiki, บทที่เกี่ยวข้องจาก topics ของแต่ละบท
+data.graph = await buildGraph(join(root, 'vault', 'wiki'), data.books);
 const chatPrompt = (await readFile(join(dataDir, 'chat-prompt.md'), 'utf8')).trim();
 
 // sanity checks — catch broken edits before they reach production

@@ -35,6 +35,13 @@ function toolButton(t) {
         <i class="fa-solid ${t.icon || 'fa-arrow-up-right-from-square'}"></i><span>${RW.escapeHtml(t.label)}</span></a>`;
 }
 
+// ไปแผนที่ความรู้ที่หัวข้อของบทนี้ (topics มาจาก books.json / categories.json)
+function mapButton(topic) {
+    const href = `${RW.pageUrl('map') || 'map.html'}?topic=${encodeURIComponent(topic)}`;
+    return `<a href="${href}" onclick="try{localStorage.setItem('rw_map_topic',${RW.escapeHtml(JSON.stringify(topic))})}catch(e){}" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white border border-slate-200 hover:border-purple-300 hover:bg-purple-50 text-xs font-heading font-semibold text-pea-800 transition no-underline">
+        <i class="fa-solid fa-diagram-project"></i><span>ดูในแผนที่ความรู้</span></a>`;
+}
+
 const chReady = (c) => c.content || c.link || c.clauses;
 const chMeta = (c) => c.clauses ? `${c.clauses.length} ${typeof c.clauses[0] === 'number' ? 'ข้อ' : 'เรื่อง'}` : `หน้า ${RW.escapeHtml(c.pages || '-')}`;
 
@@ -181,7 +188,7 @@ function renderBook(p) {
            <p class="mt-1 text-xs text-slate-500">${RW.escapeHtml(item.summary || '')} <span class="ml-1 text-slate-400"><i class="fa-regular fa-file-pdf mr-0.5"></i>${RW.escapeHtml(item.page || '')}</span></p>`
         : `<span class="text-xs font-heading font-semibold text-pea-600">บทที่ ${ch.num} · ${chMeta(ch)}</span>
            <h1 class="mt-1 text-xl sm:text-2xl font-heading font-bold text-slate-900 leading-snug">${RW.escapeHtml(ch.title)}</h1>
-           ${tools.length ? `<div class="flex flex-wrap gap-2 mt-4">${tools.map(toolButton).join('')}</div>` : ''}`;
+           ${tools.length || ch.topics ? `<div class="flex flex-wrap gap-2 mt-4">${tools.map(toolButton).join('')}${ch.topics ? mapButton(ch.topics[0]) : ''}</div>` : ''}`;
     const body = item ? item.content + renderGuidelinePager(book, ch, item) : renderBody(book, ch);
 
     root.innerHTML = `

@@ -8,6 +8,7 @@
     "allowance": "allowance.html",
     "chat": "chat.html",
     "forms": "forms.html",
-    "book": "book.html"
+    "book": "book.html",
+    "map": "map.html"
   }
 }

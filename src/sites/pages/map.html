@@ -1,0 +1,31 @@
+<!-- @title แผนที่ความรู้ - สิทธิและสวัสดิการ กฟภ. -->
+<script src="https://cdn.jsdelivr.net/npm/force-graph@1.43.5/dist/force-graph.min.js" integrity="sha384-vn7B1RT1Urhy4RinbMhup/ZWDwbhNQQO3JH16BtgTwiCXWEEMDmCVPUW8qO4DeLL" crossorigin="anonymous"></script>
+<main class="app-main max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-5 space-y-3">
+    <div class="flex flex-col sm:flex-row sm:items-end gap-3">
+        <div class="min-w-0">
+            <h1 class="font-heading font-bold text-xl text-pea-900"><i class="fa-solid fa-diagram-project text-pea-600 mr-1.5"></i>แผนที่ความรู้</h1>
+            <p class="text-xs text-slate-500 mt-0.5">แต่ละจุดคือหัวข้อในฐานความรู้ เส้นแสดงว่าหัวข้อไหนอ้างถึงกัน — กดจุดเพื่อดูสรุปและเปิดบทในหนังสือ</p>
+        </div>
+        <div class="relative sm:ml-auto sm:w-80">
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+            <input id="mapSearch" type="search" list="mapTitles" placeholder="ค้นหาหัวข้อ เช่น ค่าห้อง, เดินทาง" aria-label="ค้นหาหัวข้อในแผนที่"
+                class="w-full pl-8 pr-3 py-2 rounded-xl border border-slate-300 bg-white text-sm">
+            <datalist id="mapTitles"></datalist>
+        </div>
+    </div>
+
+    <div id="mapLegend" class="flex flex-wrap gap-1.5" role="group" aria-label="กรองตามประเภท"></div>
+
+    <div class="lg:grid lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-4 items-start space-y-3 lg:space-y-0">
+        <div class="relative bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden h-[60vh] lg:h-[calc(100vh-13rem)] min-h-[420px]">
+            <div id="mapGraph" class="absolute inset-0"></div>
+            <div class="absolute top-2 right-2 flex flex-col gap-1.5">
+                <button type="button" onclick="mapZoom(1.4)" class="w-8 h-8 rounded-lg bg-white/90 border border-slate-200 text-slate-600 hover:bg-purple-50" aria-label="ซูมเข้า"><i class="fa-solid fa-plus text-xs"></i></button>
+                <button type="button" onclick="mapZoom(1 / 1.4)" class="w-8 h-8 rounded-lg bg-white/90 border border-slate-200 text-slate-600 hover:bg-purple-50" aria-label="ซูมออก"><i class="fa-solid fa-minus text-xs"></i></button>
+                <button type="button" onclick="mapFit()" class="w-8 h-8 rounded-lg bg-white/90 border border-slate-200 text-slate-600 hover:bg-purple-50" aria-label="ดูทั้งหมด" title="ดูทั้งหมด"><i class="fa-solid fa-expand text-xs"></i></button>
+            </div>
+            <div class="absolute left-2 bottom-2 text-[11px] text-slate-500 bg-white/85 rounded-lg px-2 py-1 pointer-events-none">ลากเพื่อเลื่อน · ล้อเมาส์/สองนิ้วเพื่อซูม · กดจุดเพื่อดูรายละเอียด</div>
+        </div>
+        <aside id="mapPanel" class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 lg:sticky lg:top-20 lg:max-h-[calc(100vh-6rem)] overflow-y-auto" aria-live="polite"></aside>
+    </div>
+</main>

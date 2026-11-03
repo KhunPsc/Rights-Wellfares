@@ -56,6 +56,7 @@ scripts/               build-knowledge.mjs: รวม wiki/ → apps-script/Know
 - เนื้อหาแต่ละบท: `vault/books/<book id>/<เลขบท 2 หลัก>.md` (แก้ใน Obsidian ได้) — ไม่มีไฟล์ = บทนั้นแสดง "กำลังจัดทำ"
 - Markdown ที่รองรับ: `##`/`###`/`####`, ย่อหน้า, `-` และ `1.` (ซ้อนด้วยเว้น 2 ช่อง), `| ตาราง |`, `> หมายเหตุ`, `**ตัวหนา**` (ตัวแปลง `scripts/lib/markdown.mjs`)
 - รูปในบท: `![คำอธิบาย](../../raw/assets/ชื่อไฟล์.jpg)` ทั้งบรรทัด — ไฟล์ต้องอยู่ใน `vault/raw/assets/` (build คัดลอกไปที่ `docs/assets/raw/` ซึ่งเผยแพร่สาธารณะบน GitHub Pages)
+- แผนที่ความรู้ (`map`): สร้างตอน build จาก `vault/wiki` (`scripts/lib/graph.mjs`) — จุด = หน้า wiki, เส้น = `[[ลิงก์]]`, สรุป = คำอธิบายใน `index.md` · บทหนังสือที่เกี่ยวข้องมาจาก `topics` ในแต่ละบทของ `books.json` (เล่ม 44 ข้อ: `topics` ใน `categories.json`) — build ล้มถ้าอ้างหน้าที่ไม่มี
 - การ์ด "เกิดอะไรขึ้นกับคุณ?" หน้าแรก: `src/data/highlights.json` (ชี้ไป book + ch) · ตัวเลขบนการ์ดตรวจด้วย `facts.json` (location `highlight:<id>`)
 - เล่มที่มี `"fromCategories": true` (เล่ม `welfare44` = คู่มือ 44 ข้อ) สร้างบทจาก `categories.json` ตอน build — บท = หมวด เนื้อหา = ข้อใน `clauses.json` (ไม่ต้องมีไฟล์ใน vault/books)
 - บทที่ชี้ไปเล่มอื่นใช้ `link: { book, label, text }` (เช่น กฟน.1 บท 1 → เล่ม 44 ข้อ) · `tools` ที่ระดับเล่มหรือบท = ปุ่มไปหน้าเครื่องมือ
@@ -74,7 +75,7 @@ scripts/               build-knowledge.mjs: รวม wiki/ → apps-script/Know
   - `Knowledge.js` (generated): รวมจาก `vault/wiki/`
   - API key เก็บใน Script Properties ชื่อ `GEMINI_API_KEY`
 - **Frontend (Google Sites Pages)**: อยู่ใน `src/sites/`
-  - หน้าใน `src/sites/pages/`: `home` (ชั้นหนังสือ + ค้นหาทุกเล่ม), `book` (อ่านหนังสือ), `allowance`, `tools`, `tables`, `forms`, `chat`
+  - หน้าใน `src/sites/pages/`: `home` (ชั้นหนังสือ + ค้นหาทุกเล่ม), `book` (อ่านหนังสือ), `map` (แผนที่ความรู้), `allowance`, `tools`, `tables`, `forms`, `chat`
   - คอมไพล์เป็น Embed code ก้อนเล็ก (30-45 KB) ใน `dist/sites/<page>.html` ด้วย `npm run build:sites`
   - ปรับ URL หน้าใน Sites ได้ที่ `src/sites/config.json`
 - **คำสั่งสำคัญ**:
