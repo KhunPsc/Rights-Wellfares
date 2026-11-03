@@ -1,0 +1,23 @@
+{
+  "_comment": "ตัวเลขสำคัญที่เขียนซ้ำหลายที่ — npm run build ตรวจว่า text ปรากฏทุกที่ใน in (และ rate ใน allowance-rates.json ตรงค่า) ถ้าเปลี่ยนอัตรา: แก้ที่นี่ก่อน แล้วแก้ทุกที่ที่ build แจ้ง · in: wiki:<path ใน vault/wiki> | clause:<num> | prompt (chat-prompt.md)",
+  "facts": [
+    { "fact": "ค่าห้อง+อาหาร พนักงาน ไม่เกิน/วัน", "text": "1,500", "in": ["wiki:welfare/ค่าห้องและค่าอาหาร.md", "clause:7", "prompt"] },
+    { "fact": "ค่าห้อง+อาหาร ครอบครัวพนักงาน ไม่เกิน/วัน", "text": "1,100", "in": ["wiki:welfare/ค่าห้องและค่าอาหาร.md", "clause:7", "prompt"] },
+    { "fact": "ค่าห้อง+อาหาร ลูกจ้างและครอบครัว ไม่เกิน/วัน", "text": "1,000", "in": ["wiki:welfare/ค่าห้องและค่าอาหาร.md", "clause:7", "prompt"] },
+    { "fact": "OPD รพ.เอกชน + คลินิก ไม่เกิน/ปี", "text": "3,600", "in": ["wiki:welfare/ค่ารักษาพยาบาล พนักงาน.md", "clause:7"] },
+
+    { "fact": "เบี้ยเลี้ยงเต็มวัน ระดับ 13+", "text": "460", "rate": "13+.full.total", "in": ["wiki:welfare/เบี้ยเลี้ยงและค่าเช่าที่พัก.md", "clause:44", "prompt"] },
+    { "fact": "เบี้ยเลี้ยงเต็มวัน ระดับ 7-12", "text": "370", "rate": "7-12.full.total", "in": ["wiki:welfare/เบี้ยเลี้ยงและค่าเช่าที่พัก.md", "clause:44", "prompt"] },
+    { "fact": "เบี้ยเลี้ยงเต็มวัน ระดับ 1-6", "text": "300", "rate": "1-6.full.total", "in": ["wiki:welfare/เบี้ยเลี้ยงและค่าเช่าที่พัก.md", "clause:44", "prompt"] },
+    { "fact": "เบี้ยเลี้ยง ส่วนไม่ระบุ TAX สูงสุด", "text": "270", "rate": "13+.full.noTax", "in": ["wiki:welfare/เบี้ยเลี้ยงและค่าเช่าที่พัก.md", "clause:44", "prompt"] },
+    { "fact": "เบี้ยเลี้ยงเต็มวัน ระดับ 13+ ส่วนระบุ TAX", "text": "190", "rate": "13+.full.tax", "in": ["wiki:welfare/เบี้ยเลี้ยงและค่าเช่าที่พัก.md", "clause:44", "prompt"] },
+    { "fact": "เบี้ยเลี้ยง 2 ใน 3 ระดับ 13+", "text": "306.67", "rate": "13+.twoThird.total", "in": ["wiki:welfare/เบี้ยเลี้ยงและค่าเช่าที่พัก.md", "clause:44", "prompt"] },
+    { "fact": "เบี้ยเลี้ยง 2 ใน 3 ระดับ 7-12", "text": "246.67", "rate": "7-12.twoThird.total", "in": ["wiki:welfare/เบี้ยเลี้ยงและค่าเช่าที่พัก.md", "clause:44", "prompt"] },
+    { "fact": "เบี้ยเลี้ยง 1 ใน 3 ระดับ 13+", "text": "153.33", "rate": "13+.oneThird.total", "in": ["wiki:welfare/เบี้ยเลี้ยงและค่าเช่าที่พัก.md", "clause:44", "prompt"] },
+    { "fact": "เบี้ยเลี้ยง 1 ใน 3 ระดับ 7-12", "text": "123.33", "rate": "7-12.oneThird.total", "in": ["wiki:welfare/เบี้ยเลี้ยงและค่าเช่าที่พัก.md", "clause:44", "prompt"] },
+    { "fact": "ที่พักเหมาจ่าย ระดับ 7-12", "text": "1,000", "rate": "7-12.hotelLump.rate", "in": ["wiki:welfare/เบี้ยเลี้ยงและค่าเช่าที่พัก.md", "clause:44", "prompt"] },
+    { "fact": "ที่พักเหมาจ่าย ระดับ 1-6", "text": "650", "rate": "1-6.hotelLump.rate", "in": ["wiki:welfare/เบี้ยเลี้ยงและค่าเช่าที่พัก.md", "clause:44", "prompt"] },
+    { "fact": "ที่พักจ่ายจริง ระดับ 7-12 ไม่เกิน", "text": "1,350", "rate": "7-12.hotelActual.numericCap", "in": ["wiki:welfare/เบี้ยเลี้ยงและค่าเช่าที่พัก.md", "clause:44", "prompt"] },
+    { "fact": "ที่พักจ่ายจริง ระดับ 1-6 ไม่เกิน", "text": "1,000", "rate": "1-6.hotelActual.numericCap", "in": ["wiki:welfare/เบี้ยเลี้ยงและค่าเช่าที่พัก.md", "clause:44", "prompt"] }
+  ]
+}

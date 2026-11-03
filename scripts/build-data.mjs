@@ -31,6 +31,35 @@ for (const c of data.clauses) {
   if (!c.num || !c.title || !c.content) throw new Error(`clause ${c.num} missing num/title/content`);
 }
 
+// ตัวเลขสำคัญต้องตรงกันทุกที่ (wiki / clauses.json / chat-prompt.md / allowance-rates.json) — ดู src/data/facts.json
+// shortcut: ตรวจแค่ว่ามีตัวเลขนั้นอยู่ — ถ้าแก้บางจุดแต่ยังเหลือค่าเดิมจุดอื่นในที่เดียวกันจะไม่จับ; ถ้าเจอปัญหานี้ค่อยเพิ่มรายการ "ค่าเก่าที่ห้ามมี"
+const { facts } = await readJson('facts.json');
+const wikiDir = join(root, 'vault', 'wiki');
+async function sourceText(loc) {
+  const [kind, ref] = loc.split(/:(.*)/);
+  if (kind === 'prompt') return chatPrompt;
+  if (kind === 'wiki') return readFile(join(wikiDir, ref), 'utf8');
+  if (kind === 'clause') {
+    const c = data.clauses.find((x) => String(x.num) === ref);
+    if (!c) throw new Error(`facts.json: clause ${ref} not found`);
+    return [c.title, c.summary, c.content].join(' ').replace(/<[^>]+>/g, ' ');
+  }
+  throw new Error(`facts.json: unknown location "${loc}"`);
+}
+const mismatches = [];
+for (const f of facts) {
+  for (const loc of f.in) {
+    if (!(await sourceText(loc)).includes(f.text)) mismatches.push(`${f.fact}: ไม่พบ "${f.text}" ใน ${loc}`);
+  }
+  if (f.rate) {
+    const actual = f.rate.split('.').reduce((o, k) => o?.[k], data.allowanceRates);
+    if (actual !== Number(f.text.replace(/,/g, ''))) mismatches.push(`${f.fact}: allowance-rates.json ${f.rate} = ${actual} แต่ facts.json = ${f.text}`);
+  }
+}
+if (mismatches.length) {
+  throw new Error(`ตัวเลขไม่ตรงกัน ${mismatches.length} จุด — แก้ให้ตรงกับ src/data/facts.json:\n  ` + mismatches.join('\n  '));
+}
+
 const json = JSON.stringify(data);
 const version = createHash('sha1').update(json + chatPrompt).digest('hex').slice(0, 10);
 

@@ -44,6 +44,8 @@ npm run build
 npm run build:sites
 ```
 
+> **เปลี่ยนอัตราเงิน (ค่าห้อง, OPD, เบี้ยเลี้ยง, ที่พัก):** ตัวเลขเหล่านี้เขียนซ้ำใน wiki, `clauses.json`, `chat-prompt.md` และ `allowance-rates.json` — แก้ค่าใน `src/data/facts.json` ก่อน แล้ว `npm run build` จะบอกทุกจุดที่ยังเป็นค่าเก่า (build ล้มจนกว่าจะแก้ครบ)
+
 ### 4. Deploy Google Apps Script Backend
 เมื่อข้อมูลใน Apps Script มีการเปลี่ยนแปลง:
 ```powershell

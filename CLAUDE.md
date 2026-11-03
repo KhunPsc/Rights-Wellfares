@@ -65,7 +65,7 @@ scripts/               build-knowledge.mjs: รวม wiki/ → apps-script/Know
   - คอมไพล์เป็น Embed code ก้อนเล็ก (30-45 KB) ใน `dist/sites/<page>.html` ด้วย `npm run build:sites`
   - ปรับ URL หน้าใน Sites ได้ที่ `src/sites/config.json`
 - **คำสั่งสำคัญ**:
-  - `npm run build` = รวม wiki (`Knowledge.js`) + src/data (`Data.js`)
+  - `npm run build` = รวม wiki (`Knowledge.js`) + src/data (`Data.js`) + ตรวจตัวเลขสำคัญให้ตรงกันทุกที่ตาม `src/data/facts.json` (build ล้มถ้าไม่ตรง)
   - `npm run build:sites` = บิลด์โค้ดฝัง Google Sites ไปที่ `dist/sites/*.html`
   - `npm run push` = build + `clasp push`
   - `npm run deploy` = build + push + อัปเดตเวอร์ชัน deployment บน Apps Script อัตโนมัติ
