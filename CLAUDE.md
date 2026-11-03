@@ -69,6 +69,7 @@ scripts/               build-knowledge.mjs: รวม wiki/ → apps-script/Know
   - `Router.js`: `doGet` (bootstrap/version) + `doPost` (chat/feedback)
   - `Chat.js`: ประกอบ System Prompt ฝั่ง Server (คู่มือ 48 ข้อ + หน้า wiki ที่เกี่ยวกับคำถาม ≤ 20K ตัวอักษร เลือกด้วย bigram) พร้อม Exponential Backoff & Rate Limit — ทดสอบการเลือกหน้าด้วย `npm test`
   - `Feedback.js`: บันทึกลง Google Sheet พร้อมป้องกัน Formula Injection
+  - `Quota.js`: จำกัดคำขอรวมทุกผู้ใช้ — แชต 14/นาที 240/วัน (Gemini free tier 15 RPM / 250 RPD) · feedback 10/นาที 100/วัน · ดูยอดวันนี้: รัน `showQuotaUsage` ใน editor · ทดสอบด้วย `npm test`
   - `Data.js` (generated): รวมจาก `src/data/` ผ่าน `npm run build`
   - `Knowledge.js` (generated): รวมจาก `vault/wiki/`
   - API key เก็บใน Script Properties ชื่อ `GEMINI_API_KEY`

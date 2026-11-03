@@ -19,7 +19,8 @@ function doGet(e) {
     }
     return errorOut_('unknown_action', 'ไม่รู้จัก action: ' + action);
   } catch (err) {
-    return errorOut_('server_error', err.toString());
+    console.error(err);
+    return errorOut_('server_error', 'ระบบขัดข้องชั่วคราว กรุณาลองใหม่อีกครั้ง');
   }
 }
 
@@ -34,7 +35,8 @@ function doPost(e) {
     }
     return errorOut_('unknown_action', 'ไม่รู้จัก action: ' + body.action);
   } catch (err) {
-    return errorOut_('server_error', err.toString());
+    console.error(err);
+    return errorOut_('server_error', 'ระบบขัดข้องชั่วคราว กรุณาลองใหม่อีกครั้ง');
   }
 }
 

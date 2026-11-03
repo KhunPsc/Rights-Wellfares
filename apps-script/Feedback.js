@@ -8,6 +8,13 @@ function handleFeedbackSubmission(data) {
   var detail = cell_(data.detail, 5000);
   if (!detail) return errorOut_('bad_request', 'กรุณาระบุรายละเอียด');
 
+  var quota = takeQuota_('feedback');
+  if (!quota.ok) {
+    return errorOut_('rate_limited', quota.reason === 'day'
+      ? 'วันนี้มีการแจ้งเรื่องครบจำนวนที่ระบบรับได้แล้ว กรุณาส่งใหม่พรุ่งนี้'
+      : 'มีการแจ้งเรื่องถี่เกินไป กรุณารอสักครู่แล้วส่งใหม่');
+  }
+
   var sheet = SpreadsheetApp.openById(FEEDBACK_SHEET_ID).getSheets()[0];
   if (sheet.getLastRow() === 0) {
     sheet.appendRow(['Timestamp', 'ประเภทการแจ้ง', 'รายละเอียด', 'ผู้แจ้ง / สังกัด', 'ช่องทางติดต่อ', 'หน้า']);
