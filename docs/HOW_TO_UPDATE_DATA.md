@@ -40,7 +40,7 @@
 # รวม Knowledge และ Data เข้า Apps Script
 npm run build
 
-# คอมไพล์หน้าเว็บทั้งหมดลง dist/sites/ และ docs/
+# คอมไพล์หน้าเว็บทั้งหมดลง dist/sites/ และ docs/ (เครื่องใหม่ให้รัน npm install ครั้งแรกก่อน — ใช้ Tailwind สร้าง CSS)
 npm run build:sites
 ```
 
