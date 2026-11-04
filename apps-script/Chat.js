@@ -53,7 +53,7 @@ function handleChat(body) {
     payload: JSON.stringify({
       contents: contents,
       systemInstruction: { parts: [{ text: buildSystemPrompt_(wikiPages) }] },
-      generationConfig: { temperature: 0.2, maxOutputTokens: CHAT_MAX_OUTPUT_TOKENS }
+      generationConfig: { temperature: 0, maxOutputTokens: CHAT_MAX_OUTPUT_TOKENS }
     }),
     muteHttpExceptions: true
   };
