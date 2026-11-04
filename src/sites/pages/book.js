@@ -242,7 +242,16 @@ window.bookFilterToc = bookFilterToc;
 
 function initBookPage() {
     const root = document.getElementById('bookRoot');
-    root.innerHTML = RW.loadingBox('กำลังเปิดหนังสือ...');
+    root.innerHTML = `
+    <div role="status" aria-label="กำลังเปิดหนังสือ">
+        <div class="h-16 rounded-2xl bg-gradient-to-r from-purple-200 to-purple-100 motion-safe:animate-pulse"></div>
+        <div class="mt-4 lg:grid lg:grid-cols-[17rem_minmax(0,1fr)] lg:gap-6">
+            <div class="hidden lg:block bg-white rounded-2xl border border-slate-200 p-3 space-y-2 motion-safe:animate-pulse">
+                ${Array.from({ length: 9 }, () => '<div class="flex gap-2.5 items-center"><span class="w-6 h-6 rounded-md bg-slate-200"></span><span class="flex-1 h-3.5 rounded bg-slate-200/80"></span></div>').join('')}
+            </div>
+            <div class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-8">${RW.skeleton(8)}</div>
+        </div>
+    </div>`;
     RW.loadData(d => {
         BOOK_DATA = d;
         renderBook(bookParams());

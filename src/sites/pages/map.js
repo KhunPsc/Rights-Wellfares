@@ -194,6 +194,7 @@ function initMapPage() {
         mapGraph.d3Force('charge').strength(-140);
         mapGraph.d3Force('link').distance((l) => (l.source.type === 'source' || l.target.type === 'source' ? 70 : 50));
 
+        document.getElementById('mapGraphLoading')?.remove();
         const resize = () => mapGraph.width(el.clientWidth).height(el.clientHeight);
         resize();
         if (window.ResizeObserver) new ResizeObserver(resize).observe(el); else window.addEventListener('resize', resize);
@@ -208,6 +209,7 @@ function initMapPage() {
         }, 1200);
     }).catch((err) => {
         panel.innerHTML = RW.errorBox(err.message, 'initMapPage');
+        document.getElementById('mapGraphLoading')?.remove();
     });
 }
 

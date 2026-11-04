@@ -136,10 +136,20 @@ const RW = (() => {
             </div>`;
     }
 
+    // แถบ skeleton กะพริบ (motion-safe: ไม่กะพริบถ้าผู้ใช้ตั้งลดภาพเคลื่อนไหว)
+    function skeleton(lines = 4) {
+        const widths = ['w-3/4', 'w-full', 'w-5/6', 'w-2/3', 'w-11/12', 'w-1/2'];
+        return `<div class="space-y-2.5 motion-safe:animate-pulse" aria-hidden="true">
+            <div class="h-5 w-2/5 rounded-lg bg-slate-200"></div>
+            ${Array.from({ length: lines }, (_, i) => `<div class="h-3.5 ${widths[i % widths.length]} rounded bg-slate-200/80"></div>`).join('')}
+        </div>`;
+    }
+
     function loadingBox(text) {
         return `
-            <div class="bg-white rounded-2xl border border-slate-200 p-8 text-center text-sm text-slate-500">
-                <i class="fa-solid fa-circle-notch fa-spin text-pea-600 mr-1.5"></i>${escapeHtml(text || 'กำลังโหลดข้อมูล...')}
+            <div class="bg-white rounded-2xl border border-slate-200 p-6" role="status">
+                ${skeleton(4)}
+                <p class="mt-4 text-xs text-slate-400"><i class="fa-solid fa-circle-notch fa-spin text-pea-600 mr-1.5"></i>${escapeHtml(text || 'กำลังโหลดข้อมูล...')}</p>
             </div>`;
     }
 
@@ -591,7 +601,7 @@ const RW = (() => {
         config: cfg,
         get data() { return data; },
         loadData, ensureData, post, go, back, pageUrl,
-        escapeHtml, fmt, errorBox, loadingBox,
+        escapeHtml, fmt, errorBox, loadingBox, skeleton,
         openClause, closeClause,
         openNewsModal, closeNewsModal,
         toggleChat, clearChat, askQuestion, handleChatSubmit,

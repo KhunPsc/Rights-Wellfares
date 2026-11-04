@@ -181,6 +181,7 @@ window.clearHomeSearch = clearHomeSearch;
 function renderBookShelf(books) {
     const shelf = document.getElementById('homeBookShelf');
     if (!shelf) return;
+    shelf.removeAttribute('aria-busy');
     const base = RW.pageUrl('book') || 'book.html';
     shelf.innerHTML = books.map(b => {
         const ready = b.chapters.filter(c => c.content || c.link || c.clauses).length;
@@ -216,6 +217,7 @@ const HIGHLIGHT_COLORS = {
 function renderHighlights(items) {
     const box = document.getElementById('homeHighlights');
     if (!box) return;
+    box.removeAttribute('aria-busy');
     const base = RW.pageUrl('book') || 'book.html';
     box.innerHTML = items.map(h => `
         <a href="${base}?book=${encodeURIComponent(h.book)}&ch=${h.ch}" onclick="try{localStorage.setItem('rw_book','${h.book}|${h.ch}')}catch(e){}"
@@ -279,6 +281,8 @@ function initHomePage() {
     }).catch(err => {
         const shelf = document.getElementById('homeBookShelf');
         if (shelf) shelf.innerHTML = RW.errorBox(err.message, 'initHomePage');
+        const box = document.getElementById('homeHighlights');
+        if (box) box.innerHTML = '';
     });
 }
 
