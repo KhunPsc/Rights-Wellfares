@@ -344,7 +344,57 @@ const RW = (() => {
     }
 
     // ---------- Floating AI Chatbot Widget Logic ----------
-    let floatingChatHistory = [];
+    // ประวัติแชตเก็บในเครื่องผู้ใช้ (localStorage) — เปลี่ยนหน้า/รีเฟรชแล้วยังอยู่ · เก็บ 30 ข้อความล่าสุด 7 วัน · ปุ่มล้างแชตลบทิ้ง
+    const CHAT_STORE_KEY = 'rw_chat_v1';
+    const CHAT_STORE_MAX = 30;
+    const CHAT_STORE_DAYS = 7;
+    let floatingChatHistory = loadChatHistory();
+
+    function loadChatHistory() {
+        try {
+            const saved = JSON.parse(localStorage.getItem(CHAT_STORE_KEY) || 'null');
+            if (!saved || !Array.isArray(saved.history) || Date.now() - saved.at > CHAT_STORE_DAYS * 864e5) return [];
+            return saved.history.filter(m => (m.role === 'user' || m.role === 'model') && m.parts && typeof m.parts[0].text === 'string');
+        } catch (e) { return []; }
+    }
+
+    function saveChatHistory() {
+        floatingChatHistory = floatingChatHistory.slice(-CHAT_STORE_MAX);
+        try {
+            if (floatingChatHistory.length) localStorage.setItem(CHAT_STORE_KEY, JSON.stringify({ at: Date.now(), history: floatingChatHistory }));
+            else localStorage.removeItem(CHAT_STORE_KEY);
+        } catch (e) { /* storage เต็มหรือถูกบล็อก — แชตยังใช้ได้ แค่ไม่จำ */ }
+    }
+
+    const userBubbleHtml = (text) => `
+            <div class="max-w-[85%] bg-pea-700 text-white rounded-2xl rounded-tr-sm px-3.5 py-2 text-xs shadow-sm leading-relaxed">
+                ${escapeHtml(text)}
+            </div>`;
+    const botBubbleHtml = (text) => `
+                <div class="w-7 h-7 rounded-lg bg-pea-700 text-amber-300 flex items-center justify-center text-xs shrink-0 mt-0.5">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <div class="max-w-[88%] bg-white border border-slate-200 rounded-2xl rounded-tl-sm p-3 text-xs text-slate-700 shadow-sm leading-relaxed">
+                    ${formatChatText(text)}
+                </div>`;
+
+    function appendChatBubble(msgBox, role, text) {
+        const el = document.createElement('div');
+        el.className = role === 'user' ? 'flex justify-end' : 'flex items-start gap-2.5';
+        el.innerHTML = role === 'user' ? userBubbleHtml(text) : botBubbleHtml(text);
+        msgBox.appendChild(el);
+        return el;
+    }
+
+    // แสดงแชตที่ค้างไว้ต่อท้ายข้อความต้อนรับ (เรียกเมื่อหน้าโหลดเสร็จ)
+    function restoreChat() {
+        const msgBox = document.getElementById('rwFloatingChatMessages');
+        if (!msgBox || !floatingChatHistory.length) return;
+        floatingChatHistory.forEach(m => appendChatBubble(msgBox, m.role, m.parts[0].text));
+        msgBox.scrollTop = msgBox.scrollHeight;
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', restoreChat);
+    else restoreChat();
 
     function toggleChat(forceOpen) {
         const panel = document.getElementById('rwChatPanel');
@@ -364,6 +414,7 @@ const RW = (() => {
 
     function clearChat() {
         floatingChatHistory = [];
+        saveChatHistory();
         const box = document.getElementById('rwFloatingChatMessages');
         if (box) {
             box.innerHTML = `
@@ -414,13 +465,7 @@ const RW = (() => {
         input.disabled = true;
         sendBtn.disabled = true;
 
-        const userBubble = document.createElement('div');
-        userBubble.className = 'flex justify-end';
-        userBubble.innerHTML = `
-            <div class="max-w-[85%] bg-pea-700 text-white rounded-2xl rounded-tr-sm px-3.5 py-2 text-xs shadow-sm leading-relaxed">
-                ${escapeHtml(userText)}
-            </div>`;
-        msgBox.appendChild(userBubble);
+        appendChatBubble(msgBox, 'user', userText);
 
         const loadingBubble = document.createElement('div');
         loadingBubble.className = 'flex items-start gap-2.5';
@@ -445,14 +490,9 @@ const RW = (() => {
             const answerText = res.answer || 'ไม่ได้รับข้อความตอบกลับ';
             floatingChatHistory.push({ role: 'user', parts: [{ text: userText }] });
             floatingChatHistory.push({ role: 'model', parts: [{ text: answerText }] });
+            saveChatHistory();
 
-            loadingBubble.innerHTML = `
-                <div class="w-7 h-7 rounded-lg bg-pea-700 text-amber-300 flex items-center justify-center text-xs shrink-0 mt-0.5">
-                    <i class="fa-solid fa-robot"></i>
-                </div>
-                <div class="max-w-[88%] bg-white border border-slate-200 rounded-2xl rounded-tl-sm p-3 text-xs text-slate-700 shadow-sm leading-relaxed">
-                    ${formatChatText(answerText)}
-                </div>`;
+            loadingBubble.innerHTML = botBubbleHtml(answerText);
         } catch (err) {
             loadingBubble.innerHTML = `
                 <div class="w-7 h-7 rounded-lg bg-rose-600 text-white flex items-center justify-center text-xs shrink-0 mt-0.5">
