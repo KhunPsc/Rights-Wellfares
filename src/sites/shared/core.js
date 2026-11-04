@@ -405,7 +405,7 @@ const RW = (() => {
         if (shouldOpen) {
             panel.classList.remove('hidden');
             fab.classList.add('hidden');
-            setTimeout(() => document.getElementById('rwFloatingChatInput')?.focus(), 100);
+            setTimeout(() => document.getElementById('rwFloatingChatInput')?.focus({ preventScroll: true }), 100);
         } else {
             panel.classList.add('hidden');
             fab.classList.remove('hidden');
@@ -504,7 +504,7 @@ const RW = (() => {
         } finally {
             input.disabled = false;
             sendBtn.disabled = false;
-            input.focus();
+            input.focus({ preventScroll: true });
             msgBox.scrollTop = msgBox.scrollHeight;
         }
     }

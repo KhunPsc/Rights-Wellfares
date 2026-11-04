@@ -79,7 +79,7 @@ scripts/               build-knowledge / build-data / build-sites + test-*.mjs (
   - `Knowledge.js` (generated): รวมจาก `vault/wiki/`
   - API key เก็บใน Script Properties ชื่อ `GEMINI_API_KEY`
 - **Frontend (Google Sites Pages)**: อยู่ใน `src/sites/`
-  - หน้าใน `src/sites/pages/`: `home` (ชั้นหนังสือ + ค้นหาทุกเล่ม), `book` (อ่านหนังสือ), `map` (แผนที่ความรู้), `allowance`, `tools`, `tables`, `forms`, `chat`
+  - หน้าใน `src/sites/pages/`: `home` (ชั้นหนังสือ + ค้นหาทุกเล่ม), `book` (อ่านหนังสือ), `map` (แผนที่ความรู้), `allowance`, `tools`, `tables`, `forms`
   - build เป็นหน้าเว็บใน `docs/<page>.html` (GitHub Pages) ด้วย `npm run build:sites` — Google Sites ฝัง URL ของ GitHub Pages ไว้
   - ปรับ URL หน้าใน Sites ได้ที่ `src/sites/config.json`
 - **คำสั่งสำคัญ**:

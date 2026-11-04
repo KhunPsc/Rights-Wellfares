@@ -162,7 +162,7 @@ function clearHomeSearch() {
     const input = document.getElementById('globalSearchInput');
     if (input) {
         input.value = '';
-        input.focus();
+        input.focus({ preventScroll: true });
     }
     const btn = document.getElementById('clearSearchBtn');
     if (btn) btn.classList.add('hidden');

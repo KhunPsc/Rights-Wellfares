@@ -10,7 +10,7 @@
 | Backend | [apps-script/](apps-script/) | Google Apps Script web app: ส่งข้อมูลให้หน้าเว็บ, แชตบอท (Gemini), รับ Feedback ลง Google Sheet |
 | หน้าเว็บ | [src/sites/](src/sites/) → [docs/](docs/) | build เป็น GitHub Pages (`https://khunpsc.github.io/Rights-Wellfares/`) — Google Sites ฝัง URL นี้ไว้ |
 
-หน้าเว็บ: ชั้นหนังสือ (หน้าแรก) · อ่านหนังสือ · แผนที่ความรู้ · สรุปการใช้สิทธิ์ · แบบฟอร์ม · แชต AI
+หน้าเว็บ: ชั้นหนังสือ (หน้าแรก) · อ่านหนังสือ · แผนที่ความรู้ · สรุปการใช้สิทธิ์ · แบบฟอร์ม · แชต AI (ปุ่มลอยทุกหน้า)
 (หน้าโปรแกรมคำนวณ `tools` ยังซ่อนจากเมนู)
 
 ## ติดตั้งครั้งแรก

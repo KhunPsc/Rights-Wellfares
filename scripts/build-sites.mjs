@@ -75,7 +75,8 @@ ${inlineScript(core, 'shared/core.js')}
 <body class="rw-embed">
 ${nav.trim()}
 ${body.trim()}
-${page !== 'chat' ? chatWidget.trim() + '\n' : ''}${feedbackModal.trim()}
+${chatWidget.trim()}
+${feedbackModal.trim()}
 ${footer.trim()}
 ${pageJs ? inlineScript(pageJs, `pages/${page}.js`) : ''}
 </body>

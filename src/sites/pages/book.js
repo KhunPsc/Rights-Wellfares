@@ -208,16 +208,20 @@ function renderBook(p) {
     </div>`;
 
     document.title = `${item ? item.title : 'บทที่ ' + ch.num + ' ' + ch.title} - ${book.short || book.title}`;
+    // ห้ามใช้ scrollIntoView ในหน้านี้: มันเลื่อนหน้า Google Sites ที่ครอบ iframe ด้วย (navbar หลุดจอ) — เลื่อนเองเฉพาะในเอกสารนี้
     const cur = root.querySelector('[data-toc] [aria-current]');
-    if (cur) cur.scrollIntoView({ block: 'nearest' });
+    if (cur) {
+        const list = cur.closest('[data-toc]');
+        list.scrollTop += cur.getBoundingClientRect().top - list.getBoundingClientRect().top - list.clientHeight / 3;
+    }
     if (!(p.clause && bookScrollTo(p.clause) === false)) window.scrollTo(0, 0);
 }
 
-// เลื่อนไปที่ข้อในบท — คืน false เมื่อเจอ (ใช้เป็นค่าคืนของ onclick ได้)
+// เลื่อนไปที่ข้อในบท (เผื่อความสูง navbar) — คืน false เมื่อเจอ (ใช้เป็นค่าคืนของ onclick ได้)
 function bookScrollTo(num) {
     const el = document.getElementById('clause-' + num);
     if (!el) return true;
-    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' });
     return false;
 }
 window.bookScrollTo = bookScrollTo;

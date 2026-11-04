@@ -90,7 +90,6 @@ description: >-
 │           ├── map.html / map.js          # แผนที่ความรู้ (force-graph)
 │           ├── tables.html                # สรุปการใช้สิทธิ์
 │           ├── forms.html / forms.js
-│           ├── chat.html / chat.js
 │           ├── allowance.html / allowance.js  # ไม่อยู่ในเมนู (ลิงก์จากบทหนังสือ)
 │           └── tools.html / tools.js          # ซ่อนไว้ก่อน
 │
@@ -109,7 +108,7 @@ description: >-
 
 ### กฎที่ 1: การนำทางในเว็บแอป (Single-Host Same-Tab Navigation)
 * **เมื่อใช้ GitHub Pages เป็นโฮสต์หลัก (แนะนำสูงสุด)**:
-  - ทุกลิงก์นำทางระหว่างหน้าภายในเว็บแอป (`home.html`, `book.html`, `map.html`, `tables.html`, `forms.html`, `chat.html`) ให้ใช้ **Relative Links** พร้อมการนำทางในแท็บเดิม (`target="_self"` หรือ `window.location.href`)
+  - ทุกลิงก์นำทางระหว่างหน้าภายในเว็บแอป (`home.html`, `book.html`, `map.html`, `tables.html`, `forms.html`) ให้ใช้ **Relative Links** พร้อมการนำทางในแท็บเดิม (`target="_self"` หรือ `window.location.href`)
   - **ข้อดี:** ผู้ใช้สลับหน้าไป-มาได้ลื่นไหล ไม่ต้องเปิดแท็บใหม่ และปุ่มย้อนกลับ (Back) ของเบราว์เซอร์ทำงานได้ปกติ
   - **การฝังใน Google Sites:** ให้ฝังลิงก์หลัก `https://<user>.github.io/<repo>/` เพียงจุดเดียวใน Google Sites โดยการคลิกเปลี่ยนหน้าทั้งหมดจะทำงานอยู่ภายในกรอบ iframe เดิมอย่างราบรื่น
 * **ลิงก์ดาวน์โหลดภายนอก (Direct Download)**:
