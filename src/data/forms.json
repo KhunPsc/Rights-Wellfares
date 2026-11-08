@@ -42,5 +42,71 @@
     "ext": "PDF",
     "icon": "fa-file-pdf text-rose-600",
     "url": "https://drive.google.com/uc?export=download&id=1LaCkWEJpA_T60iQdvN5d9THrkGIYL5xt"
+  },
+  {
+    "id": "disaster-claim-pdf",
+    "category": "เงินช่วยเหลือประสบภัย",
+    "label": "แบบคำร้องและใบสำคัญจ่ายเงิน กรณีประสบอัคคีภัยหรือภัยธรรมชาติ (PDF)",
+    "title": "แบบคำร้องและใบสำคัญจ่ายเงิน กรณีประสบอัคคีภัยหรือภัยธรรมชาติ",
+    "desc": "สำหรับยื่นขอรับเงินช่วยเหลือเมื่อที่อยู่อาศัยหรือทรัพย์สินเสียหายจากอัคคีภัยหรือภัยธรรมชาติ",
+    "type": "pdf",
+    "ext": "PDF",
+    "icon": "fa-file-pdf text-rose-600",
+    "url": "https://drive.google.com/uc?export=download&id=1pToCzn2OHvjQ_NyK8erO44EPQpXu47Uq"
+  },
+  {
+    "id": "change-name-address-pdf",
+    "category": "แจ้งเปลี่ยนแปลงข้อมูล",
+    "label": "แบบฟอร์มแจ้งเปลี่ยนแปลงข้อมูล (ชื่อ นามสกุล ที่อยู่) (PDF)",
+    "title": "แบบฟอร์มแจ้งเปลี่ยนแปลงข้อมูล (ชื่อ นามสกุล ที่อยู่)",
+    "desc": "แบบ บค.08-ป.68 — แจ้งเปลี่ยนชื่อ นามสกุล หรือที่อยู่ของพนักงานและลูกจ้าง",
+    "type": "pdf",
+    "ext": "PDF",
+    "icon": "fa-file-pdf text-rose-600",
+    "url": "https://drive.google.com/uc?export=download&id=1pMan514EeJr-6SDOqVXayNugfvxMLUBp"
+  },
+  {
+    "id": "change-marital-pdf",
+    "category": "แจ้งเปลี่ยนแปลงข้อมูล",
+    "label": "แบบฟอร์มแจ้งเปลี่ยนแปลงข้อมูล (สถานภาพสมรส คู่สมรส) (PDF)",
+    "title": "แบบฟอร์มแจ้งเปลี่ยนแปลงข้อมูล (สถานภาพสมรส คู่สมรส)",
+    "desc": "แบบ บค.09-ป.68 — แจ้งจดทะเบียนสมรส หย่า หรือเปลี่ยนแปลงข้อมูลคู่สมรส",
+    "type": "pdf",
+    "ext": "PDF",
+    "icon": "fa-file-pdf text-rose-600",
+    "url": "https://drive.google.com/uc?export=download&id=11GP0PQAtYEEi8n2gLuaxnnvKe-nqB8TX"
+  },
+  {
+    "id": "change-child-pdf",
+    "category": "แจ้งเปลี่ยนแปลงข้อมูล",
+    "label": "แบบฟอร์มแจ้งเปลี่ยนแปลงข้อมูล (บุตร) (PDF)",
+    "title": "แบบฟอร์มแจ้งเปลี่ยนแปลงข้อมูล (บุตร)",
+    "desc": "แบบ บค.10-ป.68 — แจ้งเพิ่มหรือเปลี่ยนแปลงข้อมูลบุตร",
+    "type": "pdf",
+    "ext": "PDF",
+    "icon": "fa-file-pdf text-rose-600",
+    "url": "https://drive.google.com/uc?export=download&id=1MxmdBQiNfr7F_NSatO3lXEiGYkRpM0Kr"
+  },
+  {
+    "id": "change-parents-pdf",
+    "category": "แจ้งเปลี่ยนแปลงข้อมูล",
+    "label": "แบบฟอร์มแจ้งเปลี่ยนแปลงข้อมูล (บิดา มารดา) (PDF)",
+    "title": "แบบฟอร์มแจ้งเปลี่ยนแปลงข้อมูล (บิดา มารดา)",
+    "desc": "แบบ บค.11-ป.68 — แจ้งเปลี่ยนแปลงข้อมูลบิดา มารดา",
+    "type": "pdf",
+    "ext": "PDF",
+    "icon": "fa-file-pdf text-rose-600",
+    "url": "https://drive.google.com/uc?export=download&id=12pzBc4TnM4Nm2BvH-j9emsNwy7Q3wVkB"
+  },
+  {
+    "id": "death-notice-pdf",
+    "category": "ถึงแก่กรรม",
+    "label": "แบบฟอร์มแจ้งการถึงแก่กรรมของพนักงานและลูกจ้าง (PDF)",
+    "title": "แบบฟอร์มแจ้งการถึงแก่กรรมของพนักงานและลูกจ้าง",
+    "desc": "แบบ บค.12-ป.68 — แจ้งการถึงแก่กรรมของพนักงานหรือลูกจ้าง",
+    "type": "pdf",
+    "ext": "PDF",
+    "icon": "fa-file-pdf text-rose-600",
+    "url": "https://drive.google.com/uc?export=download&id=1Z31waMG6gLaS_oLwavNK7cBg7tJaplla"
   }
 ]
