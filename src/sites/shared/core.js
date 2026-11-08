@@ -448,8 +448,40 @@ const RW = (() => {
         }
     }
 
+    // [[หน้า wiki]] ในคำตอบบอท → ลิงก์บทหนังสือที่เกี่ยวข้อง (topics) หรือจุดในแผนที่ความรู้ · ไม่รู้จัก = ข้อความธรรมดา
+    // key เป็นข้อความที่ escape แล้ว เพราะ formatChatText จับคู่หลัง escapeHtml
+    function wikiLinkIndex() {
+        const d = data || (storage.get() || {}).data;
+        const idx = {};
+        ((d && d.graph && d.graph.nodes) || []).forEach(n => {
+            idx[escapeHtml(n.id)] = n;
+            if (n.title) idx[escapeHtml(n.title)] = n;
+        });
+        return idx;
+    }
+
+    function wikiLinkHtml(n, label) {
+        const cls = 'text-pea-700 underline decoration-purple-300 underline-offset-2 hover:text-pea-900 font-semibold';
+        const ch = n.chapters && n.chapters[0];
+        if (ch) {
+            const key = escapeHtml(JSON.stringify(ch.book + '|' + ch.ch));
+            return `<a href="${pageUrl('book') || 'book.html'}?book=${encodeURIComponent(ch.book)}&ch=${ch.ch}" onclick="try{localStorage.setItem('rw_book',${key})}catch(e){}" class="${cls}" title="เปิดอ่าน ${escapeHtml(ch.short)} บท ${ch.ch}">${label}</a>`;
+        }
+        const topic = escapeHtml(JSON.stringify(n.id));
+        return `<a href="${pageUrl('map') || 'map.html'}?topic=${encodeURIComponent(n.id)}" onclick="try{localStorage.setItem('rw_map_topic',${topic})}catch(e){}" class="${cls}" title="ดูในแผนที่ความรู้">${label}</a>`;
+    }
+
     function formatChatText(text) {
         let safe = escapeHtml(text);
+        // แทนลิงก์ด้วยตัวคั่นก่อน กันไม่ให้ regex "ข้อ N" ข้างล่างไปแทรกปุ่มในลิงก์
+        const links = [];
+        const idx = safe.includes('[[') ? wikiLinkIndex() : {};
+        safe = safe.replace(/\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g, (m, target, alias) => {
+            const name = target.trim(), label = (alias || name).trim();
+            if (!idx[name]) return label;
+            links.push(wikiLinkHtml(idx[name], label));
+            return `\u0000${links.length - 1}\u0000`;
+        });
         safe = safe.replace(/\*\*([^*]+)\*\*/g, '<strong class="text-pea-900 font-semibold">$1</strong>');
         safe = safe.replace(/ข้อ\s*(\d{1,2})(?:\.\d+)*/g, (match, numStr) => {
             const n = parseInt(numStr, 10);
@@ -458,7 +490,7 @@ const RW = (() => {
             }
             return match;
         });
-        return safe.replace(/\n/g, '<br>');
+        return safe.replace(/\u0000(\d+)\u0000/g, (m, i) => links[i]).replace(/\n/g, '<br>');
     }
 
     async function handleChatSubmit(e) {
@@ -604,7 +636,7 @@ const RW = (() => {
         escapeHtml, fmt, errorBox, loadingBox, skeleton,
         openClause, closeClause,
         openNewsModal, closeNewsModal,
-        toggleChat, clearChat, askQuestion, handleChatSubmit,
+        toggleChat, clearChat, askQuestion, handleChatSubmit, formatChatText,
         openFeedback, closeFeedback, submitFeedback,
         showImage, closeImageModal
     };

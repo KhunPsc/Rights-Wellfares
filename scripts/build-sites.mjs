@@ -24,7 +24,9 @@ const tailwindCss = execFileSync(
 if (!tailwindCss.includes('.bg-pea-700')) throw new Error('Tailwind output looks wrong (missing .bg-pea-700) — check tailwind.config.cjs');
 const css = tailwindCss + '\n' + (await read('shared/ui.css'));
 const core = await read('shared/core.js');
-const nav = await read('shared/nav.html');
+// วันที่ build = วันที่ปล่อยงานล่าสุด (ขั้นตอนปล่อยงานรัน build:sites ทุกครั้ง)
+const nav = (await read('shared/nav.html')).replace('{{UPDATED}}', new Date().toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' }));
+if (nav.includes('{{')) throw new Error('nav.html: placeholder ที่ไม่รู้จัก');
 const chatWidget = await read('shared/chat-widget.html');
 const feedbackModal = await read('shared/feedback-modal.html');
 const footer = await read('shared/footer.html');

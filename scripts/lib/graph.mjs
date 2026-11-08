@@ -70,9 +70,14 @@ export async function buildGraph(wikiDir, books) {
       for (const t of ch.topics || []) {
         const n = byId.get(t);
         if (!n) throw new Error(`${book.id} บท ${ch.num}: topics อ้างหน้า wiki "${t}" ที่ไม่มี`);
-        n.chapters.push({ book: book.id, short: book.short, ch: ch.num, title: ch.title });
+        n.chapters.push({ book: book.id, short: book.short, ch: ch.num, title: ch.title, main: ch.topics[0] === t });
       }
     }
+  }
+  // บทที่หน้านี้เป็นหัวข้อหลัก (topics[0]) ขึ้นก่อน — ลิงก์ในคำตอบแชตใช้บทแรก
+  for (const n of nodes) {
+    n.chapters.sort((a, b) => b.main - a.main);
+    n.chapters.forEach((c) => delete c.main);
   }
   return { nodes, links };
 }

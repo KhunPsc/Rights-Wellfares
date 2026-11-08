@@ -15,14 +15,17 @@ try {
   await writeFile(join(dir, 'index.md'), '- [[ค่าห้อง]] — 1,500 บาท/วัน\n');
   await writeFile(join(dir, 'welfare', 'ค่าห้อง.md'), '---\ntitle: ค่าห้อง\n---\n# ค่าห้อง\nดู [[ระเบียบ]] และ [[ระเบียบ|อีกครั้ง]] กับ [[ไม่มีหน้านี้]]\n');
   await writeFile(join(dir, 'sources', 'ระเบียบ.md'), '---\ntitle: ระเบียบ\n---\nอ้าง [[ค่าห้อง]]\n');
-  const books = [{ id: 'b', short: 'B', chapters: [{ num: 2, title: 'บทสอง', topics: ['ค่าห้อง'] }] }];
+  const books = [
+    { id: 'a', short: 'A', chapters: [{ num: 1, title: 'บทหนึ่ง', topics: ['ระเบียบ', 'ค่าห้อง'] }] },
+    { id: 'b', short: 'B', chapters: [{ num: 2, title: 'บทสอง', topics: ['ค่าห้อง'] }] },
+  ];
   const g = await buildGraph(dir, books);
   assert.equal(g.nodes.length, 2);
   assert.equal(g.links.length, 1, 'duplicate/reverse links merged, missing pages dropped');
   const room = g.nodes.find((n) => n.id === 'ค่าห้อง');
   assert.equal(room.summary, '1,500 บาท/วัน');
   assert.equal(room.type, 'welfare');
-  assert.deepEqual(room.chapters, [{ book: 'b', short: 'B', ch: 2, title: 'บทสอง' }]);
+  assert.deepEqual(room.chapters, [{ book: 'b', short: 'B', ch: 2, title: 'บทสอง' }, { book: 'a', short: 'A', ch: 1, title: 'บทหนึ่ง' }], 'chapter where the page is the main topic comes first');
   books[0].chapters[0].topics = ['ไม่มีหน้านี้'];
   await assert.rejects(buildGraph(dir, books), /ไม่มีหน้านี้/);
 } finally {
