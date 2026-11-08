@@ -1,5 +1,5 @@
 {
-  "_comment": "การ์ด 'เกิดอะไรขึ้นกับคุณ?' บนหน้าแรก — กดแล้วไปบทในหนังสือ (book + ch) · ตัวเลขใน figure ที่อยู่ใน facts.json ต้องตรงกัน (location highlight:<id>)",
+  "_comment": "การ์ด 'กำลังสงสัยเรื่องอะไรอยู่รึเปล่า?' บนหน้าแรก — กดแล้วไปบทในหนังสือ (book + ch) · ตัวเลขใน figure ที่อยู่ใน facts.json ต้องตรงกัน (location highlight:<id>)",
   "highlights": [
     { "id": "sick", "icon": "fa-hospital-user", "color": "purple", "title": "ไม่สบาย / นอนโรงพยาบาล", "figure": "ค่าห้อง 1,500/วัน · OPD เอกชน 3,600/ปี", "book": "welfare44", "ch": 2 },
     { "id": "birth", "icon": "fa-baby", "color": "pink", "title": "คลอดบุตร", "figure": "1,200 บาท/ครั้ง · ยื่นภายใน 90 วัน", "book": "kfn1", "ch": 3 },

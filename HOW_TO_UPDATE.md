@@ -49,7 +49,7 @@ src/sites/ ───────────────────────
 
 อัตราที่เขียนซ้ำหลายที่ (ค่าห้อง, OPD, เบี้ยเลี้ยง, ที่พัก, การ์ดหน้าแรก ฯลฯ) — แก้ค่าที่ `src/data/facts.json` ก่อน แล้ว `npm run build` จะบอกทุกจุดที่ยังเป็นค่าเก่า (wiki, `clauses.json`, `chat-prompt.md`, `allowance-rates.json`, `highlights.json`)
 
-## 6. การ์ดหน้าแรก "เกิดอะไรขึ้นกับคุณ?" (`highlights.json`)
+## 6. การ์ดหน้าแรก "กำลังสงสัยเรื่องอะไรอยู่รึเปล่า?" (`highlights.json`)
 
 `id`, `icon` (Font Awesome), `color` (purple / pink / blue / emerald / indigo / amber / orange / slate), `title`, `figure`, `book`, `ch` — ตัวเลขใน `figure` ควรผูกไว้ใน `facts.json` ด้วย location `highlight:<id>`
 

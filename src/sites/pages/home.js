@@ -177,32 +177,57 @@ window.goToNewsSlide = goToNewsSlide;
 window.handleHomeSearch = handleHomeSearch;
 window.clearHomeSearch = clearHomeSearch;
 
+// ปกหนังสือ: พื้นขาว + แถบโค้งสีเข้มพาดครึ่งล่าง + เส้นคาด — วนสีตามลำดับเล่ม
+// แถบโค้งเริ่มไม่ต่ำกว่า 45% ของความสูงปก ข้อความชิดล่างจึงอยู่บนแถบเสมอ (ตัวหนังสือไม่กลืนกับพื้นขาว)
+const COVER_THEMES = [
+    { fill: '#5b1968', band: '#f59e0b', streak: '#ffffff', text: 'text-white', sub: 'text-purple-100', badge: 'bg-amber-400 text-slate-900', line: 'border-white/25', icon: 'bg-pea-800 text-amber-300' },
+    { fill: '#111827', band: '#facc15', streak: '#ffffff', text: 'text-white', sub: 'text-slate-300', badge: 'bg-yellow-400 text-slate-900', line: 'border-white/20', icon: 'bg-slate-900 text-yellow-400' },
+    { fill: '#f59e0b', band: '#5b1968', streak: '#ffffff', text: 'text-slate-950', sub: 'text-slate-900', badge: 'bg-pea-800 text-white', line: 'border-black/20', icon: 'bg-amber-500 text-slate-950' },
+];
+
+function coverArt(t) {
+    return `<svg class="absolute inset-0 w-full h-full" viewBox="0 0 300 400" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M0 180 C55 178 85 148 130 132 C185 112 245 108 300 98 L300 400 L0 400 Z" fill="${t.fill}"/>
+                <path d="M0 168 C55 166 85 136 130 120 C185 100 245 96 300 86" fill="none" stroke="${t.band}" stroke-width="7"/>
+                <path d="M0 154 C60 152 90 126 135 110 C190 91 245 86 300 76" fill="none" stroke="${t.band}" stroke-width="2" opacity=".6"/>
+                <g fill="${t.streak}" opacity=".14">
+                    <path d="M-10 330 C40 300 90 285 150 280 C100 295 50 320 -10 360 Z"/>
+                    <path d="M20 400 C60 350 110 325 190 312 C130 335 85 365 60 400 Z"/>
+                    <path d="M150 400 C175 375 215 360 260 352 C225 368 200 385 190 400 Z"/>
+                </g>
+            </svg>`;
+}
+
 // ชั้นหนังสือ: การ์ดละเล่ม → หน้า book (สารบัญ) — เก็บ id ใน localStorage เผื่อ Google Sites ตัด query string
 function renderBookShelf(books) {
     const shelf = document.getElementById('homeBookShelf');
     if (!shelf) return;
     shelf.removeAttribute('aria-busy');
     const base = RW.pageUrl('book') || 'book.html';
-    shelf.innerHTML = books.map(b => {
+    shelf.innerHTML = books.map((b, i) => {
         const ready = b.chapters.filter(c => c.content || c.link || c.clauses).length;
+        const t = COVER_THEMES[i % COVER_THEMES.length];
         return `
         <a href="${base}?book=${encodeURIComponent(b.id)}" onclick="try{localStorage.setItem('rw_book','${b.id}|0')}catch(e){}"
-           class="group relative aspect-[3/4] flex flex-col bg-gradient-to-br from-pea-900 via-pea-700 to-purple-800 rounded-r-2xl rounded-l-md p-4 pl-6 sm:p-5 sm:pl-7 text-white shadow-md hover:shadow-xl hover:-translate-y-1 transition no-underline overflow-hidden">
-            <span class="absolute left-0 top-0 bottom-0 w-3 bg-black/25 border-r border-white/10"></span>
-            <span class="absolute right-0 top-2 bottom-2 w-1 bg-white/10 rounded-l"></span>
-            <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-white/10 flex items-center justify-center text-lg sm:text-xl text-amber-300 mb-3"><i class="fa-solid ${b.icon || 'fa-book'}"></i></div>
-            <span class="self-start px-2 py-0.5 text-[11px] font-heading font-semibold bg-amber-400 text-slate-900 rounded-full">${RW.escapeHtml(b.short || '')}</span>
-            <h3 class="mt-2 font-heading font-bold text-sm sm:text-base leading-snug line-clamp-3">${RW.escapeHtml(b.title)}</h3>
-            <p class="mt-1 text-[11px] text-purple-200 line-clamp-3 hidden sm:block">${RW.escapeHtml(b.subtitle || '')}</p>
-            <div class="mt-auto pt-3 border-t border-white/15 flex flex-wrap items-center justify-between gap-x-2 gap-y-1 text-[11px] sm:text-xs font-heading">
-                <span class="text-purple-100">${b.chapters.length} บท · พร้อมอ่าน ${ready}</span>
-                <span class="text-amber-300 font-semibold">เปิดอ่าน <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition"></i></span>
+           class="group relative aspect-[3/4] flex flex-col bg-white rounded-r-2xl rounded-l-md p-4 pl-6 sm:p-5 sm:pl-7 border border-slate-200 shadow-md hover:shadow-xl hover:-translate-y-1 transition no-underline overflow-hidden">
+            ${coverArt(t)}
+            <span class="absolute left-0 top-0 bottom-0 w-3 bg-black/10 border-r border-black/10"></span>
+            <div class="relative flex items-start justify-between gap-2">
+                <span class="w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-xl ${t.icon} flex items-center justify-center text-base sm:text-lg"><i class="fa-solid ${b.icon || 'fa-book'}"></i></span>
+                <span class="px-2 py-0.5 text-[11px] font-heading font-semibold ${t.badge} rounded-full whitespace-nowrap">${RW.escapeHtml(b.short || '')}</span>
+            </div>
+            <div class="relative mt-auto text-right ${t.text}" title="${RW.escapeHtml(b.subtitle || '')}">
+                <h3 class="font-heading font-extrabold text-sm sm:text-base leading-snug line-clamp-3">${RW.escapeHtml(b.title)}</h3>
+                <div class="mt-2 pt-2 border-t ${t.line} flex flex-wrap items-center justify-between gap-x-2 gap-y-1 text-[11px] sm:text-xs font-heading">
+                    <span class="${t.sub}">${b.chapters.length} บท<span class="hidden lg:inline"> · พร้อมอ่าน ${ready}</span></span>
+                    <span class="font-semibold">เปิดอ่าน <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition"></i></span>
+                </div>
             </div>
         </a>`;
     }).join('');
 }
 
-// การ์ด "เกิดอะไรขึ้นกับคุณ?" — สีเขียนเต็มชื่อ class เพื่อให้ Tailwind สร้าง CSS ตอน build
+// การ์ด "กำลังสงสัยเรื่องอะไรอยู่รึเปล่า?" — สีเขียนเต็มชื่อ class เพื่อให้ Tailwind สร้าง CSS ตอน build
 const HIGHLIGHT_COLORS = {
     purple: 'bg-purple-50 border-purple-200 hover:bg-purple-100 [&_.hl-icon]:bg-pea-700',
     pink: 'bg-pink-50 border-pink-200 hover:bg-pink-100 [&_.hl-icon]:bg-pink-600',
