@@ -1,16 +1,25 @@
-<!-- @title เครื่องมือจำลองคำนวณ & วินิจฉัยสิทธิ -->
+<!-- @title เครื่องมือคำนวณสิทธิ - สิทธิและสวัสดิการ กฟภ. -->
 <main class="app-main max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
     <div id="viewTools" class="space-y-6">
+        <header>
+            <div class="flex flex-col sm:flex-row sm:items-end gap-2 sm:gap-4">
+                <div class="min-w-0 flex-1">
+                    <h1 class="rw-title">เครื่องมือคำนวณสิทธิ</h1>
+                    <p class="mt-1 text-sm text-slate-600">คำนวณค่ารักษาพยาบาลที่เบิกได้ นับกำหนดยื่นเบิก และตรวจสิทธิของบุคคลในครอบครัว</p>
+                </div>
+            </div>
+            <div class="rw-band mt-3" aria-hidden="true"></div>
+        </header>
         <div class="grid grid-cols-1 gap-6">
             <!-- Tool 1: Hospital Bill & Discount Claim Calculator -->
             <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-6">
                 <div class="flex items-center gap-3 mb-4 pb-3 border-b border-slate-100">
-                    <div class="w-10 h-10 rounded-xl bg-pea-100 text-pea-700 flex items-center justify-center text-lg">
+                    <div class="w-10 h-10 rounded-xl bg-purple-50 text-pea-700 flex items-center justify-center text-lg">
                         <i class="fa-solid fa-calculator"></i>
                     </div>
                     <div>
                         <h3 class="font-heading font-bold text-base sm:text-lg text-slate-800">
-                            1. โปรแกรมคำนวณสิทธิเบิกค่ารักษาพยาบาล & ส่วนลด รพ. (ตามข้อ 7, 8.1, 8.4, 25.5, 33)
+                            1. คำนวณค่ารักษาพยาบาลที่เบิกได้และส่วนลดโรงพยาบาล (ข้อ 7, 8.1, 8.4, 25.5, 33)
                         </h3>
                         <p class="text-xs text-slate-500">รองรับสิทธิพนักงาน (1,500 บ.) ครอบครัวพนักงาน (1,100 บ.) ลูกจ้างและครอบครัวลูกจ้าง (1,000 บ.) และการหักส่วนลด/สิทธิอื่น</p>
                     </div>
@@ -71,7 +80,7 @@
                 </div>
 
                 <!-- Calculation Result Box -->
-                <div id="calcResultBox" class="rounded-2xl bg-gradient-to-br from-purple-50 to-indigo-50 border border-purple-200 p-4 sm:p-5">
+                <div id="calcResultBox" class="rounded-xl bg-purple-50/60 border border-purple-200 p-4 sm:p-5">
                     <!-- Dynamically populated -->
                 </div>
             </div>
@@ -138,12 +147,12 @@
         <!-- Tool 4: Interactive Family & Dual-Entitlement Decision Wizard (Clauses 8, 9, 10, 13, 27-29) -->
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-6">
             <div class="flex items-center gap-3 mb-4 pb-3 border-b border-slate-100">
-                <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center text-lg">
+                <div class="w-10 h-10 rounded-xl bg-purple-50 text-pea-700 flex items-center justify-center text-lg">
                     <i class="fa-solid fa-sitemap"></i>
                 </div>
                 <div>
                     <h3 class="font-heading font-bold text-base sm:text-lg text-slate-800">
-                        4. ตัวช่วยวินิจฉัยสิทธิการใช้ค่ารักษาพยาบาลของบุคคลในครอบครัว & บุตร (ตามข้อ 8, 9, 10, 13, 27-29)
+                        4. ตรวจสิทธิค่ารักษาพยาบาลของบุคคลในครอบครัวและบุตร (ข้อ 8, 9, 10, 13, 27–29)
                     </h3>
                     <p class="text-xs text-slate-500">เลือกกรณีความสัมพันธ์และสิทธิทางราชการ/ประกันสังคม/ลูกจ้าง เพื่อดูแนวทางปฏิบัติที่ถูกต้องตามระเบียบ</p>
                 </div>

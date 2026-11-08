@@ -1,117 +1,22 @@
-// หน้าแรก: โหลด Categories เพื่อแสดงหมวดหมู่ระเบียบ และ News Feed Banner Carousel
+// หน้าแรก: ค้นหาทุกเล่ม · แถบข่าวระเบียบ (เลื่อนด้วยปุ่ม/ปัด ไม่เลื่อนเอง) · การ์ดเรื่องที่สงสัย · ชั้นหนังสือ
 let newsItems = [];
 let currentNewsIndex = 0;
-let newsCarouselTimer = null;
-const CAROUSEL_INTERVAL = 5500; // 5.5 วินาทีต่อการเปลี่ยนสไลด์
 
 function renderNewsSlide(index) {
     if (!newsItems.length) return;
     currentNewsIndex = (index + newsItems.length) % newsItems.length;
     const item = newsItems[currentNewsIndex];
-
-    const container = document.getElementById('newsSlideContainer');
     const content = document.getElementById('newsSlideContent');
-    const badge = document.getElementById('newsSlideBadge');
     const counter = document.getElementById('newsSlideCounter');
-    const dotsContainer = document.getElementById('newsOwlDots');
-
-    if (badge) badge.textContent = item.badge || 'ประกาศ';
-    if (counter) counter.textContent = `${currentNewsIndex + 1} / ${newsItems.length}`;
-
-    // Smooth fade transition
-    if (container) {
-        container.style.opacity = '0';
-        setTimeout(() => {
-            if (content) {
-                content.innerHTML = `
-                    <div class="flex items-center gap-2 flex-wrap text-xs text-purple-200">
-                        <span class="text-amber-400 font-heading font-semibold flex items-center gap-1">
-                            <i class="fa-regular fa-calendar-check text-[11px]"></i>
-                            <span>${RW.escapeHtml(item.date || '')}</span>
-                        </span>
-                        <span class="text-white/40">•</span>
-                        <span class="text-purple-200/90 font-medium truncate max-w-xs sm:max-w-md">${RW.escapeHtml(item.ref || '')}</span>
-                    </div>
-
-                    <h2
-                        class="text-base sm:text-lg font-heading font-bold text-white hover:text-amber-300 transition cursor-pointer leading-snug line-clamp-2"
-                        onclick="RW.openNewsModal('${item.id}')"
-                        title="คลิกเพื่ออ่านรายละเอียดฉบับเต็ม"
-                    >
-                        ${RW.escapeHtml(item.title || '')}
-                    </h2>
-
-                    <p class="text-xs sm:text-sm text-purple-100/80 line-clamp-2 leading-relaxed">
-                        ${RW.escapeHtml(item.summary || '')}
-                    </p>
-
-                    <div class="pt-2 flex items-center gap-2 flex-wrap">
-                        <button
-                            type="button"
-                            onclick="RW.openNewsModal('${item.id}')"
-                            class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-heading font-semibold text-xs shadow-md transition flex items-center gap-1.5 cursor-pointer active:scale-95"
-                        >
-                            <span>อ่านรายละเอียดฉบับเต็ม</span>
-                            <i class="fa-solid fa-arrow-right text-[10px]"></i>
-                        </button>
-                        <span class="text-[11px] text-purple-300/70 hidden sm:inline-block">
-                            (คลิกเพื่อดูเงื่อนไขและเอกสารแนบ)
-                        </span>
-                    </div>
-                `;
-            }
-            container.style.opacity = '1';
-        }, 150);
-    }
-
-    // Render Owl Dots
-    if (dotsContainer) {
-        dotsContainer.innerHTML = newsItems.map((_, i) => `
-            <button
-                type="button"
-                onclick="goToNewsSlide(${i})"
-                class="${i === currentNewsIndex ? 'w-7 h-2 rounded-full bg-amber-400 shadow' : 'w-2 h-2 rounded-full bg-white/30 hover:bg-white/60'} transition-all duration-300 cursor-pointer"
-                title="ไปยังข่าวที่ ${i + 1}"
-            ></button>
-        `).join('');
-    }
+    if (counter) counter.textContent = `${currentNewsIndex + 1}/${newsItems.length}`;
+    if (!content) return;
+    content.innerHTML = `
+        <p class="text-xs text-slate-500 truncate"><span class="font-heading font-semibold text-amber-700">${RW.escapeHtml(item.date || '')}</span> ${RW.escapeHtml(item.ref || '')}</p>
+        <button type="button" onclick="RW.openNewsModal('${item.id}')" class="w-full text-left mt-0.5 font-heading font-semibold text-sm sm:text-base text-pea-900 hover:text-pea-700 hover:underline leading-snug line-clamp-2 cursor-pointer" title="อ่านรายละเอียดและเอกสารแนบ">${RW.escapeHtml(item.title || '')}</button>`;
 }
 
-function nextNewsSlide() {
-    renderNewsSlide(currentNewsIndex + 1);
-    resetNewsTimer();
-}
-
-function prevNewsSlide() {
-    renderNewsSlide(currentNewsIndex - 1);
-    resetNewsTimer();
-}
-
-function goToNewsSlide(idx) {
-    renderNewsSlide(idx);
-    resetNewsTimer();
-}
-
-function startNewsTimer() {
-    if (newsCarouselTimer) clearInterval(newsCarouselTimer);
-    if (newsItems.length > 1) {
-        newsCarouselTimer = setInterval(() => {
-            renderNewsSlide(currentNewsIndex + 1);
-        }, CAROUSEL_INTERVAL);
-    }
-}
-
-function stopNewsTimer() {
-    if (newsCarouselTimer) {
-        clearInterval(newsCarouselTimer);
-        newsCarouselTimer = null;
-    }
-}
-
-function resetNewsTimer() {
-    stopNewsTimer();
-    startNewsTimer();
-}
+function nextNewsSlide() { renderNewsSlide(currentNewsIndex + 1); }
+function prevNewsSlide() { renderNewsSlide(currentNewsIndex - 1); }
 
 // ค้นหาในหนังสือทุกเล่ม (เนื้อหาบท + ข้อในเล่ม 44 ข้อ) แสดงผลใต้ช่องค้นหา
 let HOME_DATA = null;
@@ -154,7 +59,7 @@ function handleHomeSearch(event) {
                 <span class="block text-[11px] text-pea-600 font-heading font-semibold">${RW.escapeHtml(h.book.short)} · บทที่ ${h.ch.num} ${RW.escapeHtml(h.ch.title)}</span>
                 <span class="block text-sm font-heading font-semibold text-slate-800">${mark(h.title)}</span>
                 <span class="block text-xs text-slate-500 mt-0.5 line-clamp-2">${mark(h.snippet)}</span></a></li>`;
-        }).join('')}</ul>` : '<p class="px-4 py-6 text-center text-sm text-slate-500">ไม่พบ — ลองคำอื่น หรือถาม AI ผู้ช่วย</p>'}`;
+        }).join('')}</ul>` : '<p class="px-4 py-6 text-center text-sm text-slate-500">ไม่พบคำนี้ในคู่มือ ลองคำอื่น หรือถามผู้ช่วย AI</p>'}`;
     box.classList.remove('hidden');
 }
 
@@ -173,7 +78,6 @@ function clearHomeSearch() {
 // Expose navigation & search functions
 window.nextNewsSlide = nextNewsSlide;
 window.prevNewsSlide = prevNewsSlide;
-window.goToNewsSlide = goToNewsSlide;
 window.handleHomeSearch = handleHomeSearch;
 window.clearHomeSearch = clearHomeSearch;
 
@@ -209,7 +113,7 @@ function renderBookShelf(books) {
         const t = COVER_THEMES[i % COVER_THEMES.length];
         return `
         <a href="${base}?book=${encodeURIComponent(b.id)}" onclick="try{localStorage.setItem('rw_book','${b.id}|0')}catch(e){}"
-           class="group relative aspect-[3/4] flex flex-col bg-white rounded-r-2xl rounded-l-md p-4 pl-6 sm:p-5 sm:pl-7 border border-slate-200 shadow-md hover:shadow-xl hover:-translate-y-1 transition no-underline overflow-hidden">
+           class="group relative aspect-[3/4] flex flex-col bg-white rounded-r-2xl rounded-l-md p-4 pl-6 sm:p-5 sm:pl-7 border border-slate-200 shadow-sm hover:shadow-lg hover:border-slate-300 transition-shadow no-underline overflow-hidden">
             ${coverArt(t)}
             <span class="absolute left-0 top-0 bottom-0 w-3 bg-black/10 border-r border-black/10"></span>
             <div class="relative flex items-start justify-between gap-2">
@@ -220,25 +124,14 @@ function renderBookShelf(books) {
                 <h3 class="font-heading font-extrabold text-sm sm:text-base leading-snug line-clamp-3">${RW.escapeHtml(b.title)}</h3>
                 <div class="mt-2 pt-2 border-t ${t.line} flex flex-wrap items-center justify-between gap-x-2 gap-y-1 text-[11px] sm:text-xs font-heading">
                     <span class="${t.sub}">${b.chapters.length} บท<span class="hidden lg:inline"> · พร้อมอ่าน ${ready}</span></span>
-                    <span class="font-semibold">เปิดอ่าน <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition"></i></span>
+                    <span class="font-semibold group-hover:underline">เปิดอ่าน</span>
                 </div>
             </div>
         </a>`;
     }).join('');
 }
 
-// การ์ด "กำลังสงสัยเรื่องอะไรอยู่รึเปล่า?" — สีเขียนเต็มชื่อ class เพื่อให้ Tailwind สร้าง CSS ตอน build
-const HIGHLIGHT_COLORS = {
-    purple: 'bg-purple-50 border-purple-200 hover:bg-purple-100 [&_.hl-icon]:bg-pea-700',
-    pink: 'bg-pink-50 border-pink-200 hover:bg-pink-100 [&_.hl-icon]:bg-pink-600',
-    blue: 'bg-blue-50 border-blue-200 hover:bg-blue-100 [&_.hl-icon]:bg-blue-600',
-    emerald: 'bg-emerald-50 border-emerald-200 hover:bg-emerald-100 [&_.hl-icon]:bg-emerald-600',
-    indigo: 'bg-indigo-50 border-indigo-200 hover:bg-indigo-100 [&_.hl-icon]:bg-indigo-600',
-    amber: 'bg-amber-50 border-amber-200 hover:bg-amber-100 [&_.hl-icon]:bg-amber-500',
-    orange: 'bg-orange-50 border-orange-200 hover:bg-orange-100 [&_.hl-icon]:bg-orange-500',
-    slate: 'bg-slate-50 border-slate-200 hover:bg-slate-100 [&_.hl-icon]:bg-slate-600',
-};
-
+// การ์ด "กำลังสงสัยเรื่องอะไรอยู่รึเปล่า?" (src/data/highlights.json) — การ์ดขาวสีเดียวกันทั้งหมด
 function renderHighlights(items) {
     const box = document.getElementById('homeHighlights');
     if (!box) return;
@@ -246,11 +139,11 @@ function renderHighlights(items) {
     const base = RW.pageUrl('book') || 'book.html';
     box.innerHTML = items.map(h => `
         <a href="${base}?book=${encodeURIComponent(h.book)}&ch=${h.ch}" onclick="try{localStorage.setItem('rw_book','${h.book}|${h.ch}')}catch(e){}"
-           class="group p-3 rounded-xl border transition flex items-start gap-2.5 no-underline ${HIGHLIGHT_COLORS[h.color] || HIGHLIGHT_COLORS.slate}">
-            <span class="hl-icon w-9 h-9 shrink-0 rounded-lg text-white flex items-center justify-center"><i class="fa-solid ${h.icon}"></i></span>
+           class="group p-3 rounded-xl border border-slate-200 bg-white hover:border-pea-400 hover:bg-purple-50/40 transition-colors flex items-start gap-2.5 no-underline">
+            <span class="w-9 h-9 shrink-0 rounded-lg bg-purple-50 text-pea-700 flex items-center justify-center"><i class="fa-solid ${h.icon}"></i></span>
             <span class="min-w-0">
-                <span class="block font-heading font-bold text-sm text-slate-800 leading-snug group-hover:text-pea-800">${RW.escapeHtml(h.title)}</span>
-                <span class="block mt-0.5 text-[11px] text-slate-600 leading-snug">${RW.escapeHtml(h.figure)}</span>
+                <span class="block font-heading font-bold text-sm text-slate-900 leading-snug group-hover:text-pea-800">${RW.escapeHtml(h.title)}</span>
+                <span class="block mt-0.5 text-xs text-slate-600 leading-snug">${RW.escapeHtml(h.figure)}</span>
             </span>
         </a>`).join('');
 }
@@ -272,28 +165,21 @@ function initHomePage() {
         const newsSection = document.getElementById('newsFeedSection');
 
         if (newsSection && newsItems.length > 0) {
-            renderNewsSlide(0);
-            startNewsTimer();
-
-            // Hover pause & resume
-            newsSection.addEventListener('mouseenter', stopNewsTimer);
-            newsSection.addEventListener('mouseleave', startNewsTimer);
-
-            // Touch swipe support for mobile
-            let touchStartX = 0;
-            newsSection.addEventListener('touchstart', e => {
-                if (e.changedTouches && e.changedTouches[0]) {
-                    touchStartX = e.changedTouches[0].screenX;
-                }
-            }, { passive: true });
-
-            newsSection.addEventListener('touchend', e => {
-                if (e.changedTouches && e.changedTouches[0]) {
+            renderNewsSlide(Math.min(currentNewsIndex, newsItems.length - 1));
+            // ปัดซ้าย/ขวาบนมือถือ — loadData เรียกซ้ำเมื่อข้อมูลใหม่มา จึงผูก event ครั้งเดียว
+            if (!newsSection.dataset.swipe) {
+                newsSection.dataset.swipe = '1';
+                let touchStartX = 0;
+                newsSection.addEventListener('touchstart', e => {
+                    if (e.changedTouches && e.changedTouches[0]) touchStartX = e.changedTouches[0].screenX;
+                }, { passive: true });
+                newsSection.addEventListener('touchend', e => {
+                    if (!e.changedTouches || !e.changedTouches[0]) return;
                     const diff = e.changedTouches[0].screenX - touchStartX;
                     if (diff > 50) prevNewsSlide();
                     else if (diff < -50) nextNewsSlide();
-                }
-            }, { passive: true });
+                }, { passive: true });
+            }
 
             newsSection.classList.remove('hidden');
         } else if (newsSection) {

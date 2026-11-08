@@ -43,25 +43,26 @@ function mapButton(topic) {
 }
 
 const chReady = (c) => c.content || c.link || c.clauses;
-const chMeta = (c) => c.clauses ? `${c.clauses.length} ${typeof c.clauses[0] === 'number' ? 'ข้อ' : 'เรื่อง'}` : `หน้า ${RW.escapeHtml(c.pages || '-')}`;
+const chMeta = (c) => c.clauses ? `${c.clauses.length} ${typeof c.clauses[0] === 'number' ? 'ข้อ' : 'เรื่อง'}` : '';
 
 function renderBanner(book, ch, prev, next) {
     const arrow = (c, dir) => c
-        ? `<a ${bookLink(book.id, c.num)} class="w-9 h-9 inline-flex items-center justify-center rounded-lg bg-white/15 hover:bg-white/25 text-white no-underline" title="บทที่ ${c.num} ${RW.escapeHtml(c.title)}"><i class="fa-solid fa-chevron-${dir}"></i></a>`
-        : `<span class="w-9 h-9 inline-flex items-center justify-center rounded-lg bg-white/5 text-white/30"><i class="fa-solid fa-chevron-${dir}"></i></span>`;
+        ? `<a ${bookLink(book.id, c.num)} class="w-9 h-9 inline-flex items-center justify-center rounded-lg border border-slate-200 text-slate-600 hover:border-pea-400 hover:text-pea-800 no-underline transition-colors" title="บทที่ ${c.num} ${RW.escapeHtml(c.title)}" aria-label="บทที่ ${c.num}"><i class="fa-solid fa-chevron-${dir}"></i></a>`
+        : `<span class="w-9 h-9 inline-flex items-center justify-center rounded-lg border border-slate-100 text-slate-300" aria-hidden="true"><i class="fa-solid fa-chevron-${dir}"></i></span>`;
     return `
-    <div class="bg-gradient-to-r from-pea-900 via-pea-700 to-purple-800 rounded-2xl px-4 py-3 text-white shadow-md flex items-center gap-3">
-        <span class="hidden sm:inline-flex w-10 h-10 shrink-0 rounded-xl bg-white/10 items-center justify-center text-amber-300"><i class="fa-solid ${book.icon || 'fa-book'}"></i></span>
+    <div class="flex items-center gap-3">
+        <span class="hidden sm:inline-flex w-10 h-10 shrink-0 rounded-lg bg-pea-800 items-center justify-center text-amber-300"><i class="fa-solid ${book.icon || 'fa-book'}"></i></span>
         <div class="min-w-0 flex-1">
             <div class="flex items-center gap-2 min-w-0">
                 <span class="shrink-0 px-2 py-0.5 text-[11px] font-heading font-semibold bg-amber-400 text-slate-900 rounded-full">${RW.escapeHtml(book.short || '')}</span>
-                <span class="font-heading font-bold text-sm truncate">${RW.escapeHtml(book.title)}</span>
+                <span class="font-heading font-bold text-base text-pea-900 truncate">${RW.escapeHtml(book.title)}</span>
             </div>
-            <div class="text-[11px] text-purple-200 mt-0.5 truncate">บทที่ ${ch.num} / ${book.chapters.length} · ${chMeta(ch)} · ${RW.escapeHtml(book.edition || '')}</div>
+            <div class="text-xs text-slate-500 mt-0.5 truncate">บทที่ ${ch.num} จาก ${book.chapters.length}${chMeta(ch) ? ` (${chMeta(ch)})` : ''} ${RW.escapeHtml(book.edition || '')}</div>
         </div>
-        <button type="button" onclick="bookToc(true)" class="lg:hidden shrink-0 inline-flex items-center gap-1.5 h-9 px-3 rounded-lg bg-white/15 hover:bg-white/25 text-xs font-heading font-semibold"><i class="fa-solid fa-list-ol"></i>สารบัญ</button>
+        <button type="button" onclick="bookToc(true)" class="lg:hidden shrink-0 inline-flex items-center gap-1.5 h-9 px-3 rounded-lg border border-slate-200 text-slate-700 hover:border-pea-400 text-xs font-heading font-semibold"><i class="fa-solid fa-list-ol"></i>สารบัญ</button>
         <div class="flex items-center gap-1.5 shrink-0">${arrow(prev, 'left')}${arrow(next, 'right')}</div>
-    </div>`;
+    </div>
+    <div class="rw-band mt-2" aria-hidden="true"></div>`;
 }
 
 function renderSidebar(book, ch) {
@@ -83,7 +84,7 @@ function renderSidebar(book, ch) {
                     <span class="w-6 h-6 shrink-0 rounded-md ${cur ? 'bg-pea-700 text-white' : ready ? 'bg-purple-50 text-pea-800' : 'bg-slate-100 text-slate-400'} flex items-center justify-center text-[11px] font-heading font-bold">${c.num}</span>
                     <span class="min-w-0 flex-1">
                         <span class="block text-[13px] leading-snug font-heading ${cur ? 'font-semibold text-pea-900' : ready ? 'text-slate-700' : 'text-slate-400'}">${RW.escapeHtml(c.title)}</span>
-                        <span class="block text-[10px] text-slate-400 mt-0.5">${chMeta(c)}${ready ? '' : ' · กำลังจัดทำ'}</span>
+                        ${chMeta(c) || !ready ? `<span class="block text-[10px] text-slate-400 mt-0.5">${[chMeta(c), ready ? '' : 'กำลังจัดทำ'].filter(Boolean).join(' · ')}</span>` : ''}
                     </span>
                 </a></li>`;
             }).join('')}
@@ -96,12 +97,12 @@ function renderClause(c) {
     return `
     <section id="clause-${RW.escapeHtml(String(c.num))}" class="scroll-mt-24 pt-6 first:pt-0">
         <div class="flex items-start gap-3">
-            <span class="w-10 h-10 shrink-0 rounded-xl ${isNum ? 'bg-gradient-to-br from-pea-700 to-purple-800' : 'bg-gradient-to-br from-amber-500 to-rose-600'} text-white flex flex-col items-center justify-center font-heading font-bold leading-none">
+            <span class="w-10 h-10 shrink-0 rounded-xl ${isNum ? 'bg-pea-800 text-white' : 'bg-amber-100 text-amber-800'} flex flex-col items-center justify-center font-heading font-bold leading-none">
                 ${isNum ? `<span class="text-[9px] font-normal text-purple-200">ข้อ</span><span class="text-sm">${c.num}</span>` : '<i class="fa-solid fa-file-medical text-sm"></i>'}
             </span>
             <div class="min-w-0">
                 <h2 class="font-heading font-bold text-base text-slate-900 leading-snug">${RW.escapeHtml(c.title)}</h2>
-                <p class="text-xs text-slate-500 mt-0.5">${RW.escapeHtml(c.summary || '')} <span class="ml-1 text-slate-400"><i class="fa-regular fa-file-pdf mr-0.5"></i>${RW.escapeHtml(c.page || '')}</span></p>
+                <p class="text-xs text-slate-500 mt-0.5">${RW.escapeHtml(c.summary || '')}</p>
             </div>
         </div>
         <div class="mt-3">${c.content}</div>
@@ -115,12 +116,11 @@ const isCardChapter = (ch) => ch.clauses && ch.clauses.every(n => typeof n !== '
 function renderGuidelineCards(book, ch) {
     return `<div class="grid sm:grid-cols-2 gap-3">${clauseItems(ch).map(c => `
         <a ${bookLink(book.id, ch.num, c.num)} class="group flex flex-col p-4 rounded-xl border border-slate-200 hover:border-purple-300 hover:bg-purple-50/40 hover:shadow-sm transition no-underline">
-            <span class="w-9 h-9 rounded-lg bg-gradient-to-br from-amber-500 to-rose-600 text-white flex items-center justify-center"><i class="fa-solid fa-file-medical text-sm"></i></span>
+            <span class="w-9 h-9 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center"><i class="fa-solid fa-file-medical text-sm"></i></span>
             <span class="mt-3 font-heading font-bold text-sm text-slate-900 leading-snug group-hover:text-pea-800">${RW.escapeHtml(c.title)}</span>
             <span class="mt-1 text-xs text-slate-500 line-clamp-3">${RW.escapeHtml(c.summary || '')}</span>
-            <span class="mt-auto pt-3 flex items-center justify-between text-[11px] font-heading">
-                <span class="text-slate-400"><i class="fa-regular fa-file-pdf mr-0.5"></i>${RW.escapeHtml(c.page || '')}</span>
-                <span class="text-pea-700 font-semibold">อ่าน <i class="fa-solid fa-arrow-right group-hover:translate-x-0.5 transition"></i></span>
+            <span class="mt-auto pt-3 flex items-center justify-end text-[11px] font-heading">
+                <span class="text-pea-700 font-semibold group-hover:underline">อ่าน</span>
             </span>
         </a>`).join('')}</div>`;
 }
@@ -152,11 +152,11 @@ function renderBody(book, ch) {
         return `<div class="p-6 rounded-2xl bg-purple-50 border border-purple-200 text-center">
             <i class="fa-solid fa-book-open text-2xl text-pea-600 mb-2 block"></i>
             <p class="text-sm text-slate-700">${RW.escapeHtml(ch.link.text || '')}</p>
-            <a ${bookLink(ch.link.book, 1)} class="mt-4 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-pea-700 hover:bg-pea-800 text-white text-sm font-heading font-semibold no-underline">${RW.escapeHtml(ch.link.label)} <i class="fa-solid fa-arrow-right"></i></a>
+            <a ${bookLink(ch.link.book, 1)} class="mt-4 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-pea-700 hover:bg-pea-800 text-white text-sm font-heading font-semibold no-underline">${RW.escapeHtml(ch.link.label)}</a>
         </div>`;
     }
     return `<div class="p-6 rounded-2xl bg-slate-50 border border-dashed border-slate-300 text-center text-sm text-slate-500">
-        <i class="fa-solid fa-pen-ruler text-2xl text-slate-300 mb-2 block"></i>บทนี้กำลังจัดทำเนื้อหา — สอบถามรายละเอียดได้ที่ <button type="button" onclick="RW.toggleChat(true)" class="text-emerald-700 font-semibold underline">AI ผู้ช่วย</button></div>`;
+        <i class="fa-solid fa-pen-ruler text-2xl text-slate-300 mb-2 block"></i>บทนี้กำลังจัดทำเนื้อหา ระหว่างนี้ถาม<button type="button" onclick="RW.toggleChat(true)" class="ml-1 text-pea-700 font-semibold underline">ผู้ช่วย AI</button>ได้</div>`;
 }
 
 function renderFooterNav(book, prev, next) {
@@ -185,8 +185,8 @@ function renderBook(p) {
     const header = item
         ? `<a ${bookLink(book.id, ch.num)} class="inline-flex items-center gap-1.5 text-xs font-heading font-semibold text-pea-600 hover:text-pea-800 no-underline"><i class="fa-solid fa-arrow-left"></i>บทที่ ${ch.num} ${RW.escapeHtml(ch.title)}</a>
            <h1 class="mt-2 text-xl sm:text-2xl font-heading font-bold text-slate-900 leading-snug">${RW.escapeHtml(item.title)}</h1>
-           <p class="mt-1 text-xs text-slate-500">${RW.escapeHtml(item.summary || '')} <span class="ml-1 text-slate-400"><i class="fa-regular fa-file-pdf mr-0.5"></i>${RW.escapeHtml(item.page || '')}</span></p>`
-        : `<span class="text-xs font-heading font-semibold text-pea-600">บทที่ ${ch.num} · ${chMeta(ch)}</span>
+           <p class="mt-1 text-xs text-slate-500">${RW.escapeHtml(item.summary || '')}</p>`
+        : `<span class="text-xs font-heading font-semibold text-pea-600">บทที่ ${ch.num}${chMeta(ch) ? ' · ' + chMeta(ch) : ''}</span>
            <h1 class="mt-1 text-xl sm:text-2xl font-heading font-bold text-slate-900 leading-snug">${RW.escapeHtml(ch.title)}</h1>
            ${tools.length || ch.topics ? `<div class="flex flex-wrap gap-2 mt-4">${tools.map(toolButton).join('')}${ch.topics ? mapButton(ch.topics[0]) : ''}</div>` : ''}`;
     const body = item ? item.content + renderGuidelinePager(book, ch, item) : renderBody(book, ch);
@@ -244,7 +244,7 @@ function initBookPage() {
     const root = document.getElementById('bookRoot');
     root.innerHTML = `
     <div role="status" aria-label="กำลังเปิดหนังสือ">
-        <div class="h-16 rounded-2xl bg-gradient-to-r from-purple-200 to-purple-100 motion-safe:animate-pulse"></div>
+        <div class="h-14 rounded-lg bg-slate-100 motion-safe:animate-pulse"></div>
         <div class="mt-4 lg:grid lg:grid-cols-[17rem_minmax(0,1fr)] lg:gap-6">
             <div class="hidden lg:block bg-white rounded-2xl border border-slate-200 p-3 space-y-2 motion-safe:animate-pulse">
                 ${Array.from({ length: 9 }, () => '<div class="flex gap-2.5 items-center"><span class="w-6 h-6 rounded-md bg-slate-200"></span><span class="flex-1 h-3.5 rounded bg-slate-200/80"></span></div>').join('')}

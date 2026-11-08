@@ -5,16 +5,13 @@
         id="rwChatFab"
         type="button"
         onclick="RW.toggleChat()"
-        class="group flex items-center gap-2.5 pl-4 pr-5 py-3 rounded-full bg-gradient-to-r from-pea-800 via-pea-700 to-purple-700 hover:from-pea-700 hover:to-purple-600 text-white shadow-2xl border-2 border-amber-400 transition-all duration-200 hover:scale-105"
-        title="ถาม AI ผู้ช่วยตรวจจ่าย กฟภ."
+        class="flex items-center gap-2 pl-2 pr-4 py-2 rounded-full bg-pea-800 hover:bg-pea-900 text-white shadow-lg transition-colors"
+        title="ถามผู้ช่วย AI เรื่องสิทธิและสวัสดิการ"
     >
-        <div class="w-8 h-8 rounded-full bg-amber-400 text-slate-900 flex items-center justify-center shadow font-bold">
-            <i class="fa-solid fa-robot text-base"></i>
-        </div>
-        <div class="text-left">
-            <div class="text-[10px] text-amber-300 font-heading font-semibold leading-none">AI Assistant</div>
-            <div class="text-xs font-heading font-bold leading-tight mt-0.5">ถาม AI.</div>
-        </div>
+        <span class="w-8 h-8 rounded-full bg-amber-400 text-slate-900 flex items-center justify-center">
+            <i class="fa-solid fa-robot text-sm"></i>
+        </span>
+        <span class="text-sm font-heading font-semibold">ถามผู้ช่วย AI</span>
     </button>
 
     <!-- Chat Box Drawer Panel -->
@@ -23,7 +20,7 @@
         class="hidden w-[94vw] sm:w-[400px] h-[560px] max-h-[82vh] bg-white rounded-3xl shadow-2xl border border-purple-200 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200"
     >
         <!-- Chat Header -->
-        <div class="bg-gradient-to-r from-pea-900 via-pea-700 to-purple-800 text-white px-4 py-3 flex items-center justify-between border-b-2 border-amber-400 shrink-0">
+        <div class="bg-pea-800 text-white px-4 py-3 flex items-center justify-between border-b-2 border-amber-400 shrink-0">
             <div class="flex items-center gap-2.5">
                 <div class="w-8 h-8 rounded-xl bg-amber-400 text-slate-900 flex items-center justify-center font-bold text-sm shadow">
                     <i class="fa-solid fa-robot"></i>

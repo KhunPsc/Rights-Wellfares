@@ -1,73 +1,11 @@
 <!-- @title หน้าแรก - คู่มือตรวจจ่ายค่ารักษาพยาบาล และอัตราเบี้ยเลี้ยง-ที่พัก (กฟภ.) -->
 <main class="app-main max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
 
-    <!-- News Feed / Announcement Banner Carousel with Owl Dots -->
-    <section id="newsFeedSection" class="relative bg-gradient-to-br from-slate-900 via-purple-950 to-pea-950 rounded-3xl p-5 sm:p-6 text-white shadow-xl border border-white/10 overflow-hidden group">
-        <!-- Background decorative ambient glow -->
-        <div class="absolute -right-16 -top-16 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="absolute -left-16 -bottom-16 w-64 h-64 bg-pea-500/10 rounded-full blur-3xl pointer-events-none"></div>
-
-        <!-- Header bar: Badge and Page Counter -->
-        <div class="relative z-10 flex items-center justify-between gap-3 mb-3">
-            <div class="flex items-center gap-2">
-                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-heading font-bold text-xs shadow-sm">
-                    <i class="fa-solid fa-bullhorn text-xs animate-bounce"></i>
-                    <span>ข่าวสารและระเบียบล่าสุด</span>
-                </span>
-                <span id="newsSlideBadge" class="hidden sm:inline-block px-2.5 py-0.5 rounded-full text-[11px] font-heading font-medium bg-white/10 text-purple-200 border border-white/10">
-                    ประกาศ
-                </span>
-            </div>
-            <!-- Slide Counter and Progress -->
-            <div class="flex items-center gap-2 text-xs text-purple-200 font-heading">
-                <span id="newsSlideCounter" class="bg-white/10 px-2 py-0.5 rounded-lg border border-white/10">1 / 1</span>
-            </div>
-        </div>
-
-        <!-- Slide Content Wrapper with Navigation Chevrons -->
-        <div class="relative z-10 flex items-center gap-2 sm:gap-4">
-            <!-- Prev Button -->
-            <button
-                type="button"
-                id="newsPrevBtn"
-                onclick="prevNewsSlide()"
-                class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 text-white flex items-center justify-center shrink-0 transition border border-white/10 shadow-sm cursor-pointer"
-                title="ข่าวก่อนหน้า"
-            >
-                <i class="fa-solid fa-chevron-left text-xs sm:text-sm"></i>
-            </button>
-
-            <!-- Active Slide Card (Transitions smoothly) -->
-            <div id="newsSlideContainer" class="flex-1 min-w-0 transition-opacity duration-300">
-                <div id="newsSlideContent" class="space-y-2">
-                    <div class="animate-pulse space-y-2 py-2">
-                        <div class="h-4 bg-white/10 rounded w-1/4"></div>
-                        <div class="h-6 bg-white/20 rounded w-3/4"></div>
-                        <div class="h-4 bg-white/10 rounded w-full"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Next Button -->
-            <button
-                type="button"
-                id="newsNextBtn"
-                onclick="nextNewsSlide()"
-                class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 text-white flex items-center justify-center shrink-0 transition border border-white/10 shadow-sm cursor-pointer"
-                title="ข่าวถัดไป"
-            >
-                <i class="fa-solid fa-chevron-right text-xs sm:text-sm"></i>
-            </button>
-        </div>
-
-        <!-- Owl Dots (Indicators) -->
-        <div id="newsOwlDots" class="relative z-10 flex items-center justify-center gap-2 pt-4">
-            <!-- Dynamic owl dots rendered here -->
-        </div>
-    </section>
-
-    <!-- Search Bar Section (Home Page) -->
-    <section class="w-full">
+    <!-- งานหลักของหน้า: ค้นหาในหนังสือทุกเล่ม -->
+    <section>
+        <h1 class="rw-title">ค้นหาสิทธิและสวัสดิการ</h1>
+        <p class="mt-1 text-sm text-slate-600">ค้นได้ในคู่มือทุกเล่ม หรือเลือกเรื่องที่สงสัยด้านล่าง</p>
+        <div class="rw-band mt-3 mb-4" aria-hidden="true"></div>
         <form onsubmit="handleHomeSearch(event)" class="relative w-full">
             <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-base pointer-events-none"></i>
             <input
@@ -79,8 +17,8 @@
                 autocapitalize="off"
                 spellcheck="false"
                 aria-label="ค้นหาในหนังสือทุกเล่ม"
-                placeholder="ค้นหา เช่น ค่าห้อง, ลูกจ้าง, 90 วัน, ล้างไต, เบี้ยเลี้ยง, ปากกาลดน้ำหนัก..."
-                class="w-full min-w-0 pl-11 pr-24 py-3 sm:py-3.5 rounded-2xl bg-white text-slate-900 placeholder-slate-400 text-base sm:text-sm border border-slate-300 focus:border-pea-600 focus:ring-4 focus:ring-purple-100 focus:outline-none shadow-sm transition"
+                placeholder="เช่น ค่าห้อง, ลูกจ้าง, 90 วัน, ล้างไต, เบี้ยเลี้ยง"
+                class="w-full min-w-0 pl-11 pr-24 py-3.5 sm:py-4 rounded-xl bg-white text-slate-900 placeholder-slate-400 text-base border-2 border-slate-300 focus:border-pea-700 focus:outline-none transition-colors"
             >
             <div class="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
                 <button
@@ -94,21 +32,32 @@
                 </button>
                 <button
                     type="submit"
-                    class="px-4 py-2 sm:py-2.5 rounded-xl bg-pea-700 hover:bg-pea-800 text-white font-heading font-semibold text-xs sm:text-sm transition flex items-center gap-1.5 shadow-sm cursor-pointer active:scale-95"
-                >
-                    <i class="fa-solid fa-magnifying-glass text-xs"></i>
-                    <span>ค้นหา</span>
-                </button>
+                    class="px-4 py-2.5 rounded-lg bg-pea-700 hover:bg-pea-800 text-white font-heading font-semibold text-sm transition-colors cursor-pointer"
+                >ค้นหา</button>
             </div>
         </form>
-        <div id="homeSearchResults" class="hidden mt-3 bg-white rounded-2xl border border-slate-200 shadow-sm"></div>
+        <div id="homeSearchResults" class="hidden mt-3 bg-white rounded-xl border border-slate-200"></div>
+    </section>
+
+    <!-- ข่าวระเบียบล่าสุด: แถบเดียว เลื่อนเองด้วยปุ่ม (src/data/news.json) -->
+    <section id="newsFeedSection" class="flex items-stretch gap-3 bg-white rounded-xl border border-slate-200 border-l-4 border-l-amber-400 pl-4 pr-2 py-3" aria-label="ข่าวระเบียบล่าสุด">
+        <div id="newsSlideContent" class="flex-1 min-w-0">
+            <div class="motion-safe:animate-pulse space-y-2 py-1" aria-hidden="true">
+                <div class="h-3 bg-slate-200 rounded w-1/4"></div>
+                <div class="h-4 bg-slate-200 rounded w-3/4"></div>
+            </div>
+        </div>
+        <div class="shrink-0 flex items-center gap-1 self-center">
+            <button type="button" id="newsPrevBtn" onclick="prevNewsSlide()" class="w-8 h-8 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-pea-800 flex items-center justify-center transition-colors cursor-pointer" title="ข่าวก่อนหน้า" aria-label="ข่าวก่อนหน้า"><i class="fa-solid fa-chevron-left text-xs"></i></button>
+            <span id="newsSlideCounter" class="text-xs text-slate-500 font-heading tabular-nums min-w-[2.5rem] text-center">1/1</span>
+            <button type="button" id="newsNextBtn" onclick="nextNewsSlide()" class="w-8 h-8 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-pea-800 flex items-center justify-center transition-colors cursor-pointer" title="ข่าวถัดไป" aria-label="ข่าวถัดไป"><i class="fa-solid fa-chevron-right text-xs"></i></button>
+        </div>
     </section>
 
     <!-- เข้าตามเหตุการณ์: การ์ดจาก src/data/highlights.json → บทในหนังสือ -->
     <section>
         <div class="flex items-center justify-between mb-3">
-            <h2 class="font-heading font-bold text-base text-slate-800"><i class="fa-solid fa-compass text-pea-600 mr-1.5"></i>กำลังสงสัยเรื่องอะไรอยู่รึเปล่า?</h2>
-            <span class="text-xs text-slate-500">เลือกเรื่องเพื่อเปิดอ่านบทที่เกี่ยวข้อง</span>
+            <h2 class="font-heading font-bold text-lg text-pea-900">กำลังสงสัยเรื่องอะไรอยู่รึเปล่า?</h2>
         </div>
         <div id="homeHighlights" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3" aria-busy="true">
             <!-- skeleton จนกว่า JS จะเติมข้อมูล -->
@@ -119,8 +68,7 @@
     <!-- Book Shelf: หนังสือคู่มือ (เพิ่มเล่มใน src/data/books.json) -->
     <section>
         <div class="flex items-center justify-between mb-3">
-            <h2 class="font-heading font-bold text-base text-slate-800"><i class="fa-solid fa-book-bookmark text-pea-600 mr-1.5"></i>ชั้นหนังสือคู่มือ</h2>
-            <span class="text-xs text-slate-500">เลือกเล่มเพื่อเปิดสารบัญ</span>
+            <h2 class="font-heading font-bold text-lg text-pea-900">ชั้นหนังสือคู่มือ</h2>
         </div>
         <div id="homeBookShelf" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-5" aria-busy="true">
             <!-- skeleton จนกว่า JS จะเติมข้อมูล -->

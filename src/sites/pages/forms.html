@@ -1,35 +1,20 @@
 <!-- @title ดาวน์โหลดแบบฟอร์มและเอกสารการเบิกจ่าย (กฟภ.) -->
 <main class="app-main max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
 
-    <!-- Header Banner -->
-    <div class="bg-gradient-to-r from-pea-900 via-pea-700 to-purple-800 rounded-3xl p-6 sm:p-7 text-white shadow-xl border-b-4 border-pea-gold flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-            <div class="flex items-center gap-2 mb-1.5">
-                <span class="px-2.5 py-0.5 rounded-full text-xs font-heading font-semibold bg-amber-400 text-slate-900">Download Center</span>
-                <span class="text-xs text-purple-200">แบบฟอร์มมาตรฐาน กฟภ.</span>
+    <header>
+        <div class="flex flex-col sm:flex-row sm:items-end gap-2 sm:gap-4">
+            <div class="min-w-0 flex-1">
+                <h1 class="rw-title">ดาวน์โหลดแบบฟอร์ม</h1>
+                <p class="mt-1 text-sm text-slate-600">กดที่แบบฟอร์มเพื่อดาวน์โหลดไฟล์</p>
             </div>
-            <h1 class="text-xl sm:text-2xl font-heading font-bold text-white">
-                ดาวน์โหลดแบบฟอร์มและเอกสารประกอบการเบิกจ่าย
-            </h1>
-            <p class="text-xs sm:text-sm text-purple-200 mt-1">
-                คลิกปุ่มดาวน์โหลดเพื่อบันทึกไฟล์ลงคอมพิวเตอร์ของคุณทันที (Direct Download)
-            </p>
+            <a href="book.html?book=welfare44" onclick="try{localStorage.setItem('rw_book','welfare44|0')}catch(e){}" class="shrink-0 text-sm font-heading font-semibold text-pea-700 hover:text-pea-900 hover:underline">ดูระเบียบการเบิกจ่าย</a>
         </div>
-        <div class="shrink-0 flex items-center gap-2">
-            <a
-                href="book.html?book=welfare44"
-                onclick="try{localStorage.setItem('rw_book','welfare44|0')}catch(e){}"
-                class="px-4 py-2 rounded-xl bg-white/15 hover:bg-white/25 border border-white/30 text-white font-heading font-semibold text-xs transition flex items-center gap-1.5 no-underline"
-            >
-                <i class="fa-solid fa-book-open"></i>
-                <span>ดูระเบียบการเบิกจ่าย</span>
-            </a>
-        </div>
-    </div>
+        <div class="rw-band mt-3" aria-hidden="true"></div>
+    </header>
 
     <!-- แถบเลือกมุมมอง -->
     <div class="flex items-center justify-between gap-3 -mb-3">
-        <h2 class="font-heading font-bold text-base text-slate-800"><i class="fa-solid fa-folder-open text-pea-600 mr-1.5"></i>แบบฟอร์ม <span class="text-slate-400 font-semibold text-sm">(<span id="formsCount">…</span>)</span></h2>
+        <p class="text-sm text-slate-600">ทั้งหมด <span id="formsCount" class="font-semibold text-slate-900">…</span> รายการ</p>
         <div class="inline-flex p-1 rounded-xl bg-slate-100 border border-slate-200" role="group" aria-label="มุมมองรายการแบบฟอร์ม">
             <button type="button" data-forms-view="tiles" onclick="setFormsView('tiles')" aria-pressed="false" class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-heading font-semibold text-slate-500 hover:text-pea-800 transition flex items-center gap-1.5"><i class="fa-solid fa-table-cells-large"></i><span class="hidden sm:inline">Tiles</span></button>
             <button type="button" data-forms-view="content" onclick="setFormsView('content')" aria-pressed="false" class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-heading font-semibold text-slate-500 hover:text-pea-800 transition flex items-center gap-1.5"><i class="fa-solid fa-list-ul"></i><span class="hidden sm:inline">Content</span></button>

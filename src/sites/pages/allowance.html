@@ -1,29 +1,25 @@
 <!-- @title อัตราเบี้ยเลี้ยง-ค่าเช่าที่พัก (TAX) -->
 <main class="app-main max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
     <div id="viewAllowance" class="space-y-6">
-        <!-- Header Banner -->
-        <div class="bg-gradient-to-r from-indigo-900 via-pea-800 to-purple-800 rounded-2xl p-5 sm:p-6 text-white shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-                <span class="px-3 py-0.5 rounded-full text-xs font-heading font-semibold bg-amber-400 text-slate-900">อัตราปัจจุบัน</span>
-                <h2 class="text-xl sm:text-2xl font-heading font-bold mt-1.5">ตารางอัตราค่าเบี้ยเลี้ยง และค่าเช่าที่พัก (พร้อมหลักเกณฑ์การระบุ TAX)</h2>
-                <p class="text-xs sm:text-sm text-purple-200 mt-1">แยกจำนวนเงินได้ที่ไม่ถือเป็นประโยชน์เพิ่ม (ไม่ระบุ TAX) และจำนวนเงินได้ที่ถือเป็นประโยชน์เพิ่ม (ระบุ TAX ในช่องการกำหนด)</p>
+        <header>
+            <div class="flex flex-col sm:flex-row sm:items-end gap-2 sm:gap-4">
+                <div class="min-w-0 flex-1">
+                    <h1 class="rw-title">อัตราเบี้ยเลี้ยงและค่าเช่าที่พัก</h1>
+                    <p class="mt-1 text-sm text-slate-600">แยกยอดที่ไม่ต้องระบุ TAX กับยอดที่ต้องระบุ TAX เบี้ยเลี้ยงยกเว้นภาษีได้ไม่เกินวันละ 270 บาท</p>
+                </div>
             </div>
-            <div class="flex items-center gap-2 shrink-0">
-                <span class="px-3.5 py-2 rounded-xl bg-white/15 border border-white/20 text-xs font-heading">
-                    <i class="fa-solid fa-file-invoice-dollar text-amber-300 mr-1.5"></i>เกณฑ์ยกเว้นภาษีเบี้ยเลี้ยง 270 บ./วัน
-                </span>
-            </div>
-        </div>
+            <div class="rw-band mt-3" aria-hidden="true"></div>
+        </header>
 
         <!-- Interactive Per Diem & Accommodation Calculator -->
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-6">
             <div class="flex items-center gap-3 mb-4 pb-3 border-b border-slate-100">
-                <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center text-lg">
+                <div class="w-10 h-10 rounded-xl bg-purple-50 text-pea-700 flex items-center justify-center text-lg">
                     <i class="fa-solid fa-calculator"></i>
                 </div>
                 <div>
                     <h3 class="font-heading font-bold text-base sm:text-lg text-slate-800">
-                        โปรแกรมคำนวณค่าเบี้ยเลี้ยง & ค่าเช่าที่พัก พร้อมแยกยอดระบุ TAX อัตโนมัติ
+                        คำนวณเบี้ยเลี้ยงและค่าเช่าที่พัก
                     </h3>
                     <p class="text-xs text-slate-500">เลือกระดับพนักงาน จำนวนวันเบี้ยเลี้ยง และประเภทค่าที่พัก เพื่อดูยอดเงินที่ต้องบันทึกแยกบรรทัด TAX และไม่ระบุ TAX</p>
                 </div>

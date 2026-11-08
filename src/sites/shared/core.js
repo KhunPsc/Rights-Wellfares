@@ -162,7 +162,7 @@ const RW = (() => {
         modal.className = 'fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-start sm:items-center justify-center p-3 sm:p-6';
         modal.innerHTML = `
             <div class="bg-white rounded-3xl shadow-2xl border border-slate-200 w-full max-w-3xl max-h-[92vh] flex flex-col overflow-hidden">
-                <div class="bg-gradient-to-r from-pea-900 to-pea-700 text-white px-5 py-3.5 flex items-start justify-between gap-3 border-b-2 border-amber-400 shrink-0">
+                <div class="bg-pea-800 text-white px-5 py-3.5 flex items-start justify-between gap-3 border-b-2 border-amber-400 shrink-0">
                     <div id="rwClauseModalHead" class="min-w-0"></div>
                     <div class="flex items-center gap-2 shrink-0">
                         <a id="rwClauseModalGoBtn" class="hidden px-2.5 py-1 rounded-lg bg-white/20 hover:bg-white/30 text-white text-xs font-heading font-medium transition flex items-center gap-1.5 no-underline" title="เปิดอ่านในหนังสือ">
@@ -198,7 +198,7 @@ const RW = (() => {
             }
             const numLabel = typeof c.num === 'number' ? `ข้อ ${c.num}` : 'หลักเกณฑ์และแนวทางปฏิบัติ';
             head.innerHTML = `
-                <div class="text-[11px] text-amber-200 font-heading">${numLabel} · ${escapeHtml(c.page)}</div>
+                <div class="text-[11px] text-amber-200 font-heading">${numLabel}</div>
                 <div class="font-heading font-bold text-sm sm:text-base">${escapeHtml(c.title)}</div>`;
             body.innerHTML = c.content;
 
@@ -236,7 +236,7 @@ const RW = (() => {
         modal.className = 'fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-start sm:items-center justify-center p-3 sm:p-6';
         modal.innerHTML = `
             <div class="bg-white rounded-3xl shadow-2xl border border-slate-200 w-full max-w-2xl max-h-[92vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-                <div class="bg-gradient-to-r from-pea-900 via-pea-800 to-purple-800 text-white px-5 py-4 flex items-start justify-between gap-3 border-b-2 border-amber-400 shrink-0">
+                <div class="bg-pea-800 text-white px-5 py-4 flex items-start justify-between gap-3 border-b-2 border-amber-400 shrink-0">
                     <div id="rwNewsModalHead" class="min-w-0 space-y-1"></div>
                     <button onclick="RW.closeNewsModal()" class="w-8 h-8 rounded-lg hover:bg-white/15 text-purple-200 hover:text-white flex items-center justify-center shrink-0 cursor-pointer" title="ปิด">
                         <i class="fa-solid fa-xmark text-lg"></i>

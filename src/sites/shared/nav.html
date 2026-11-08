@@ -1,6 +1,5 @@
 <!-- Top Navbar (ทุกหน้า) -->
-<nav id="rwNav" class="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-slate-200 shadow-sm">
-    <div class="h-0.5 bg-gradient-to-r from-pea-900 via-pea-700 to-pea-gold"></div>
+<nav id="rwNav" class="sticky top-0 z-40 bg-white border-b border-slate-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center gap-3">
         <button type="button" onclick="RW.back()" data-nav-back class="w-8 h-8 shrink-0 inline-flex items-center justify-center rounded-lg text-slate-500 hover:bg-purple-50 hover:text-pea-800 transition cursor-pointer" title="ย้อนกลับ" aria-label="ย้อนกลับ">
             <i class="fa-solid fa-arrow-left text-sm"></i>
@@ -8,7 +7,7 @@
 
         <!-- Brand -->
         <a href="home.html" class="flex items-center gap-2.5 min-w-0 no-underline" title="หน้าหลัก">
-            <span class="w-9 h-9 shrink-0 rounded-xl bg-gradient-to-br from-pea-800 to-pea-600 text-white inline-flex items-center justify-center shadow-sm">
+            <span class="w-9 h-9 shrink-0 rounded-lg bg-pea-800 text-amber-300 inline-flex items-center justify-center">
                 <i class="fa-solid fa-book-open text-sm"></i>
             </span>
             <span class="min-w-0 leading-tight">
@@ -27,13 +26,10 @@
 
         <!-- Actions -->
         <div class="flex items-center gap-1.5 ml-auto lg:ml-2 shrink-0">
-            <button type="button" onclick="RW.toggleChat(true)" class="inline-flex items-center gap-1.5 px-3 h-9 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-heading font-semibold text-xs shadow-sm transition cursor-pointer" title="ถาม AI ผู้ช่วย">
-                <i class="fa-solid fa-robot"></i><span class="hidden sm:inline">ถาม AI</span>
-            </button>
-            <button type="button" onclick="RW.openFeedback()" class="w-9 h-9 inline-flex items-center justify-center rounded-xl text-amber-700 hover:bg-amber-50 border border-amber-200 transition cursor-pointer" title="Feedback / เสนอแนะ / แจ้งปัญหา" aria-label="Feedback / เสนอแนะ / แจ้งปัญหา">
+            <button type="button" onclick="RW.openFeedback()" class="w-9 h-9 inline-flex items-center justify-center rounded-lg text-slate-500 hover:text-pea-800 hover:bg-slate-100 transition cursor-pointer" title="เสนอแนะหรือแจ้งปัญหา" aria-label="เสนอแนะหรือแจ้งปัญหา">
                 <i class="fa-solid fa-flag"></i>
             </button>
-            <button type="button" onclick="document.getElementById('rwNavMenu').classList.toggle('hidden')" class="lg:hidden w-9 h-9 inline-flex items-center justify-center rounded-xl text-slate-600 hover:bg-slate-100 transition cursor-pointer" aria-label="เมนู" aria-controls="rwNavMenu">
+            <button type="button" onclick="document.getElementById('rwNavMenu').classList.toggle('hidden')" class="lg:hidden w-9 h-9 inline-flex items-center justify-center rounded-lg text-slate-600 hover:bg-slate-100 transition cursor-pointer" aria-label="เมนู" aria-controls="rwNavMenu">
                 <i class="fa-solid fa-bars"></i>
             </button>
         </div>
