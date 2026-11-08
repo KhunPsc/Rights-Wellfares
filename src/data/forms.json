@@ -44,6 +44,17 @@
     "url": "https://drive.google.com/uc?export=download&id=1LaCkWEJpA_T60iQdvN5d9THrkGIYL5xt"
   },
   {
+    "id": "travel-claim-pdf",
+    "category": "เดินทางไปปฏิบัติงาน",
+    "label": "ใบสำคัญจ่ายเงิน ค่าใช้จ่ายในการเดินทางไปปฏิบัติงาน และรายงานการเดินทาง (ส่วนภูมิภาค) (PDF)",
+    "title": "ใบสำคัญจ่ายเงิน ค่าใช้จ่ายในการเดินทางไปปฏิบัติงาน และรายงานการเดินทาง (ส่วนภูมิภาค)",
+    "desc": "สำหรับเบิกเบี้ยเลี้ยง ค่าเช่าที่พัก และค่าพาหนะ พร้อมรายงานการเดินทางไปปฏิบัติงาน (หน่วยงานส่วนภูมิภาค)",
+    "type": "pdf",
+    "ext": "PDF",
+    "icon": "fa-file-pdf text-rose-600",
+    "url": "https://drive.google.com/uc?export=download&id=1hHS9ueTnusSw114UZ5fd1_OHPQdXZebX"
+  },
+  {
     "id": "disaster-claim-pdf",
     "category": "เงินช่วยเหลือประสบภัย",
     "label": "แบบคำร้องและใบสำคัญจ่ายเงิน กรณีประสบอัคคีภัยหรือภัยธรรมชาติ (PDF)",
