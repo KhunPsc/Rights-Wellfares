@@ -27,8 +27,18 @@
         </div>
     </div>
 
-    <!-- Download Cards Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-5" id="formsContainer">
+    <!-- แถบเลือกมุมมอง -->
+    <div class="flex items-center justify-between gap-3 -mb-3">
+        <h2 class="font-heading font-bold text-base text-slate-800"><i class="fa-solid fa-folder-open text-pea-600 mr-1.5"></i>แบบฟอร์ม <span class="text-slate-400 font-semibold text-sm">(<span id="formsCount">…</span>)</span></h2>
+        <div class="inline-flex p-1 rounded-xl bg-slate-100 border border-slate-200" role="group" aria-label="มุมมองรายการแบบฟอร์ม">
+            <button type="button" data-forms-view="tiles" onclick="setFormsView('tiles')" aria-pressed="false" class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-heading font-semibold text-slate-500 hover:text-pea-800 transition flex items-center gap-1.5"><i class="fa-solid fa-table-cells-large"></i><span class="hidden sm:inline">Tiles</span></button>
+            <button type="button" data-forms-view="content" onclick="setFormsView('content')" aria-pressed="false" class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-heading font-semibold text-slate-500 hover:text-pea-800 transition flex items-center gap-1.5"><i class="fa-solid fa-list-ul"></i><span class="hidden sm:inline">Content</span></button>
+            <button type="button" data-forms-view="list" onclick="setFormsView('list')" aria-pressed="false" class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-heading font-semibold text-slate-500 hover:text-pea-800 transition flex items-center gap-1.5"><i class="fa-solid fa-bars"></i><span class="hidden sm:inline">List</span></button>
+        </div>
+    </div>
+
+    <!-- รายการแบบฟอร์ม (forms.js เลือก class ตามมุมมอง) -->
+    <div id="formsContainer">
         <!-- Rendered dynamically via forms.js -->
     </div>
 
