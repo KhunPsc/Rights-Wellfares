@@ -37,10 +37,34 @@ function takeQuota_(name) {
   }
 }
 
+// ยอดเข้าชม: เก็บค่าเดียว "วันที่|วันนี้|สะสม" (วันตามเวลาไทย) · add = เบราว์เซอร์นี้ยังไม่ถูกนับวันนี้
+// shortcut: นับจาก flag ฝั่ง client จึงปั่นยอดได้ด้วยการเรียก URL ตรงๆ, ถ้าต้องเป็นสถิติทางการต้องมี login
+function countView_(add) {
+  var props = PropertiesService.getScriptProperties();
+  var day = Utilities.formatDate(new Date(), 'Asia/Bangkok', 'yyyy-MM-dd');
+  var read = function () {
+    var s = String(props.getProperty('views') || '').split('|');
+    return { today: s[0] === day ? Number(s[1]) || 0 : 0, total: Number(s[2]) || 0 };
+  };
+  if (!add) return read();
+  var lock = LockService.getScriptLock();
+  if (!lock.tryLock(3000)) return read(); // คิวยาว ไม่ให้หน้าเว็บรอ — ยอมพลาดนับครั้งนี้
+  try {
+    var v = read();
+    v.today++;
+    v.total++;
+    props.setProperty('views', day + '|' + v.today + '|' + v.total);
+    return v;
+  } finally {
+    lock.releaseLock();
+  }
+}
+
 // ดูยอดใช้วันนี้ใน editor: เลือกฟังก์ชันนี้แล้วกด Run
 function showQuotaUsage() {
   var props = PropertiesService.getScriptProperties();
   Object.keys(QUOTA).forEach(function (name) {
     console.log(name + ': ' + (props.getProperty('quota_' + name + '_day') || '-') + ' / ' + QUOTA[name].perDay + ' ต่อวัน');
   });
+  console.log('views (วันที่|วันนี้|สะสม): ' + (props.getProperty('views') || '-'));
 }

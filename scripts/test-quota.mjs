@@ -38,4 +38,12 @@ assert.equal(take('chat').ok, true, 'chat counter is separate');
 now = new Date('2026-11-04T10:00:00Z');
 assert.equal(take('feedback').ok, true, 'new day resets');
 
+// ยอดเข้าชม: view=0 แค่อ่าน · วันใหม่รีเซ็ตยอดวันนี้แต่สะสมต่อ
+const view = (add) => JSON.parse(vm.runInContext(`JSON.stringify(countView_(${add}))`, ctx));
+assert.deepEqual(view(false), { today: 0, total: 0 });
+view(true); view(true);
+assert.deepEqual(view(false), { today: 2, total: 2 });
+now = new Date('2026-11-05T10:00:00Z');
+assert.deepEqual(view(true), { today: 1, total: 3 }, 'new day resets today, keeps total');
+
 console.log('quota tests passed');

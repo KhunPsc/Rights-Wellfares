@@ -279,8 +279,32 @@ const RW = (() => {
         return json;
     }
 
+    // ผู้เข้าชม: เบราว์เซอร์นี้ส่ง view=1 แค่ครั้งแรกของวัน (เวลาไทย) แล้วแสดงยอดใน footer (#rwViews)
+    const VIEW_KEY = 'rw_viewed';
+    let viewTracked = false;
+    const bkkDay = () => new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Bangkok' });
+
+    async function getCounted(action) {
+        viewTracked = true;
+        let view = '1';
+        try { if (localStorage.getItem(VIEW_KEY) === bkkDay()) view = '0'; } catch (e) { /* storage ถูกบล็อก — นับทุกครั้ง */ }
+        const json = await getJson({ action, view });
+        if (view === '1') try { localStorage.setItem(VIEW_KEY, bkkDay()); } catch (e) { /* ไม่เป็นไร */ }
+        const el = document.getElementById('rwViews');
+        if (el && json.views) {
+            const n = (x) => Number(x).toLocaleString('th-TH');
+            el.textContent = `ผู้เข้าชมวันนี้ ${n(json.views.today)} · สะสม ${n(json.views.total)}`;
+            el.hidden = false;
+        }
+        return json;
+    }
+    // หน้าที่ไม่ได้โหลดข้อมูล (เช่น tables) ยังต้องถูกนับและแสดงยอด
+    document.addEventListener('DOMContentLoaded', () => {
+        if (!viewTracked) getCounted('version').catch(() => {});
+    });
+
     async function fetchBootstrap() {
-        const b = await getJson({ action: 'bootstrap' });
+        const b = await getCounted('bootstrap');
         storage.set({ version: b.version, data: b.data });
         data = b.data;
         return data;
@@ -293,7 +317,7 @@ const RW = (() => {
             data = cached.data;
             onData(data, { fromCache: true });
             try {
-                const v = await getJson({ action: 'version' });
+                const v = await getCounted('version');
                 if (v.version !== cached.version) onData(await fetchBootstrap(), { fromCache: false });
             } catch (err) {
                 console.warn('[RW] version check failed', err);
@@ -895,7 +919,7 @@ function closeImageModal() { RW.closeImageModal(); }
             </span>
             <span class="min-w-0 leading-tight">
                 <span class="block font-heading font-bold text-sm text-pea-900 truncate">E-Manual: สิทธิ์สวัสดิการของ PEA</span>
-                <span class="block text-[11px] text-slate-500 truncate"><span class="font-semibold text-amber-600">PEA N1</span> · อัปเดต 8 พ.ย. 2569</span>
+                <span class="block text-[11px] text-slate-500 truncate"><span class="font-semibold text-amber-600">PEA N1</span> · อัปเดต 9 พ.ย. 2569</span>
             </span>
         </a>
 
@@ -1137,6 +1161,7 @@ function closeImageModal() { RW.closeImageModal(); }
     <div class="border-t border-slate-200 pt-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
         <span>อ้างอิงระเบียบกองทุนสงเคราะห์ ว่าด้วยการรักษาพยาบาล พ.ศ. 2559 และหลักเกณฑ์ที่เกี่ยวข้อง (กฟภ. / PEA N1)</span>
         <span><i class="fa-solid fa-user-gear mr-1"></i>จัดทำโดย : นายขุนพล สมจิตร (510218) นบท.6 ผสน.กฟส.จอมทอง</span>
+        <span id="rwViews" hidden></span>
     </div>
 </footer>
 <script>

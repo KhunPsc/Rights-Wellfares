@@ -2,19 +2,21 @@
 // Router: จุดเข้าของ Web App (/exec)
 //   GET  ?action=bootstrap  → ข้อมูลทั้งหมดที่หน้าเว็บใช้ (หมวด, ข้อคู่มือ, อัตรา, wizard, ฟอร์ม)
 //   GET  ?action=version    → เวอร์ชันข้อมูล (ให้ client เช็ก cache)
+//   ทั้งสอง action แนบ views: { today, total } · ส่ง &view=1 = นับผู้เข้าชมใหม่ของวันนี้
 //   POST { action: 'chat', question, history }
 //   POST { action: 'feedback', type, detail, sender, contact, page }
 // ทุก response มีทั้ง ok (ใหม่) และ status (เดิม)
 // ============================================================================
 
 function doGet(e) {
-  var action = (e && e.parameter && e.parameter.action) || 'version';
+  var p = (e && e.parameter) || {};
+  var action = p.action || 'version';
   try {
     if (action === 'bootstrap') {
-      return jsonOut_({ ok: true, version: DATA_VERSION, data: SITE_DATA });
+      return jsonOut_({ ok: true, version: DATA_VERSION, data: SITE_DATA, views: countView_(p.view === '1') });
     }
     if (action === 'version') {
-      return jsonOut_({ ok: true, version: DATA_VERSION });
+      return jsonOut_({ ok: true, version: DATA_VERSION, views: countView_(p.view === '1') });
     }
     return errorOut_('unknown_action', 'ไม่รู้จัก action: ' + action);
   } catch (err) {

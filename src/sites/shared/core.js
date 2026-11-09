@@ -50,8 +50,32 @@ const RW = (() => {
         return json;
     }
 
+    // ผู้เข้าชม: เบราว์เซอร์นี้ส่ง view=1 แค่ครั้งแรกของวัน (เวลาไทย) แล้วแสดงยอดใน footer (#rwViews)
+    const VIEW_KEY = 'rw_viewed';
+    let viewTracked = false;
+    const bkkDay = () => new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Bangkok' });
+
+    async function getCounted(action) {
+        viewTracked = true;
+        let view = '1';
+        try { if (localStorage.getItem(VIEW_KEY) === bkkDay()) view = '0'; } catch (e) { /* storage ถูกบล็อก — นับทุกครั้ง */ }
+        const json = await getJson({ action, view });
+        if (view === '1') try { localStorage.setItem(VIEW_KEY, bkkDay()); } catch (e) { /* ไม่เป็นไร */ }
+        const el = document.getElementById('rwViews');
+        if (el && json.views) {
+            const n = (x) => Number(x).toLocaleString('th-TH');
+            el.textContent = `ผู้เข้าชมวันนี้ ${n(json.views.today)} · สะสม ${n(json.views.total)}`;
+            el.hidden = false;
+        }
+        return json;
+    }
+    // หน้าที่ไม่ได้โหลดข้อมูล (เช่น tables) ยังต้องถูกนับและแสดงยอด
+    document.addEventListener('DOMContentLoaded', () => {
+        if (!viewTracked) getCounted('version').catch(() => {});
+    });
+
     async function fetchBootstrap() {
-        const b = await getJson({ action: 'bootstrap' });
+        const b = await getCounted('bootstrap');
         storage.set({ version: b.version, data: b.data });
         data = b.data;
         return data;
@@ -64,7 +88,7 @@ const RW = (() => {
             data = cached.data;
             onData(data, { fromCache: true });
             try {
-                const v = await getJson({ action: 'version' });
+                const v = await getCounted('version');
                 if (v.version !== cached.version) onData(await fetchBootstrap(), { fromCache: false });
             } catch (err) {
                 console.warn('[RW] version check failed', err);
