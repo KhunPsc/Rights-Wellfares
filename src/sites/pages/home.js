@@ -18,47 +18,31 @@ function renderNewsSlide(index) {
 function nextNewsSlide() { renderNewsSlide(currentNewsIndex + 1); }
 function prevNewsSlide() { renderNewsSlide(currentNewsIndex - 1); }
 
-// ค้นหาในหนังสือทุกเล่ม (เนื้อหาบท + ข้อในเล่ม 44 ข้อ) แสดงผลใต้ช่องค้นหา
-let HOME_DATA = null;
-const plainText = (html) => String(html || '').replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ');
-
-function searchBooks(q) {
-    const needle = q.toLowerCase();
-    const hits = [];
-    for (const b of HOME_DATA.books || []) {
-        for (const ch of b.chapters) {
-            const items = ch.clauses
-                ? ch.clauses.map(n => HOME_DATA.clauses.find(c => String(c.num) === String(n))).filter(Boolean)
-                    .map(c => ({ clause: String(c.num), title: (typeof c.num === 'number' ? 'ข้อ ' + c.num + ' ' : '') + c.title, text: c.title + ' ' + c.summary + ' ' + plainText(c.content) }))
-                : [{ clause: '', title: ch.title, text: ch.title + ' ' + plainText(ch.content) }];
-            for (const it of items) {
-                const i = it.text.toLowerCase().indexOf(needle);
-                if (i < 0) continue;
-                const start = Math.max(0, i - 40);
-                hits.push({ book: b, ch, clause: it.clause, title: it.title, snippet: (start ? '…' : '') + it.text.slice(start, i + needle.length + 80) + '…', at: i });
-            }
-        }
-    }
-    return hits;
-}
+// ค้นหาในหนังสือทุกเล่ม (เนื้อหาบท + ข้อในเล่ม 44 ข้อ) พิมพ์เป็นประโยคได้ เรียงตามความตรง (RW.rankSearch ใน core.js)
+let SEARCH_INDEX = null;
 
 function handleHomeSearch(event) {
     if (event) event.preventDefault();
     const input = document.getElementById('globalSearchInput');
     const box = document.getElementById('homeSearchResults');
     const q = (input ? input.value : '').trim();
-    if (!q || !HOME_DATA || !box) return;
-    const hits = searchBooks(q);
+    if (!q || !SEARCH_INDEX || !box) return;
+    const hits = RW.rankSearch(SEARCH_INDEX, q);
     const base = RW.pageUrl('book') || 'book.html';
-    const mark = (s) => RW.escapeHtml(s).replace(new RegExp(RW.escapeHtml(q).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi'), m => `<mark class="bg-amber-200 rounded px-0.5">${m}</mark>`);
+    // ไฮไลต์ทุกคำที่ตรง (คำยาวก่อน คำสั้นจะได้ไม่ตัดกลางคำยาว)
+    const mark = (s, found) => {
+        const words = [...new Set(found)].sort((x, y) => y.length - x.length).map(w => RW.escapeHtml(w).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+        const html = RW.escapeHtml(s);
+        return words.length ? html.replace(new RegExp(words.join('|'), 'gi'), m => `<mark class="bg-amber-200 rounded px-0.5">${m}</mark>`) : html;
+    };
     box.innerHTML = `
         <div class="px-4 py-2.5 border-b border-slate-100 text-xs text-slate-500 font-heading">พบ ${hits.length} รายการสำหรับ "${RW.escapeHtml(q)}"${hits.length > 30 ? ' (แสดง 30 รายการแรก)' : ''}</div>
         ${hits.length ? `<ul class="divide-y divide-slate-100 max-h-[28rem] overflow-y-auto">${hits.slice(0, 30).map(h => {
             const key = `${h.book.id}|${h.ch.num}|${h.clause}`;
             return `<li><a href="${base}?book=${encodeURIComponent(h.book.id)}&ch=${h.ch.num}${h.clause ? '&clause=' + encodeURIComponent(h.clause) : ''}" onclick="try{localStorage.setItem('rw_book','${key}')}catch(e){}" class="block px-4 py-3 hover:bg-purple-50/60 no-underline">
                 <span class="block text-[11px] text-pea-600 font-heading font-semibold">${RW.escapeHtml(h.book.short)} · บทที่ ${h.ch.num} ${RW.escapeHtml(h.ch.title)}</span>
-                <span class="block text-sm font-heading font-semibold text-slate-800">${mark(h.title)}</span>
-                <span class="block text-xs text-slate-500 mt-0.5 line-clamp-2">${mark(h.snippet)}</span></a></li>`;
+                <span class="block text-sm font-heading font-semibold text-slate-800">${mark(h.title, h.found)}</span>
+                <span class="block text-xs text-slate-500 mt-0.5 line-clamp-2">${mark(h.snippet, h.found)}</span></a></li>`;
         }).join('')}</ul>` : '<p class="px-4 py-6 text-center text-sm text-slate-500">ไม่พบคำนี้ในคู่มือ ลองคำอื่น หรือถามผู้ช่วย AI</p>'}`;
     box.classList.remove('hidden');
 }
@@ -159,7 +143,7 @@ function initHomePage() {
     }
 
     RW.loadData(d => {
-        HOME_DATA = d;
+        SEARCH_INDEX = RW.searchIndex(d);
         // News Feed / Announcement Banner Carousel (สูงสุด 10 เรื่อง)
         newsItems = (d.news || []).slice(0, 10);
         const newsSection = document.getElementById('newsFeedSection');

@@ -882,6 +882,98 @@ const RW = (() => {
         document.body.style.overflow = '';
     }
 
+    // ===== ค้นหาแบบพิมพ์เป็นประโยค (หน้าแรก) =====
+    // ตัดคำไทยด้วย Intl.Segmenter แล้วให้คะแนน: คำที่พบน้อยได้น้ำหนักมาก (IDF) · เจอในหัวข้อ ×3 ·
+    // วลีตรงตัว/คำติดกันได้โบนัส · ตรงหลายคำชนะตรงคำเดียว · คำพ้องชุดเดียวกับ CHAT_SYNONYMS ใน apps-script/Chat.js (+OPD/IPD)
+    const SEARCH_DROP = ['เท่าไหร่', 'เท่าไร', 'ได้ไหม', 'ได้มั้ย', 'หรือไม่', 'อย่างไร', 'ยังไง'];
+    const SEARCH_STOP = new Set(['ได้', 'ไหม', 'มั้ย', 'บ้าง', 'ครับ', 'ค่ะ', 'คะ', 'นะ', 'กี่', 'คือ', 'ที่', 'ของ', 'และ', 'หรือ', 'ไม่', 'จะ', 'เป็น', 'มี', 'ให้', 'อะไร', 'ไหน', 'ถ้า', 'การ', 'ใน', 'กับ', 'แล้ว', 'อยาก', 'ทราบ', 'ขอ', 'ถาม']);
+    // วลีหลายพยางค์: จับก่อนตัดคำ (ตัวตัดคำแยก "นอนโรง|พยาบาล")
+    const SEARCH_PHRASES = { 'นอนโรงพยาบาล': ['ผู้ป่วยใน'], 'โรงพยาบาล': ['รพ.'], 'ทำโอที': ['ค่าล่วงเวลา'], 'ผู้ป่วยนอก': ['opd'], 'ผู้ป่วยใน': ['ipd'] };
+    // คำเดี่ยว: เทียบหลังตัดคำ แล้วค้นด้วยคำในรายการแทน (ค้น "ลูก" ตรงๆ จะไปเจอ "ลูกจ้าง")
+    const SEARCH_WORDS = { 'ลูก': ['บุตร'], 'พ่อ': ['บิดา'], 'แม่': ['มารดา'], 'หมอ': ['แพทย์'], 'แฟน': ['คู่สมรส'], 'เมีย': ['คู่สมรส'], 'ผัว': ['คู่สมรส'], 'สามี': ['สามี', 'คู่สมรส'], 'ภรรยา': ['ภรรยา', 'คู่สมรส'], 'บิน': ['เครื่องบิน'], 'โอที': ['ค่าล่วงเวลา'], 'opd': ['opd', 'ผู้ป่วยนอก'], 'ipd': ['ipd', 'ผู้ป่วยใน'] };
+
+    // คืน { terms: [[คำ, คำพ้อง...]], pairs: ['คำที่ติดกันในคำค้น'] }
+    function searchTerms(q) {
+        let s = ' ' + String(q).toLowerCase() + ' ';
+        const terms = [];
+        const add = (alts) => { if (!terms.some(t => t[0] === alts[0])) terms.push(alts); };
+        SEARCH_DROP.forEach(w => { s = s.split(w).join(' '); });
+        // อักษรย่อมีจุด เช่น ผชก. กฟภ. รจก.กฟจ. (ตัวตัดคำรวมเป็น "ผชก.ไป")
+        s = s.replace(/(^|[^\u0E00-\u0E7F])([ก-ฮ]{1,5}\.(?:[ก-ฮ]{1,5}\.?)*)/g, (m, pre, ab) => { add([ab, ab.replace(/\./g, '')]); return pre + ' '; });
+        Object.keys(SEARCH_PHRASES).forEach(p => { if (s.includes(p)) { add([p, ...SEARCH_PHRASES[p]]); s = s.split(p).join(' '); } });
+        let words;
+        try { words = [...new Intl.Segmenter('th', { granularity: 'word' }).segment(s)].filter(x => x.isWordLike).map(x => x.segment); }
+        catch (e) { words = s.split(/\s+/); } // เบราว์เซอร์ที่ไม่มีตัวตัดคำ: แยกตามช่องว่าง
+        const keep = (w) => w && !SEARCH_STOP.has(w) && (w.length > 1 || /\d/.test(w));
+        words.filter(keep).forEach(w => add(SEARCH_WORDS[w] || [w]));
+        const pairs = [];
+        for (let i = 0; i + 1 < words.length; i++) if (keep(words[i]) && keep(words[i + 1])) pairs.push(words[i] + words[i + 1]);
+        if (!terms.length && String(q).trim()) add([String(q).trim().toLowerCase()]);
+        return { terms, pairs };
+    }
+
+    // ข้อความตัวอย่าง: ช่วง 140 ตัวอักษรที่มีคำตรงหลากหลายที่สุด
+    function searchSnippet(text, found) {
+        const lc = text.toLowerCase();
+        const pos = [];
+        found.forEach(a => { for (let i = lc.indexOf(a); i >= 0 && pos.length < 200; i = lc.indexOf(a, i + a.length)) pos.push([i, a]); });
+        let start = 0, bestN = -1;
+        pos.forEach(([p]) => {
+            const s = Math.max(0, p - 30);
+            const n = new Set(pos.filter(([x]) => x >= s && x < s + 140).map(x => x[1])).size;
+            if (n > bestN) { bestN = n; start = s; }
+        });
+        return (start ? '…' : '') + text.slice(start, start + 140) + (start + 140 < text.length ? '…' : '');
+    }
+
+    // ดัชนีค้นหา: 1 รายการ = 1 บท (หรือ 1 ข้อ ในเล่มที่บทเป็นชุดข้อ)
+    function searchIndex(d) {
+        const plain = (html) => String(html || '').replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ');
+        const out = [];
+        for (const b of d.books || []) for (const ch of b.chapters || []) {
+            const items = ch.clauses
+                ? ch.clauses.map(n => (d.clauses || []).find(c => String(c.num) === String(n))).filter(Boolean)
+                    .map(c => ({ clause: String(c.num), title: (typeof c.num === 'number' ? 'ข้อ ' + c.num + ' ' : '') + c.title, text: c.title + ' ' + c.summary + ' ' + plain(c.content) }))
+                : [{ clause: '', title: ch.title, text: ch.title + ' ' + plain(ch.content) }];
+            items.forEach(it => out.push({ ...it, book: b, ch, titleLc: it.title.toLowerCase(), textLc: it.text.toLowerCase() }));
+        }
+        return out;
+    }
+
+    // คืนรายการเรียงตามคะแนน พร้อม found (คำที่ตรง ไว้ไฮไลต์) และ snippet
+    function rankSearch(items, q) {
+        const { terms, pairs } = searchTerms(q);
+        const phrase = String(q).toLowerCase().trim();
+        const N = items.length || 1;
+        const avgLen = items.reduce((a, it) => a + it.text.length, 0) / N || 1;
+        const has = (hay, t) => t.some(a => hay.includes(a));
+        const idf = terms.map(t => { const df = items.filter(it => has(it.textLc, t)).length; return df ? Math.log(1 + N / df) : 0; });
+        const live = idf.filter(Boolean).length;
+        if (!live) return [];
+        const maxIdf = Math.max(...idf);
+        const hits = [];
+        for (const it of items) {
+            let score = 0, matched = 0;
+            const found = [];
+            terms.forEach((t, i) => {
+                if (!idf[i] || !has(it.textLc, t)) return;
+                matched++;
+                score += idf[i] * (has(it.titleLc, t) ? 3 : 1);
+                t.forEach(a => { if (it.textLc.includes(a)) found.push(a); });
+            });
+            if (!matched) continue;
+            pairs.forEach(p => { if (it.textLc.includes(p)) score += maxIdf; });
+            if (phrase.length > 1 && it.textLc.includes(phrase)) score += maxIdf * (it.titleLc.includes(phrase) ? 4 : 2);
+            // บทยาวมีคำครบโดยบังเอิญ — ลดน้ำหนักลงเล็กน้อย
+            score *= (matched / live) * (0.6 + 0.8 * avgLen / (avgLen + it.text.length));
+            hits.push({ it, score, matched, found });
+        }
+        const best = Math.max(0, ...hits.map(h => h.matched));
+        const min = best >= 2 ? Math.ceil(best / 2) : 1;
+        return hits.filter(h => h.matched >= min).sort((a, b) => b.score - a.score)
+            .map(h => ({ ...h.it, score: h.score, found: h.found, snippet: searchSnippet(h.it.text, h.found) }));
+    }
+
     return {
         config: cfg,
         get data() { return data; },
@@ -891,7 +983,8 @@ const RW = (() => {
         openNewsModal, closeNewsModal,
         toggleChat, clearChat, askQuestion, handleChatSubmit, formatChatText,
         openFeedback, closeFeedback, submitFeedback,
-        showImage, closeImageModal
+        showImage, closeImageModal,
+        searchIndex, rankSearch
     };
 })();
 
@@ -919,7 +1012,7 @@ function closeImageModal() { RW.closeImageModal(); }
             </span>
             <span class="min-w-0 leading-tight">
                 <span class="block font-heading font-bold text-sm text-pea-900 truncate">E-Manual: สิทธิ์สวัสดิการของ PEA</span>
-                <span class="block text-[11px] text-slate-500 truncate"><span class="font-semibold text-amber-600">PEA N1</span> · อัปเดต 9 พ.ย. 2569</span>
+                <span class="block text-[11px] text-slate-500 truncate"><span class="font-semibold text-amber-600">PEA N1</span> · อัปเดต 27 พ.ย. 2569</span>
             </span>
         </a>
 
